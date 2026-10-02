@@ -1,0 +1,9 @@
+import {sendBrevoEmail} from "@/lib/email/brevo";import {createFounderReviewToken} from "./founder-review-token";import {buildPulsePublicUrl} from "./public-origin";
+const FOUNDER="founder@tvk.group";
+export async function sendFounderBuildPulseReview(e:{id:string;subject:string;preheader?:string|null;body_html:string;edition_type:string;slug:string;revision_number:number}){
+ const origin=buildPulsePublicUrl();
+ const approve=createFounderReviewToken(e.id,e.revision_number,"approve"),changes=createFounderReviewToken(e.id,e.revision_number,"changes");if(!approve||!changes)throw new Error("BuildPulse founder review secret unavailable");
+ const approveUrl=`${origin}/review/${encodeURIComponent(e.id)}/approve?token=${encodeURIComponent(approve)}`;const changesUrl=`${origin}/review/${encodeURIComponent(e.id)}?token=${encodeURIComponent(changes)}`;
+ const html=`<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto"><p style="font-size:12px;letter-spacing:.14em;font-weight:700">TVK BUILDPULSE · FOUNDER CONTROL</p><h1>${e.subject}</h1><p>${e.preheader??""}</p><div style="padding:18px;border:1px solid #ddd;border-radius:12px;margin:22px 0">${e.body_html}</div><p><a href="${approveUrl}" style="display:inline-block;padding:13px 20px;background:#111;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">Approve & release for delivery</a> <a href="${changesUrl}" style="display:inline-block;padding:13px 20px;border:1px solid #111;color:#111;text-decoration:none;border-radius:8px;font-weight:700">Request changes</a></p><p style="font-size:12px;color:#666">Revision ${e.revision_number}. Approval applies only to this exact revision. Requesting changes does not send the newsletter to subscribers.</p></div>`;
+ return sendBrevoEmail({to:FOUNDER,subject:`[FOUNDER APPROVAL] ${e.subject} · r${e.revision_number}`,html,buildPulseInvite:false});
+}
