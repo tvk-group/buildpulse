@@ -13,13 +13,14 @@ export default async function AdvertisingAdmin(){
   const supabase=await createClient();
   const {data:{user}}=await supabase.auth.getUser();
   if(!user)redirect("/advertiser");
-  const {data:authorized}=await supabase.rpc("buildpulse_admin_is_authorized");
-  if(!authorized)redirect("/");
-  const {data,error}=await supabase.rpc("buildpulse_admin_ad_queue");
-  const queue=(Array.isArray(data)?data:[]) as QueueItem[];
+  const {data,error}=await supabase.functions.invoke("buildpulse-ad-admin",{body:{action:"queue"}});
+  if(error||!data?.ok){
+    if(String(data?.error??"").includes("admin_required"))redirect("/");
+  }
+  const queue=(Array.isArray(data?.queue)?data.queue:[]) as QueueItem[];
   return <main className="min-h-screen bg-slate-100 text-slate-950"><div className="mx-auto max-w-6xl px-6 py-12">
     <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-black tracking-[.2em] text-slate-500">BUILD PULSE // COMMERCIAL CONTROL</p><h1 className="mt-3 text-4xl font-black">Advertising review & scheduling</h1><p className="mt-3 text-slate-600">Role-gated review queue. Payment confirmation never bypasses creative or publication review.</p></div><div className="flex gap-4"><Link className="font-bold underline" href="/admin/stories">Editorial review</Link><Link className="font-bold underline" href="/status">Launch control</Link></div></div>
-    {error?<p className="mt-8 rounded-xl bg-red-50 p-4 text-red-800">Advertising queue could not be loaded.</p>:null}
+    {error||!data?.ok?<p className="mt-8 rounded-xl bg-red-50 p-4 text-red-800">Advertising queue could not be loaded.</p>:null}
     <div className="mt-8 grid gap-6">{queue.map(item=><article key={item.id} className="rounded-2xl border bg-white p-6 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-black uppercase tracking-wider text-slate-500">{item.product.name} · {item.product.placement.replaceAll("_"," ")}</p><h2 className="mt-2 text-2xl font-black">{item.headline||"Untitled campaign"}</h2></div><div className="text-right"><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase">{item.status}</span><p className="mt-2 text-sm font-bold">USD {Number(item.amountUsd).toLocaleString("en-US")}</p><p className="text-xs text-slate-500">Payment: {item.paymentState||"none"}</p></div></div>
       <p className="mt-4 leading-7 text-slate-600">{item.copyText}</p>
@@ -27,6 +28,6 @@ export default async function AdvertisingAdmin(){
       <div className="mt-4 grid gap-2 text-xs text-slate-500 md:grid-cols-2"><p>Advertiser: {item.advertiser.companyName||"—"} · {item.advertiser.billingEmail||"—"}</p><p>Created: {new Date(item.createdAt).toLocaleString()}</p>{item.startsAt?<p>Starts: {new Date(item.startsAt).toLocaleString()}</p>:null}{item.endsAt?<p>Ends: {new Date(item.endsAt).toLocaleString()}</p>:null}</div>
       <AdvertisingReviewActions orderId={item.id} status={item.status} creatives={item.creatives??[]} durationDays={item.product.durationDays}/>
     </article>)}
-    {!error&&!queue.length?<div className="rounded-2xl border bg-white p-8 text-slate-600">No paid campaigns are awaiting commercial review.</div>:null}</div>
+    {!error&&data?.ok&&!queue.length?<div className="rounded-2xl border bg-white p-8 text-slate-600">No paid campaigns are awaiting commercial review.</div>:null}</div>
   </div></main>
 }
