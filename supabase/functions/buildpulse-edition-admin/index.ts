@@ -92,6 +92,14 @@ async function list(admin:any){
   .order("created_at",{ascending:false}).limit(100);
  if(error)throw error;return data??[];
 }
+async function getEdition(admin:any,id:string){
+ if(!/^[0-9a-f-]{36}$/i.test(id))throw new Error("invalid_request");
+ const {data,error}=await admin.from("buildpulse_editions")
+  .select("id,edition_type,subject,preheader,slug,status,body_html,revision_number,founder_review_status,founder_review_notes,founder_approved_revision,scheduled_at,published_at,created_at,updated_at,generation_error")
+  .eq("id",id).maybeSingle();
+ if(error||!data)throw new Error("edition_not_found");
+ return data;
+}
 async function editionAction(admin:any,user:any,body:any){
  const id=String(body.editionId??""),op=String(body.editionAction??"");
  if(!/^[0-9a-f-]{36}$/i.test(id)||!["approve","changes","schedule"].includes(op))throw new Error("invalid_request");
@@ -133,6 +141,7 @@ Deno.serve(async(req:Request)=>{
    const action=String(body.action??"");
    if(action==="build"){const type=body.type==="weekly"?"weekly":"daily";return reply(await build(admin,type))}
    if(action==="list")return reply({ok:true,editions:await list(admin)});
+   if(action==="get")return reply({ok:true,edition:await getEdition(admin,String(body.editionId??""))});
    if(action==="edition")return reply(await editionAction(admin,user,body));
    return reply({ok:false,error:"unsupported_action"},400);
  }catch(error){
