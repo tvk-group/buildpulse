@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest";import {createFounderReviewToken,verifyFounderReviewToken} from "./founder-review-token";
+describe("BuildPulse founder review",()=>{it("fails closed without a dedicated signing secret",()=>{if(!process.env.BUILDPULSE_REVIEW_SECRET)expect(createFounderReviewToken("00000000-0000-0000-0000-000000000001",1,"approve")).toBeNull()});it("does not accept arbitrary tokens",()=>{expect(verifyFounderReviewToken("invalid.token","approve")).toBeNull()})});
