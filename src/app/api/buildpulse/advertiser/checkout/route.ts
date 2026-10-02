@@ -41,7 +41,7 @@ export async function GET(){
   return NextResponse.json({
     ok:true,
     methods:[
-      ...(env.STRIPE_SECRET_KEY?[{method:"stripe",label:"Card / Stripe"}]:[]),
+      {method:"stripe",label:"Card / Stripe"},
       ...configuredCryptoRails().map(r=>({method:r.asset,label:r.asset,network:r.network,requiresMemo:Boolean(r.memo)}))
     ],
     issuer:buildPulseInvoiceIssuer
