@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest";import {BUILDPULSE_GENERATION_CONTRACT,buildEditorialPrompt} from "./generation-contract";
+describe("BuildPulse generation contract",()=>{it("anchors drafts to verified evidence",()=>{expect(BUILDPULSE_GENERATION_CONTRACT.factuality).toContain("verified");const p=buildEditorialPrompt([{title:"Verified title",summary:"Verified summary",canonical_url:"https://example.com/source"}]);expect(p).toContain("https://example.com/source");expect(p).toContain("Never create price targets")})});
