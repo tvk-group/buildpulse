@@ -110,6 +110,40 @@ async function issueQuote(admin:any,user:any,orderId:string,asset:Asset){
   return {quote,invoice};
 }
 
+async function prepareStripe(admin:any,user:any,orderId:string){
+  const [{data:order,error:orderError},{data:profile,error:profileError}]=await Promise.all([
+    admin.from("buildpulse_ad_orders").select("id,user_id,product_id,status,amount_usd,created_at").eq("id",orderId).eq("user_id",user.id).maybeSingle(),
+    admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,status").eq("user_id",user.id).maybeSingle()
+  ]);
+  if(orderError||!order)throw new Error("order_not_found");
+  if(profileError||!profile||profile.status!=="active")throw new Error("active_advertiser_profile_required");
+  if(!["draft","awaiting_payment","payment_detected"].includes(order.status))throw new Error("order_not_payable");
+  const {data:product,error:productError}=await admin.from("buildpulse_ad_products")
+    .select("stripe_payment_link_id,stripe_payment_link_url,price_usd,active").eq("id",order.product_id).eq("active",true).maybeSingle();
+  if(productError||!product?.stripe_payment_link_id||!product?.stripe_payment_link_url)throw new Error("stripe_payment_link_unavailable");
+  if(Math.round(Number(product.price_usd)*100)!==Math.round(Number(order.amount_usd)*100))throw new Error("order_price_mismatch");
+
+  const now=new Date().toISOString(),invNo=invoiceNumber(order.id,order.created_at);
+  const {data:invoice,error:invoiceError}=await admin.from("buildpulse_billing_invoices").upsert({
+    order_id:order.id,user_id:user.id,invoice_number:invNo,issuer_name:ISSUER.name,issuer_company_number:ISSUER.companyNumber,
+    issuer_registered_office:ISSUER.registeredOffice,billing_company:profile.company_name??null,billing_email:profile.billing_email??user.email??null,
+    amount_usd:order.amount_usd,currency:"USD",payment_method:"stripe",payment_reference:product.stripe_payment_link_id,status:"open",paid_at:null,updated_at:now
+  },{onConflict:"order_id"}).select("invoice_number,status,amount_usd,currency,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,payment_method").single();
+  if(invoiceError||!invoice)throw new Error("invoice_persistence_failed");
+
+  const {error:updateError}=await admin.from("buildpulse_ad_orders").update({
+    status:"awaiting_payment",payment_method:"stripe",payment_provider:"stripe",payment_reference:product.stripe_payment_link_id,
+    paid_tx_hash:null,paid_at:null,updated_at:now
+  }).eq("id",order.id).eq("user_id",user.id).in("status",["draft","awaiting_payment","payment_detected"]);
+  if(updateError)throw new Error("order_transition_failed");
+
+  const url=new URL(product.stripe_payment_link_url);
+  url.searchParams.set("client_reference_id",order.id);
+  const email=profile.billing_email||user.email;
+  if(email)url.searchParams.set("prefilled_email",email);
+  return {checkoutUrl:url.toString(),paymentLinkId:product.stripe_payment_link_id,invoice};
+}
+
 async function verifyEvm(asset:Asset,rail:Rail,quote:any,txHash:string){
   const isBase=rail.network==="Base";
   const rpc=isBase?"https://base-rpc.publicnode.com":"https://ethereum-rpc.publicnode.com";
@@ -261,6 +295,10 @@ Deno.serve(async(req:Request)=>{
     const action=String(body.action??"");
     const orderId=String(body.orderId??"");
     if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return reply({ok:false,error:"invalid_order"},400);
+    if(action==="stripe"){
+      const result=await prepareStripe(admin,user,orderId);
+      return reply({ok:true,method:"stripe",...result});
+    }
     if(action==="quote"){
       const asset=String(body.asset??"").toUpperCase() as Asset;
       if(!RAILS[asset])return reply({ok:false,error:"unsupported_asset"},400);
@@ -277,7 +315,7 @@ Deno.serve(async(req:Request)=>{
     const message=error instanceof Error?error.message:"payment_operation_failed";
     const status=["order_not_found","payment_quote_not_found"].includes(message)?404:
       ["active_advertiser_profile_required"].includes(message)?403:
-      ["order_not_payable","order_not_verifiable","transaction_already_used"].includes(message)?409:
+      ["order_not_payable","order_not_verifiable","transaction_already_used","order_price_mismatch"].includes(message)?409:
       ["invalid_transaction_hash","payment_underpaid","transaction_outside_quote_window","destination_mismatch","destination_tag_mismatch","not_xrp_payment","non_xrp_amount","payment_rail_mismatch","payment_destination_mismatch","transaction_failed"].includes(message)?400:500;
     return reply({ok:false,error:message},status);
   }
