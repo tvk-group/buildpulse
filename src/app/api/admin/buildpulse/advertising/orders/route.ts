@@ -9,8 +9,8 @@ export async function POST(req:NextRequest){
  const admin=createAdminClient();if(!admin)return NextResponse.json({ok:false},{status:503});
  const {data:order}=await admin.from("buildpulse_ad_orders").select("id,product_id,status").eq("id",parsed.data.orderId).single();if(!order)return NextResponse.json({ok:false,error:"order_not_found"},{status:404});
  if(parsed.data.action==="reject"){const {error}=await admin.from("buildpulse_ad_orders").update({status:"rejected",updated_at:new Date().toISOString()}).eq("id",order.id).in("status",["payment_detected","review","approved"]);return error?NextResponse.json({ok:false},{status:500}):NextResponse.json({ok:true,state:"rejected"});}
- const {data:payment}=await admin.from("buildpulse_ad_payment_events").select("id").eq("order_id",order.id).eq("state","confirmed").limit(1).maybeSingle();
- if(!payment)return NextResponse.json({ok:false,error:"confirmed_payment_required"},{status:409});
+ const {data:payment}=await admin.from("buildpulse_ad_payment_events").select("id,state").eq("order_id",order.id).order("observed_at",{ascending:false}).limit(1).maybeSingle();
+ if(!payment||payment.state!=="confirmed")return NextResponse.json({ok:false,error:"confirmed_payment_required"},{status:409});
  const {data:creatives}=await admin.from("buildpulse_ad_creatives").select("id,review_state").eq("order_id",order.id);
  if(creatives?.some(c=>c.review_state!=="approved"))return NextResponse.json({ok:false,error:"creative_review_incomplete"},{status:409});
  if(parsed.data.action==="approve"){if((await admin.from("buildpulse_ad_products").select("width_px,height_px").eq("id",order.product_id).single()).data?.width_px&&!creatives?.length)return NextResponse.json({ok:false,error:"approved_creative_required"},{status:409});const {error}=await admin.from("buildpulse_ad_orders").update({status:"approved",updated_at:new Date().toISOString()}).eq("id",order.id).in("status",["payment_detected","review"]);return error?NextResponse.json({ok:false},{status:500}):NextResponse.json({ok:true,state:"approved",reviewedBy:auth.email});}
