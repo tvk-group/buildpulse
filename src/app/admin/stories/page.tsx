@@ -6,7 +6,7 @@ import StoryReviewActions from "@/components/buildpulse/StoryReviewActions";
 export const dynamic="force-dynamic";
 type QueueRow={id:string;title:string;summary:string|null;canonical_url:string;published_at:string|null;verification_state:string;editorial_score:number|null;buildpulse_sources:{name:string}|Array<{name:string}>|null};
 export default async function Page({searchParams}:{searchParams:Promise<{page?:string;source?:string}>}){
- const auth=await requireBuildPulseAdmin();if(!auth.ok)redirect("/login");
+ const auth=await requireBuildPulseAdmin();if(!auth.ok)redirect("/");
  const admin=createAdminClient();if(!admin)return <main className="p-10">Service unavailable.</main>;
  const params=await searchParams,source=(params.source??"").trim().slice(0,120);const page=Math.max(1,Number.parseInt(params.page??"1",10)||1),size=50,from=(page-1)*size;
  let query=admin.from("buildpulse_stories").select("id,title,summary,canonical_url,published_at,buildpulse_sources!inner(name),verification_state,editorial_score",{count:"exact"}).in("verification_state",["pending","needs_review"]);if(source)query=query.eq("buildpulse_sources.name",source);const {data,error,count}=await query.order("editorial_score",{ascending:false,nullsFirst:false}).order("published_at",{ascending:false}).range(from,from+size-1);
