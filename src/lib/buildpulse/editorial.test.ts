@@ -1,0 +1,2 @@
+import { describe,expect,it } from "vitest"; import { editorialScore,BUILDPULSE_EDITORIAL_POLICY,BUILDPULSE_SECTIONS } from "./editorial";
+describe("BuildPulse editorial contract",()=>{it("keeps core coverage",()=>{expect(BUILDPULSE_SECTIONS).toContain("entelekron");expect(BUILDPULSE_SECTIONS).toContain("security")});it("scores deterministically",()=>{expect(editorialScore({trustTier:1,freshness:100,impact:100,originality:100,corroboration:100})).toBe(100)});it("forbids invented claims",()=>{expect(BUILDPULSE_EDITORIAL_POLICY.rules.join(" ")).toContain("Never invent")})});
