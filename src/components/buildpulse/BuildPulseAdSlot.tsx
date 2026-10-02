@@ -4,7 +4,8 @@ type Props={placement:"homepage"|"archive"|"edition_top"|"edition_inline"|"editi
 type ActiveAd={orderId:string;headline:string|null;copyText:string|null;productId:string;widthPx:number|null;heightPx:number|null;hasCreative:boolean};
 
 export async function BuildPulseAdSlot({placement,className=""}:Props){
-  const {url,key}=getSupabasePublicConfig();
+  const {url,key,configured}=getSupabasePublicConfig();
+  if(!configured)return null;
   const endpoint=new URL(`${url}/functions/v1/buildpulse-ad-runtime`);
   endpoint.searchParams.set("action","lookup");
   endpoint.searchParams.set("placement",placement);
