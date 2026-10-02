@@ -1,0 +1,2 @@
+REVOKE ALL ON FUNCTION public.buildpulse_search_editions(TEXT,TEXT,INTEGER,INTEGER) FROM PUBLIC,anon,authenticated,service_role;
+DROP FUNCTION IF EXISTS public.buildpulse_search_editions(TEXT,TEXT,INTEGER,INTEGER);
