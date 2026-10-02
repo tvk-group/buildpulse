@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS uq_buildpulse_editions_generation_key; CREATE UNIQUE INDEX uq_buildpulse_editions_generation_key ON buildpulse_editions(generation_key);
