@@ -30,11 +30,13 @@ CREATE INDEX IF NOT EXISTS idx_buildpulse_billing_invoices_user_created
 
 ALTER TABLE buildpulse_billing_invoices ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS buildpulse_billing_invoices_own_read ON buildpulse_billing_invoices;
 CREATE POLICY buildpulse_billing_invoices_own_read
   ON buildpulse_billing_invoices
   FOR SELECT TO authenticated
   USING(auth.uid() = user_id);
 
+DROP POLICY IF EXISTS buildpulse_billing_invoices_service_all ON buildpulse_billing_invoices;
 CREATE POLICY buildpulse_billing_invoices_service_all
   ON buildpulse_billing_invoices
   FOR ALL TO service_role
