@@ -1,0 +1,1 @@
+ALTER TABLE buildpulse_ad_payment_quotes ADD COLUMN IF NOT EXISTS required_confirmations INTEGER NOT NULL DEFAULT 1 CHECK(required_confirmations BETWEEN 1 AND 1000);
