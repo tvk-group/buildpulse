@@ -7,7 +7,8 @@ type PublicEdition={
 };
 
 async function runtime(params:Record<string,string>){
-  const {url,key}=getSupabasePublicConfig();
+  const {url,key,configured}=getSupabasePublicConfig();
+  if(!configured)return null;
   const endpoint=new URL(`${url}/functions/v1/buildpulse-content-runtime`);
   for(const [k,v] of Object.entries(params))if(v)endpoint.searchParams.set(k,v);
   const response=await fetch(endpoint,{cache:"no-store",headers:{apikey:key}}).catch(()=>null);
@@ -28,7 +29,8 @@ export async function getPublicEdition(slug:string):Promise<PublicEdition|null>{
   return data?.edition??null;
 }
 export function publicEditionPdfRuntimeUrl(slug:string){
-  const {url}=getSupabasePublicConfig();
+  const {url,configured}=getSupabasePublicConfig();
+  if(!configured)return "#";
   const endpoint=new URL(`${url}/functions/v1/buildpulse-content-runtime`);
   endpoint.searchParams.set("action","pdf");endpoint.searchParams.set("slug",slug);
   return endpoint.toString();
