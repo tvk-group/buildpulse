@@ -33,7 +33,7 @@ export async function POST(req:Request){
    await Promise.all([
      admin.from("buildpulse_ad_payment_quotes").update({state:"observed"}).eq("id",quote.id),
      admin.from("buildpulse_billing_invoices").update({status:"open",paid_at:null,updated_at:now}).eq("order_id",parsed.data.orderId),
-     admin.from("buildpulse_ad_orders").update({status:"payment_detected",paid_at:null,updated_at:now}).eq("id",parsed.data.orderId).eq("status","review")
+     admin.from("buildpulse_ad_orders").update({status:"payment_detected",paid_at:null,updated_at:now}).eq("id",parsed.data.orderId).in("status",["review","approved","scheduled","active"])
    ]);
  }
  return NextResponse.json({ok:true,state:acceptedState,advancedToReview:acceptedState==="confirmed"});
