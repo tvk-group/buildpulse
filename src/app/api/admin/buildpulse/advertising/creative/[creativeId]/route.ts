@@ -1,22 +1,22 @@
 import {createClient} from "@/lib/supabase/server";
+import {getSupabasePublicConfig} from "@/lib/supabase/env";
 
 export async function GET(_request:Request,{params}:{params:Promise<{creativeId:string}>}){
   const {creativeId}=await params;
   if(!/^[0-9a-f-]{36}$/i.test(creativeId))return new Response("Not found",{status:404});
   const supabase=await createClient();
-  const {data:{user}}=await supabase.auth.getUser();
-  if(!user)return new Response("Unauthorized",{status:401});
-  const {data:authorized}=await supabase.rpc("buildpulse_admin_is_authorized");
-  if(!authorized)return new Response("Forbidden",{status:403});
-  const {data:creative,error}=await supabase.from("buildpulse_ad_creatives")
-    .select("storage_path,mime_type,sha256").eq("id",creativeId).maybeSingle();
-  if(error||!creative)return new Response("Not found",{status:404});
-  const {data:file,error:downloadError}=await supabase.storage.from("buildpulse-ad-creatives").download(creative.storage_path);
-  if(downloadError||!file)return new Response("Not found",{status:404});
-  return new Response(file.stream(),{headers:{
-    "Content-Type":creative.mime_type,
+  const {data:{session}}=await supabase.auth.getSession();
+  if(!session?.access_token)return new Response("Unauthorized",{status:401});
+  const {url,key}=getSupabasePublicConfig();
+  const endpoint=new URL(`${url}/functions/v1/buildpulse-ad-admin`);
+  endpoint.searchParams.set("action","creative");
+  endpoint.searchParams.set("creativeId",creativeId);
+  const response=await fetch(endpoint,{cache:"no-store",headers:{apikey:key,Authorization:`Bearer ${session.access_token}`}});
+  if(!response.ok)return new Response(response.status===403?"Forbidden":"Not found",{status:response.status===403?403:404});
+  return new Response(await response.arrayBuffer(),{headers:{
+    "Content-Type":response.headers.get("content-type")??"application/octet-stream",
     "Cache-Control":"private, no-store",
-    "ETag":`"${creative.sha256}"`,
+    "ETag":response.headers.get("etag")??"",
     "X-Content-Type-Options":"nosniff",
     "Content-Security-Policy":"default-src 'none'"
   }});
