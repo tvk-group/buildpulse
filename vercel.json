@@ -17,10 +17,6 @@
       "schedule": "0 7 * * 1"
     },
     {
-      "path": "/api/cron/buildpulse-ad-activation",
-      "schedule": "*/15 * * * *"
-    },
-    {
       "path": "/api/cron/buildpulse-delivery-reconcile",
       "schedule": "*/15 * * * *"
     }
