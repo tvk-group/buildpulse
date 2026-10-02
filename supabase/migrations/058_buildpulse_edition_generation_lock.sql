@@ -1,0 +1,1 @@
+ALTER TABLE buildpulse_editions ADD COLUMN IF NOT EXISTS generation_key TEXT; CREATE UNIQUE INDEX IF NOT EXISTS uq_buildpulse_editions_generation_key ON buildpulse_editions(generation_key) WHERE generation_key IS NOT NULL;
