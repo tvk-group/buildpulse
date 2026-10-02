@@ -12,17 +12,20 @@ export default function AdvertisingReviewActions({orderId,status,creatives,durat
 
   async function creativeAction(creativeId:string,decision:"approved"|"rejected"){
     setBusy(true);setMessage("");
-    const {data,error}=await supabase.rpc("buildpulse_admin_review_creative",{p_creative_id:creativeId,p_decision:decision,p_notes:null});
-    setMessage(error?.message??(data?.state?`Creative ${data.state}.`:"Creative review saved."));
-    setBusy(false);if(!error)router.refresh();
+    const {data,error}=await supabase.functions.invoke("buildpulse-ad-admin",{body:{action:"reviewCreative",creativeId,decision}});
+    setMessage(error?.message??data?.error??(data?.state?`Creative ${data.state}.`:"Creative review saved."));
+    setBusy(false);if(!error&&data?.ok)router.refresh();
   }
-  async function orderAction(action:"approve"|"reject"|"schedule"){
+  async function orderAction(actionType:"approve"|"reject"|"schedule"){
     setBusy(true);setMessage("");
-    const start=action==="schedule"&&startsAt?new Date(startsAt).toISOString():null;
-    if(action==="schedule"&&!start){setMessage("Choose a schedule start time.");setBusy(false);return}
-    const {data,error}=await supabase.rpc("buildpulse_admin_order_action",{p_order_id:orderId,p_action:action,p_starts_at:start,p_notes:null});
-    setMessage(error?.message??(data?.state?`Order ${data.state}.`:"Order updated."));
-    setBusy(false);if(!error)router.refresh();
+    let start:string|null=null;
+    if(actionType==="schedule"){
+      if(!startsAt){setMessage("Choose a schedule start time.");setBusy(false);return}
+      start=new Date(startsAt).toISOString();
+    }
+    const {data,error}=await supabase.functions.invoke("buildpulse-ad-admin",{body:{action:"order",orderId,actionType,startsAt:start}});
+    setMessage(error?.message??data?.error??(data?.state?`Order ${data.state}.`:"Order updated."));
+    setBusy(false);if(!error&&data?.ok)router.refresh();
   }
   return <div className="mt-5 border-t pt-5">
     <div className="grid gap-4">
