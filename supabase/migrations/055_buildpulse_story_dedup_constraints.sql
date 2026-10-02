@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS uq_buildpulse_stories_canonical_url ON buildpulse_stories(canonical_url); CREATE UNIQUE INDEX IF NOT EXISTS uq_buildpulse_stories_content_hash ON buildpulse_stories(content_hash);
