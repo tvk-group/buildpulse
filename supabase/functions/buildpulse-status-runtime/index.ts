@@ -45,7 +45,7 @@ Deno.serve(async(req:Request)=>{
       checks:{
         database:true,
         sourceHealth,
-        ingestionFresh,
+        ingestionFresh:ingestFresh,
         editorialControl:true,
         editionControl:true,
         webPublication:true,
