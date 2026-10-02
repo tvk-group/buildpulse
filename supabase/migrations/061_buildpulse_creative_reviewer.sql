@@ -1,0 +1,1 @@
+ALTER TABLE buildpulse_ad_creatives ADD COLUMN IF NOT EXISTS reviewed_by TEXT;
