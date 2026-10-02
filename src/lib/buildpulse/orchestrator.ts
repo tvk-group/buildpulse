@@ -1,0 +1,13 @@
+import { createAdminClient } from "@/lib/supabase/admin";import { fetchBuildPulseFeed } from "@/lib/buildpulse/sources";import { ingestBuildPulseStories } from "@/lib/buildpulse/ingest";import { editorialScore } from "@/lib/buildpulse/editorial";
+export async function runBuildPulseIngestion(){
+ const admin=createAdminClient();if(!admin)throw new Error("Supabase admin unavailable");
+ const {data:sources,error}=await admin.from("buildpulse_sources").select("id,name,feed_url,category,trust_tier,last_fetched_at,fetch_interval_minutes").eq("enabled",true).not("feed_url","is",null);
+ if(error)throw error;let discovered=0,accepted=0,rejected=0;const failures:string[]=[];
+ for(const s of sources??[]){const last=s.last_fetched_at?Date.parse(s.last_fetched_at):0;if(last&&Date.now()-last<s.fetch_interval_minutes*60000)continue;const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),12000);
+  try{const items=await fetchBuildPulseFeed(s.feed_url,ctrl.signal);discovered+=items.length;const out=await ingestBuildPulseStories(`${s.id}:${new Date().toISOString().slice(0,13)}`,items.map(x=>({url:x.url,sourceId:s.id,title:x.title,summary:x.excerpt,category:s.category??"technology",publishedAt:x.publishedAt,payload:x.raw})));accepted+=out.accepted;rejected+=out.rejected;await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"ok",last_fetch_error:null}).eq("id",s.id)}
+  catch(e){const m=e instanceof Error?e.message:"unknown";failures.push(`${s.name}: ${m}`);await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"failed",last_fetch_error:m.slice(0,500)}).eq("id",s.id)}
+  finally{clearTimeout(timer)}
+ }
+ let scored=0;for(let batch=0;batch<5;batch++){const {data:pending,error:pendingError}=await admin.from("buildpulse_stories").select("id,source_id,published_at").eq("verification_state","pending").is("editorial_score",null).order("published_at",{ascending:false,nullsFirst:false}).limit(500);if(pendingError)throw pendingError;if(!(pending??[]).length)break;for(const story of pending!){const source=(sources??[]).find(x=>x.id===story.source_id);const age=story.published_at?Math.max(0,(Date.now()-Date.parse(story.published_at))/3600000):72;const freshness=Math.max(0,100-age*2);const {error:scoreError}=await admin.from("buildpulse_stories").update({editorial_score:editorialScore({trustTier:source?.trust_tier??3,freshness,impact:50,originality:50,corroboration:0})}).eq("id",story.id).is("editorial_score",null);if(scoreError)throw scoreError;scored++}if(pending!.length<500)break}
+ return {sources:(sources??[]).length,discovered,accepted,rejected,scored,failures};
+}
