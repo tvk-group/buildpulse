@@ -11,9 +11,9 @@ type StatusData={
 };
 
 export default async function Status(){
-  const {url,key}=getSupabasePublicConfig();
-  const endpoint=new URL(url+"/functions/v1/buildpulse-status-runtime");
-  const response=await fetch(endpoint,{cache:"no-store",headers:{apikey:key}}).catch(()=>null);
+  const {url,key,configured}=getSupabasePublicConfig();
+  const endpoint=configured?new URL(url+"/functions/v1/buildpulse-status-runtime"):null;
+  const response=endpoint?await fetch(endpoint,{cache:"no-store",headers:{apikey:key}}).catch(()=>null):null;
   const data=(response?.ok?await response.json().catch(()=>null):null) as StatusData|null;
   const c=data?.counts??{enabledSources:0,healthySources:0,stories:0,verifiedStories:0,pendingStories:0,activeSubscribers:0,editions:0,publishedEditions:0,sentEditions:0,scheduledOrActiveAds:0,stripePaymentLinks:0};
   const checks=data?.checks??{} as StatusData["checks"];
