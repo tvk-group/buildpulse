@@ -16,7 +16,7 @@ export function getBrevoFromEmail(): string {
 }
 
 export function getBrevoFromName(): string {
-  return getServerEnv().BREVO_FROM_NAME?.trim() || "ENTELΞKRON";
+  return getServerEnv().BREVO_FROM_NAME?.trim() || "BuildPulse";
 }
 
 export function isBrevoConfigured(): boolean {
