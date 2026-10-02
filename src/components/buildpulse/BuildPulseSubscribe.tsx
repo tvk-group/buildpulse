@@ -1,13 +1,19 @@
 "use client";
-import { FormEvent,useState } from "react";
+import {FormEvent,useState} from "react";
 export function BuildPulseSubscribe(){
  const [state,setState]=useState<"idle"|"sending"|"ok"|"error">("idle");
- async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setState("sending");const fd=new FormData(e.currentTarget);const r=await fetch("/api/buildpulse/subscribe",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email:fd.get("email"),locale:"en",cadence:fd.get("cadence"),topics:["ai","blockchain","crypto","security","digital-economy","entelekron"],consent:true})});setState(r.ok?"ok":"error");}
- return <form onSubmit={submit} className="mt-8 grid w-full gap-3 rounded-xl border border-white/25 bg-white p-5 text-[#17202a] shadow-sm md:grid-cols-[minmax(0,1fr)_auto_auto]">
-  <input required name="email" type="email" autoComplete="email" placeholder="you@example.com" className="min-w-0 rounded-lg border border-[#c8d1cf] bg-[#fbfaf6] px-4 py-3 text-base outline-none transition focus:border-[#0b6b63] focus:ring-2 focus:ring-[#0b6b63]/20"/>
-  <select name="cadence" defaultValue="weekly" className="min-w-0 rounded-lg border border-[#c8d1cf] bg-[#fbfaf6] px-4 py-3 text-base outline-none transition focus:border-[#0b6b63] focus:ring-2 focus:ring-[#0b6b63]/20"><option value="weekly">Weekly</option><option value="daily">Daily</option><option value="both">Daily + Weekly</option></select>
-  <button disabled={state==="sending"} className="rounded-lg bg-[#0b6b63] px-5 py-3 font-bold text-white transition hover:bg-[#08574f] disabled:opacity-50">{state==="sending"?"Joining…":"Subscribe"}</button>
-  <label className="text-sm leading-5 text-[#53606b] md:col-span-3"><input required type="checkbox" className="mr-2"/>I want BuildPulse intelligence emails and understand I can unsubscribe at any time.</label>
-  {state==="ok"&&<p className="text-sm font-semibold md:col-span-3">Subscription saved.</p>}{state==="error"&&<p className="text-sm font-semibold md:col-span-3">Subscription could not be completed.</p>}
+ async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setState("sending");const fd=new FormData(e.currentTarget);try{const r=await fetch("/api/buildpulse/subscribe",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email:fd.get("email"),locale:"en",cadence:fd.get("cadence"),topics:["ai","blockchain","crypto","security","digital-economy","entelekron"],consent:fd.get("consent")==="yes"})});setState(r.ok?"ok":"error")}catch{setState("error")}}
+ return <form onSubmit={submit} className="mt-8 w-full rounded-xl border border-white/30 bg-white p-5 text-[#17202a] shadow-sm">
+  <p className="mb-4 text-sm leading-5 text-[#53606b]">Get BuildPulse intelligence in your inbox. Enter your email, choose delivery frequency and confirm consent below.</p>
+  <div className="grid gap-3">
+   <label htmlFor="buildpulse-subscribe-email" className="text-xs font-black uppercase tracking-[.12em] text-[#42505a]">Email address</label>
+   <input id="buildpulse-subscribe-email" required name="email" type="email" inputMode="email" autoComplete="email" placeholder="you@example.com" aria-describedby="buildpulse-subscribe-help" className="block h-12 w-full appearance-none rounded-lg border-2 border-[#81908d] bg-white px-4 text-base text-[#17202a] placeholder:text-[#7a858b] outline-none focus:border-[#0b6b63] focus:ring-2 focus:ring-[#0b6b63]/20"/>
+   <p id="buildpulse-subscribe-help" className="text-xs text-[#65717c]">We use this address only for the BuildPulse briefings you request.</p>
+   <label htmlFor="buildpulse-subscribe-cadence" className="mt-1 text-xs font-black uppercase tracking-[.12em] text-[#42505a]">Delivery</label>
+   <select id="buildpulse-subscribe-cadence" name="cadence" defaultValue="weekly" className="block h-12 w-full rounded-lg border-2 border-[#81908d] bg-white px-4 text-base outline-none focus:border-[#0b6b63] focus:ring-2 focus:ring-[#0b6b63]/20"><option value="weekly">Weekly briefing</option><option value="daily">Daily briefing</option><option value="both">Daily + Weekly</option></select>
+   <label className="mt-2 flex items-start gap-3 rounded-lg bg-[#f2f5f3] p-3 text-sm leading-5 text-[#42505a]"><input required name="consent" value="yes" type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#0b6b63]"/><span>I want BuildPulse intelligence emails and understand that I can unsubscribe at any time.</span></label>
+   <button disabled={state==="sending"} className="mt-1 h-12 w-full rounded-lg bg-[#0b6b63] px-5 font-black text-white transition hover:bg-[#08574f] disabled:opacity-50">{state==="sending"?"Subscribing…":"Subscribe to BuildPulse"}</button>
+   <div aria-live="polite">{state==="ok"&&<p className="text-sm font-semibold text-[#0b6b63]">Subscription saved. Welcome to BuildPulse.</p>}{state==="error"&&<p className="text-sm font-semibold text-[#9b2c2c]">Subscription could not be completed. Please check your email and try again.</p>}</div>
+  </div>
  </form>
 }
