@@ -61,19 +61,18 @@ export function BuildPulseAdvertiserPortal(){
   async function startPayment(orderId:string,method:string){
     setBusy(true);setMessage("");
     try{
-      if(method!=="stripe"){
-        const {data,error}=await supabase.functions.invoke("buildpulse-payment",{body:{action:"quote",orderId,asset:method}});
-        if(error)throw error;
-        if(!data?.ok)throw new Error(typeof data?.error==="string"?data.error:"Crypto payment could not be initialized");
-        setMessage(`${data.quote.asset} payment quote created. Send the exact amount before the quote expires.`);
-        await refresh(userId??undefined);
+      const action=method==="stripe"?"stripe":"quote";
+      const body=method==="stripe"?{action,orderId}:{action,orderId,asset:method};
+      const {data,error}=await supabase.functions.invoke("buildpulse-payment",{body});
+      if(error)throw error;
+      if(!data?.ok)throw new Error(typeof data?.error==="string"?data.error:"Payment could not be initialized");
+      if(method==="stripe"){
+        if(!data.checkoutUrl)throw new Error("Stripe Checkout URL was not returned");
+        window.location.assign(data.checkoutUrl);
         return;
       }
-      const response=await fetch("/api/buildpulse/advertiser/checkout",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({orderId,method})});
-      const body=await response.json().catch(()=>({}));
-      if(!response.ok)throw new Error(typeof body.error==="string"?body.error:"Stripe payment could not be initialized");
-      if(body.checkoutUrl){window.location.assign(body.checkoutUrl);return}
-      throw new Error("Stripe Checkout URL was not returned");
+      setMessage(`${data.quote.asset} payment quote created. Send the exact amount before the quote expires.`);
+      await refresh(userId??undefined);
     }catch(error){setMessage(error instanceof Error?error.message:"Payment could not be initialized")}finally{setBusy(false)}
   }
 
