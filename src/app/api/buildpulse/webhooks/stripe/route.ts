@@ -34,13 +34,14 @@ export async function POST(req:Request){
   const {data:seen}=await admin.from("buildpulse_ad_payment_events").select("id,state").eq("provider_event_key",String(event.id)).maybeSingle();
   if(seen)return NextResponse.json({ok:true,idempotent:true});
 
-  if(type==="checkout.session.expired"){
+  if(type==="checkout.session.expired"||type==="checkout.session.async_payment_failed"){
     const now=new Date().toISOString();
+    const state=type==="checkout.session.expired"?"expired":"failed";
     await Promise.all([
-      admin.from("buildpulse_ad_orders").update({status:"draft",payment_reference:null,updated_at:now}).eq("id",orderId).eq("status","awaiting_payment").eq("payment_reference",session.id),
-      admin.from("buildpulse_billing_invoices").update({status:"void",updated_at:now}).eq("order_id",orderId).eq("payment_reference",session.id)
+      admin.from("buildpulse_ad_orders").update({status:"draft",payment_reference:null,paid_at:null,updated_at:now}).eq("id",orderId).in("status",["awaiting_payment","payment_detected"]).eq("payment_reference",session.id),
+      admin.from("buildpulse_billing_invoices").update({status:"open",payment_reference:null,updated_at:now,metadata:{stripe_checkout_session_id:session.id,stripe_state:state}}).eq("order_id",orderId).eq("payment_reference",session.id)
     ]);
-    return NextResponse.json({ok:true,state:"expired"});
+    return NextResponse.json({ok:true,state});
   }
 
   if(!["checkout.session.completed","checkout.session.async_payment_succeeded"].includes(type))return NextResponse.json({ok:true,ignored:true});
