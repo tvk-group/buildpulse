@@ -1,11 +1,10 @@
-import { getServerEnv, getPublicEnv } from "@/config/env";
 import { createHmac, timingSafeEqual } from "crypto";
 
 const TOKEN_VERSION = "v1";
 const TOKEN_TTL_DAYS = 365 * 3;
 
 function getUnsubscribeSecret(): string | null {
-  const secret = getServerEnv().MARKETING_UNSUBSCRIBE_SECRET?.trim();
+  const secret = process.env.MARKETING_UNSUBSCRIBE_SECRET?.trim();
   return secret && secret.length >= 16 ? secret : null;
 }
 
@@ -27,11 +26,7 @@ function signPayload(payload: string, secret: string): string {
 }
 
 function getSiteOrigin(): string {
-  return (
-    getPublicEnv().NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    getPublicEnv().NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
-    "https://www.entelekron.io"
-  );
+  return process.env.NEXT_PUBLIC_BUILDPULSE_ORIGIN?.replace(/\/$/, "") || "https://buildpulse.news";
 }
 
 export function buildMarketingUnsubscribeUrl(
@@ -47,7 +42,7 @@ export function buildMarketingUnsubscribeUrl(
   const signature = signPayload(payload, secret);
   const token = base64UrlEncode(`${payload}:${signature}`);
 
-  return `${getSiteOrigin()}/presale/${locale}/unsubscribe?token=${encodeURIComponent(token)}`;
+  return `${getSiteOrigin()}/unsubscribe?token=${encodeURIComponent(token)}&locale=${encodeURIComponent(locale)}`;
 }
 
 export function verifyMarketingUnsubscribeToken(
