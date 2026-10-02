@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
-import {createAdminClient} from "@/lib/supabase/admin";
 
 export const dynamic="force-dynamic";
 export const metadata={title:"BuildPulse Invoice",description:"BuildPulse advertising invoice."};
@@ -12,15 +11,13 @@ export default async function InvoicePage({params}:{params:Promise<{invoiceNumbe
   const {data:{user}}=await supabase.auth.getUser();
   if(!user)redirect("/advertiser");
   const {invoiceNumber}=await params;
-  const admin=createAdminClient();
-  if(!admin)redirect("/advertiser");
-  const {data:invoice,error}=await admin.from("buildpulse_billing_invoices")
+  const {data:invoice,error}=await supabase.from("buildpulse_billing_invoices")
     .select("invoice_number,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,amount_usd,currency,payment_method,payment_reference,status,issued_at,paid_at,order_id")
     .eq("invoice_number",decodeURIComponent(invoiceNumber))
     .eq("user_id",user.id)
     .maybeSingle();
   if(error||!invoice)notFound();
-  const {data:order}=await admin.from("buildpulse_ad_orders")
+  const {data:order}=await supabase.from("buildpulse_ad_orders")
     .select("headline,copy_text,destination_url,status,created_at")
     .eq("id",invoice.order_id)
     .eq("user_id",user.id)
