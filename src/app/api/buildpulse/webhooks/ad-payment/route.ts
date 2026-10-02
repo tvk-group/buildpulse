@@ -11,11 +11,30 @@ export async function POST(req:Request){
  const {data:seen}=await admin.from("buildpulse_ad_payment_events").select("id,state").eq("provider_event_key",parsed.data.eventKey).maybeSingle();if(seen)return NextResponse.json({ok:true,idempotent:true,state:seen.state});
  const {data:quote}=await admin.from("buildpulse_ad_payment_quotes").select("id,asset,network,expected_amount,state,expires_at,required_confirmations").eq("order_id",parsed.data.orderId).in("state",["open","observed"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
  if(!quote)return NextResponse.json({ok:false,error:"open_quote_not_found"},{status:409});
- const matches=quote.asset.toUpperCase()===parsed.data.asset.toUpperCase()&&quote.network.toLowerCase()===parsed.data.network.toLowerCase();const sufficient=parsed.data.amount>=Number(quote.expected_amount);const notExpired=Date.parse(quote.expires_at)>=Date.now();
- const enoughConfirmations=parsed.data.confirmations>=Number(quote.required_confirmations??1);const acceptedState=parsed.data.state==="confirmed"&&(!matches||!sufficient||!notExpired)?"rejected":parsed.data.state==="confirmed"&&!enoughConfirmations?"observed":parsed.data.state;
- const {error:eventError}=await admin.from("buildpulse_ad_payment_events").insert({order_id:parsed.data.orderId,provider_event_key:parsed.data.eventKey,crypto_asset:parsed.data.asset.toUpperCase(),crypto_network:parsed.data.network,tx_hash:parsed.data.txHash??null,observed_amount:parsed.data.amount,confirmations:parsed.data.confirmations,state:acceptedState,metadata:{quote_id:quote.id,asset_network_match:matches,sufficient_amount:sufficient,quote_unexpired:notExpired,required_confirmations:quote.required_confirmations,confirmation_threshold_met:enoughConfirmations}});
+ const matches=quote.asset.toUpperCase()===parsed.data.asset.toUpperCase()&&quote.network.toLowerCase()===parsed.data.network.toLowerCase();
+ const sufficient=parsed.data.amount>=Number(quote.expected_amount),notExpired=Date.parse(quote.expires_at)>=Date.now();
+ const enoughConfirmations=parsed.data.confirmations>=Number(quote.required_confirmations??1);
+ const acceptedState=parsed.data.state==="confirmed"&&(!matches||!sufficient||!notExpired)?"rejected":parsed.data.state==="confirmed"&&!enoughConfirmations?"observed":parsed.data.state;
+ const {error:eventError}=await admin.from("buildpulse_ad_payment_events").insert({order_id:parsed.data.orderId,provider_event_key:parsed.data.eventKey,crypto_asset:parsed.data.asset.toUpperCase(),crypto_network:parsed.data.network,tx_hash:parsed.data.txHash??null,observed_amount:parsed.data.amount,confirmations:parsed.data.confirmations,state:acceptedState,metadata:{quote_id:quote.id,asset_network_match:matches,sufficient_amount:sufficient,quote_unexpired:notExpired,required_confirmations:quote.required_confirmations,confirmation_threshold_met:enoughConfirmations,provider:"crypto_observer"}});
  if(eventError)return NextResponse.json({ok:false,error:"event_persistence_failed"},{status:500});
- if(acceptedState==="observed"){await admin.from("buildpulse_ad_payment_quotes").update({state:"observed"}).eq("id",quote.id).eq("state","open");await admin.from("buildpulse_ad_orders").update({status:"payment_detected",paid_tx_hash:parsed.data.txHash??null,updated_at:new Date().toISOString()}).eq("id",parsed.data.orderId).eq("status","awaiting_payment")}
- if(acceptedState==="confirmed"){await admin.from("buildpulse_ad_payment_quotes").update({state:"confirmed"}).eq("id",quote.id);await admin.from("buildpulse_ad_orders").update({status:"review",paid_tx_hash:parsed.data.txHash??null,updated_at:new Date().toISOString()}).eq("id",parsed.data.orderId).in("status",["awaiting_payment","payment_detected"])}
+ const now=new Date().toISOString();
+ if(acceptedState==="observed"){
+   await admin.from("buildpulse_ad_payment_quotes").update({state:"observed"}).eq("id",quote.id).eq("state","open");
+   await admin.from("buildpulse_ad_orders").update({status:"payment_detected",paid_tx_hash:parsed.data.txHash??null,updated_at:now}).eq("id",parsed.data.orderId).eq("status","awaiting_payment");
+ }
+ if(acceptedState==="confirmed"){
+   await Promise.all([
+     admin.from("buildpulse_ad_payment_quotes").update({state:"confirmed"}).eq("id",quote.id),
+     admin.from("buildpulse_ad_orders").update({status:"review",paid_tx_hash:parsed.data.txHash??null,paid_at:now,payment_method:parsed.data.asset.toUpperCase(),payment_provider:"crypto",updated_at:now}).eq("id",parsed.data.orderId).in("status",["awaiting_payment","payment_detected"]),
+     admin.from("buildpulse_billing_invoices").update({status:"paid",paid_at:now,payment_method:parsed.data.asset.toUpperCase(),payment_reference:quote.id,updated_at:now,metadata:{tx_hash:parsed.data.txHash??null,asset:parsed.data.asset.toUpperCase(),network:parsed.data.network,amount:parsed.data.amount}}).eq("order_id",parsed.data.orderId)
+   ]);
+ }
+ if(acceptedState==="reorged"){
+   await Promise.all([
+     admin.from("buildpulse_ad_payment_quotes").update({state:"observed"}).eq("id",quote.id),
+     admin.from("buildpulse_billing_invoices").update({status:"open",paid_at:null,updated_at:now}).eq("order_id",parsed.data.orderId),
+     admin.from("buildpulse_ad_orders").update({status:"payment_detected",paid_at:null,updated_at:now}).eq("id",parsed.data.orderId).eq("status","review")
+   ]);
+ }
  return NextResponse.json({ok:true,state:acceptedState,advancedToReview:acceptedState==="confirmed"});
 }
