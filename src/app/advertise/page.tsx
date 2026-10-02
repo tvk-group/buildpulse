@@ -6,11 +6,8 @@ export const dynamic="force-dynamic";
 export const metadata={title:"Advertise with BuildPulse",description:"Self-service advertising inventory for BuildPulse Global Technology & Digital Intelligence."};
 
 export default async function Advertise(){
-  const {url,key}=getSupabasePublicConfig();
-  const publicDb=createSupabaseClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
-  const {data}=await publicDb.from("buildpulse_ad_products")
-    .select("code,name,placement,width_px,height_px,max_copy_chars,price_usd,duration_days")
-    .eq("active",true).order("price_usd");
+  const {url,key,configured}=getSupabasePublicConfig();
+  const data=configured?(await createSupabaseClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}}).from("buildpulse_ad_products").select("code,name,placement,width_px,height_px,max_copy_chars,price_usd,duration_days").eq("active",true).order("price_usd")).data:[];
   return <main className="min-h-screen bg-slate-950 text-white"><section className="mx-auto max-w-6xl px-6 py-20">
     <p className="text-xs font-black tracking-[.2em] text-slate-400">TVK BUILDPULSE // ADVERTISING</p>
     <h1 className="mt-4 max-w-4xl text-5xl font-black">Reach readers following the infrastructure of the digital economy.</h1>
