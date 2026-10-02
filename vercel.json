@@ -1,1 +1,30 @@
-{"crons":[{"path":"/api/cron/buildpulse-publish","schedule":"*/15 * * * *"},{"path":"/api/cron/buildpulse-ingest","schedule":"17 * * * *"},{"path":"/api/cron/buildpulse-build-edition?type=daily","schedule":"0 6 * * *"},{"path":"/api/cron/buildpulse-build-edition?type=weekly","schedule":"0 7 * * 1"},{"path":"/api/cron/buildpulse-ad-activation","schedule":"*/15 * * * *"},{"path":"/api/cron/buildpulse-delivery-reconcile","schedule":"*/15 * * * *"}]}
+{
+  "crons": [
+    {
+      "path": "/api/cron/buildpulse-publish",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/buildpulse-ingest",
+      "schedule": "17 * * * *"
+    },
+    {
+      "path": "/api/cron/buildpulse-build-edition?type=daily",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/buildpulse-build-edition?type=weekly",
+      "schedule": "0 7 * * 1"
+    },
+    {
+      "path": "/api/cron/buildpulse-ad-activation",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/buildpulse-delivery-reconcile",
+      "schedule": "*/15 * * * *"
+    }
+  ],
+  "framework": "nextjs",
+  "outputDirectory": ".next"
+}
