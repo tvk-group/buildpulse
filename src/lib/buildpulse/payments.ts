@@ -20,7 +20,7 @@ export function configuredCryptoRails():Rail[]{
   const rails:Rail[]=[
     {asset:"ETH",network:"Ethereum",destination:env.BUILDPULSE_ETH_ADDRESS??"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:8,requiredConfirmations:12},
     {asset:"BTC",network:"Bitcoin",destination:env.BUILDPULSE_BTC_ADDRESS??"bc1q6gyckg3ya4zwhslnr3regspj8pk5anyaz50ynl",decimals:8,requiredConfirmations:3},
-    {asset:"USDC",network:env.BUILDPULSE_USDC_NETWORK??"Base",destination:env.BUILDPULSE_USDC_ADDRESS??"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:6,requiredConfirmations:12},
+    {asset:"USDC",network:env.BUILDPULSE_USDC_NETWORK??"Base",destination:env.BUILDPULSE_USDC_ADDRESS??"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:6,requiredConfirmations:20},
     {asset:"USDT",network:env.BUILDPULSE_USDT_NETWORK??"Ethereum",destination:env.BUILDPULSE_USDT_ADDRESS??"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:6,requiredConfirmations:12},
     {asset:"XRP",network:"XRPL",destination:env.BUILDPULSE_XRP_ADDRESS??"rPoLiQPahRkwi9dkhiCgw98x84fQCviT7Z",memo:env.BUILDPULSE_XRP_DESTINATION_TAG??"1234",decimals:6,requiredConfirmations:1},
   ];
