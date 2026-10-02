@@ -88,7 +88,7 @@ async function build(admin:any,type:"daily"|"weekly"){
 }
 async function list(admin:any){
  const {data,error}=await admin.from("buildpulse_editions")
-  .select("id,edition_type,subject,preheader,slug,status,revision_number,founder_review_status,founder_review_notes,founder_approved_revision,scheduled_at,published_at,created_at,updated_at,generation_error")
+  .select("id,edition_type,subject,preheader,slug,status,body_html,revision_number,founder_review_status,founder_review_notes,founder_approved_revision,scheduled_at,published_at,created_at,updated_at,generation_error")
   .order("created_at",{ascending:false}).limit(100);
  if(error)throw error;return data??[];
 }
