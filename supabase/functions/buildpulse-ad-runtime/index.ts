@@ -60,12 +60,34 @@ Deno.serve(async(req:Request)=>{
     const url=new URL(req.url);
     const action=url.searchParams.get("action")??"";
     const orderId=url.searchParams.get("order")??"";
-    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return reply({ok:false,error:"invalid_order"},400);
 
     const supabaseUrl=Deno.env.get("SUPABASE_URL")??"";
     const service=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
     if(!supabaseUrl||!service)return reply({ok:false,error:"service_not_configured"},503);
     const admin=createClient(supabaseUrl,service,{auth:{persistSession:false,autoRefreshToken:false}});
+
+    if(action==="lookup"){
+      const placement=String(url.searchParams.get("placement")??"");
+      if(!["homepage","archive","edition_top","edition_inline","edition_footer","newsletter"].includes(placement))return reply({ok:false,error:"invalid_placement"},400);
+      const now=new Date().toISOString();
+      const {data:products,error:productError}=await admin.from("buildpulse_ad_products").select("id,width_px,height_px").eq("placement",placement).eq("active",true);
+      if(productError)throw productError;
+      if(!products?.length)return reply({ok:true,ad:null});
+      const {data:ad,error:adError}=await admin.from("buildpulse_ad_orders")
+        .select("id,headline,copy_text,product_id,starts_at,ends_at")
+        .eq("status","active").in("product_id",products.map((p:any)=>p.id))
+        .lte("starts_at",now).gte("ends_at",now).order("created_at",{ascending:true}).limit(1).maybeSingle();
+      if(adError)throw adError;
+      if(!ad)return reply({ok:true,ad:null});
+      const product=products.find((p:any)=>p.id===ad.product_id);
+      const {data:creative}=await admin.from("buildpulse_ad_creatives").select("id").eq("order_id",ad.id).eq("review_state","approved").limit(1).maybeSingle();
+      return reply({ok:true,ad:{
+        orderId:ad.id,headline:ad.headline,copyText:ad.copy_text,productId:ad.product_id,
+        widthPx:product?.width_px??null,heightPx:product?.height_px??null,hasCreative:Boolean(creative)
+      }});
+    }
+
+    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return reply({ok:false,error:"invalid_order"},400);
     const order=await getActiveOrder(admin,orderId);
     if(!order)return reply({ok:false,error:"active_ad_not_found"},404);
 
