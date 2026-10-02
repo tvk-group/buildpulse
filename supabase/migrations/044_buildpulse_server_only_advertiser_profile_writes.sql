@@ -1,0 +1,3 @@
+REVOKE INSERT,UPDATE,DELETE ON buildpulse_advertiser_profiles FROM authenticated;
+DROP POLICY IF EXISTS buildpulse_advertiser_profiles_own_create ON buildpulse_advertiser_profiles;
+DROP POLICY IF EXISTS buildpulse_advertiser_profiles_own_update ON buildpulse_advertiser_profiles;
