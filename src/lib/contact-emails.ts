@@ -1,13 +1,13 @@
 /**
- * Canonical public contact addresses (Proton Mail · entelekron.io).
+ * Canonical fallback contact addresses for the standalone BuildPulse service.
  * Display names are set in Proton — not in code.
  */
 export const CONTACT_EMAILS = {
-  hq: "hq@entelekron.io",
-  contact: "contact@entelekron.io",
-  invest: "invest@entelekron.io",
-  partner: "partner@entelekron.io",
-  support: "support@entelekron.io",
+  hq: "hq@tvk.group",
+  contact: "hq@tvk.group",
+  invest: "hq@tvk.group",
+  partner: "hq@tvk.group",
+  support: "hq@tvk.group",
   legal: "legal@tvk.group",
 } as const;
 
