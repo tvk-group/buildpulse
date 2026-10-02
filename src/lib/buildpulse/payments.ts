@@ -1,0 +1,51 @@
+import { getServerEnv } from "@/config/env";
+
+export type BuildPulseCryptoAsset = "ETH"|"BTC"|"USDC"|"USDT"|"XRP";
+
+export const buildPulseInvoiceIssuer = {
+  name: "TVK LABS & TECHNOLOGIES LTD",
+  companyNumber: "16481808",
+  registeredOffice: "Office 23, Unit 5, 399-405 Oxford Street, London, United Kingdom, W1C 2BU",
+} as const;
+
+export function invoiceNumberForOrder(orderId:string, createdAt?:string){
+  const year = new Date(createdAt ?? Date.now()).getUTCFullYear();
+  return `BP-${year}-${orderId.replaceAll("-","").slice(0,12).toUpperCase()}`;
+}
+
+type Rail={asset:BuildPulseCryptoAsset;network:string;destination:string;memo?:string;decimals:number;requiredConfirmations:number};
+
+export function configuredCryptoRails():Rail[]{
+  const env=getServerEnv();
+  const rails:Rail[]=[
+    {asset:"ETH",network:"Ethereum",destination:env.BUILDPULSE_ETH_ADDRESS??"",decimals:8,requiredConfirmations:12},
+    {asset:"BTC",network:"Bitcoin",destination:env.BUILDPULSE_BTC_ADDRESS??"",decimals:8,requiredConfirmations:3},
+    {asset:"USDC",network:env.BUILDPULSE_USDC_NETWORK??"Ethereum",destination:env.BUILDPULSE_USDC_ADDRESS??"",decimals:6,requiredConfirmations:12},
+    {asset:"USDT",network:env.BUILDPULSE_USDT_NETWORK??"Ethereum",destination:env.BUILDPULSE_USDT_ADDRESS??"",decimals:6,requiredConfirmations:12},
+    {asset:"XRP",network:"XRPL",destination:env.BUILDPULSE_XRP_ADDRESS??"",memo:env.BUILDPULSE_XRP_DESTINATION_TAG,decimals:6,requiredConfirmations:1},
+  ];
+  return rails.filter(r=>Boolean(r.destination));
+}
+
+export function getCryptoRail(asset:string){
+  return configuredCryptoRails().find(r=>r.asset===asset.toUpperCase());
+}
+
+export async function fetchUsdSpot(asset:BuildPulseCryptoAsset){
+  const base=(getServerEnv().BUILDPULSE_CRYPTO_RATE_API_BASE??"https://api.coinbase.com/v2/prices").replace(/\/$/,"");
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),6000);
+  try{
+    const response=await fetch(`${base}/${asset}-USD/spot`,{cache:"no-store",signal:controller.signal,headers:{"Accept":"application/json"}});
+    if(!response.ok)throw new Error("rate_provider_unavailable");
+    const body=await response.json() as {data?:{amount?:string}};
+    const rate=Number(body.data?.amount);
+    if(!Number.isFinite(rate)||rate<=0)throw new Error("invalid_market_rate");
+    return rate;
+  }finally{clearTimeout(timer)}
+}
+
+export function quoteAmount(usd:number, rate:number, decimals:number){
+  const factor=10**decimals;
+  return Math.ceil((usd/rate)*factor)/factor;
+}
