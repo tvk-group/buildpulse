@@ -1,0 +1,5 @@
+const DEFAULT_URL="https://www.entelekron.io/buildpulse/intelligence";
+export function buildPulseEmailInvitation(url=DEFAULT_URL):string{
+ const safe=/^https:\/\//i.test(url)?url:DEFAULT_URL;
+ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;border-top:1px solid #e2e8f0"><tr><td style="padding-top:18px"><p style="margin:0 0 7px;font-size:12px;font-weight:800;letter-spacing:.12em;color:#64748b">OPTIONAL · TVK BUILDPULSE</p><p style="margin:0 0 12px;font-size:14px;line-height:1.55;color:#475569">Would you like to receive BuildPulse Global Technology &amp; Digital Intelligence? Joining is optional and separate from this service message.</p><a href="${safe}" style="display:inline-block;padding:10px 14px;border-radius:8px;background:#0f172a;color:#fff;text-decoration:none;font-size:13px;font-weight:700">Choose BuildPulse email preferences</a><p style="margin:10px 0 0;font-size:11px;line-height:1.5;color:#64748b">This email does not subscribe you. Subscription requires your affirmative choice on the BuildPulse page.</p></td></tr></table>`;
+}
