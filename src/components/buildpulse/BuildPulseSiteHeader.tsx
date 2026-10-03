@@ -11,7 +11,7 @@ const groupDefs=[
  {label:"Culture",items:[["Sports","/sports"],["Arts","/arts"],["Marketplace","/marketplace"]]},
  {label:"About",items:[["Account","/account"],["About BuildPulse","/about"],["Contribute","/contribute"],["Advertise","/advertise"]]},
 ] as const;
-const langs=[["EN","English"],["DE","Deutsch"],["TR","Türkçe"],["FR","Français"],["ES","Español"],["IT","Italiano"],["PT","Português"],["NL","Nederlands"],["PL","Polski"],["RO","Română"],["EL","Ελληνικά"],["AR","العربية"],["ZH","中文"],["JA","日本語"],["KO","한국어"],["HI","हिन्दी"]];
+const langs=[["EN","English"],["DE","Deutsch"],["FR","Français"],["TR","Türkçe"],["ES","Español"],["IT","Italiano"],["PT","Português"],["RU","Русский"],["PL","Polski"],["NL","Nederlands"],["SV","Svenska"],["NO","Norsk"],["FI","Suomi"],["DA","Dansk"],["RO","Română"],["HU","Magyar"],["CS","Čeština"],["EL","Ελληνικά"],["BG","Български"],["UK","Українська"],["ZH","中文"],["JA","日本語"],["KO","한국어"],["AR","العربية"],["HI","हिन्दी"]];
 
 export function BuildPulseSiteHeader(){
  const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN"); const t=uiCopy(locale.toLowerCase()); const groups=groupDefs.map((g,gi)=>({...g,label:[t.news,t.intelligence,t.community,t.culture,t.about][gi],items:g.items.map(([n,h],ii)=>{const names=[[t.latest,t.local,t.world,t.technology,t.politics,t.economy],[t.markets,t.methodology],[t.social,t.blogs,t.people,t.connections],[t.sports,t.arts,t.marketplace],[t.account,t.aboutBp,t.contribute,t.advertise]][gi];return [names[ii]||n,h] as const})}));
