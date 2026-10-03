@@ -144,8 +144,8 @@
 - [ ] Licensed/verified indices, metals and global exchange feeds; never fabricate. Twelve Data/Finnhub market adapters and TradingView visualization are integrated; quote API now exposes provider, observation time and real-time/reference status, while full licensed global indices/metals coverage remains incomplete.
 - [x] Align ticker behavior consistently across BuildPulse pages — shared market tape consumes the normalized market endpoint and visibly labels source plus LIVE/REF freshness semantics.
 - [x] Intelligence subscriber dashboard/watchlists — authenticated /account/intelligence claims eligible signed-Stripe entitlements, exposes active/past-due/paused plan state, and persists bounded topic/watchlist, IANA delivery-time-zone, service-email and separate marketing-consent preferences with an audit event trail.
-- [ ] Public/licensed-data-only analysis; never sell MNPI/leaked/confidential information.
-- [ ] Forecast methodology, provenance, timestamps and uncertainty.
+- [x] Public/licensed-data-only analysis policy — the generation contract and public methodology restrict analytical inputs to public or properly licensed information and explicitly reject confidential, leaked, material non-public or unlawfully obtained information.
+- [x] Forecast methodology, provenance, timestamps and uncertainty — /markets/methodology publishes the standard, and the editorial generation contract requires source provenance plus forecast as-of time, horizon, material assumptions and uncertainty while prohibiting scenarios from being presented as observed facts.
 
 ## P1 — Email/delivery
 - [x] Brevo bulk/newsletter foundation.
