@@ -1,0 +1,4 @@
+create index if not exists idx_bp_billing_credit_notes_invoice on public.buildpulse_billing_credit_notes(invoice_id);
+create index if not exists idx_bp_billing_credit_notes_user on public.buildpulse_billing_credit_notes(user_id);
+create index if not exists idx_bp_crypto_accounting_evidence_quote on public.buildpulse_crypto_accounting_evidence(quote_id);
+create index if not exists idx_bp_crypto_accounting_evidence_user on public.buildpulse_crypto_accounting_evidence(user_id);
