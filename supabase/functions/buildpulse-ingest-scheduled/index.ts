@@ -36,7 +36,10 @@ Deno.serve(async(req:Request)=>{
     discovered+=items.length;
     for(const item of items.slice(0,100)){
       const normalized=normalize(item.title),hash=await sha256(normalized+"|"+item.summary);
-      const {data:dupe}=await admin.from("buildpulse_stories").select("id").or(`canonical_url.eq.${item.url},content_hash.eq.${hash}`).limit(1).maybeSingle();
+      const {data:urlDupe,error:urlDupeError}=await admin.from("buildpulse_stories").select("id").eq("canonical_url",item.url).limit(1).maybeSingle();
+      if(urlDupeError)throw urlDupeError;
+      let dupe=Boolean(urlDupe);
+      if(!dupe){const {data:hashDupe,error:hashDupeError}=await admin.from("buildpulse_stories").select("id").eq("content_hash",hash).limit(1).maybeSingle();if(hashDupeError)throw hashDupeError;dupe=Boolean(hashDupe)}
       if(dupe){rejected++;continue}
       const published=Number.isFinite(Date.parse(item.publishedAt))?new Date(item.publishedAt).toISOString():null;
       const age=published?Math.max(0,(Date.now()-Date.parse(published))/3600000):72,freshness=Math.max(0,100-age*2);
