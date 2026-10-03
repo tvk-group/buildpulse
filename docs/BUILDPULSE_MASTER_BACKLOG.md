@@ -117,7 +117,7 @@
 
 ## P1 — Advertising/affiliate
 - [x] Advertising catalog and Stripe links foundations.
-- [ ] Resolve duplicate newsletter placement/product ambiguity.
+- [x] Resolve duplicate newsletter placement/product ambiguity — unused duplicate NEWSLETTER_SPONSOR was deactivated after confirming zero orders; NEWSLETTER_PRIMARY is the single active $750/day newsletter sponsor SKU.
 - [ ] Full advertiser self-service campaign workflow and review.
 - [ ] Clearly label Sponsored placements.
 - [ ] Contextual/consent targeting only.
