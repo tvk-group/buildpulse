@@ -7,7 +7,7 @@ function fixtureInput(v:unknown){
  const sources=Array.isArray(f.sources)?f.sources.filter((x):x is string=>typeof x==="string").slice(0,12):[];
  return {input:`Editorial focus: ${focus}\n\n${sources.map((u,i)=>`[${i+1}] Evaluation source\nSource: ${u}`).join("\n\n")}`,sources};
 }
-export async function runBuildPulseAiEvaluations(promptKey:string,runBy:string){
+export async function runBuildPulseAiEvaluations(promptKey:string,runBy:string|null){
  const db=createAdminClient();if(!db)throw new Error("Supabase admin unavailable");
  const {data:prompt,error:pe}=await db.from("buildpulse_ai_prompt_versions").select("version,task").eq("prompt_key",promptKey).eq("status","active").maybeSingle();
  if(pe||!prompt)throw new Error("active_prompt_unavailable");
