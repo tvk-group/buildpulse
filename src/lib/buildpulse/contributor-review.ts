@@ -1,0 +1,3 @@
+export type ContributorRiskFlag={code:string;severity:"low"|"medium"|"high";message:string;evidence?:string};export type ContributorReview={decision:"editor_review_required";flags:ContributorRiskFlag[];checkedAt:string;reviewer:"SOVRA_AI_PRECHECK"};
+export const CONTRIBUTOR_REVIEW_CHECKS=["source_coverage","unsupported_claims","quotation_attribution","rights_and_originality","defamation_risk","privacy_and_personal_data","undisclosed_promotion","material_conflicts","financial_claims","fabricated_evidence_signals","citation_consistency","prohibited_content"] as const;
+export function requireHumanEditorialReview(flags:ContributorRiskFlag[]):ContributorReview{return{decision:"editor_review_required",flags,checkedAt:new Date().toISOString(),reviewer:"SOVRA_AI_PRECHECK"}}
