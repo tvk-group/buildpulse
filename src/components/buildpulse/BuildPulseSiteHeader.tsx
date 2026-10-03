@@ -9,7 +9,7 @@ const groups=[
  {label:"Intelligence",items:[["Build with AI","/build-with-ai"],["Subscriptions","/subscriptions"],["Markets","/markets"],["Methodology","/methodology"]]},
  {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"]]},
  {label:"Culture",items:[["Sports","/sports"],["Arts","/arts"],["Marketplace","/marketplace"]]},
- {label:"About",items:[["About BuildPulse","/about"],["Contribute","/contribute"],["Advertise","/advertise"]]},
+ {label:"About",items:[["Account","/account"],["About BuildPulse","/about"],["Contribute","/contribute"],["Advertise","/advertise"]]},
 ] as const;
 const langs=[["EN","English"],["DE","Deutsch"],["TR","Türkçe"],["FR","Français"],["ES","Español"],["IT","Italiano"],["PT","Português"],["NL","Nederlands"],["PL","Polski"],["RO","Română"],["EL","Ελληνικά"],["AR","العربية"],["ZH","中文"],["JA","日本語"],["KO","한국어"],["HI","हिन्दी"]];
 
@@ -31,7 +31,7 @@ export function BuildPulseSiteHeader(){
       </div>
      </div>)}
     </nav>
-    <label className="sr-only" htmlFor="bp-language">Language</label>
+    <Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 md:block">Account</Link><label className="sr-only" htmlFor="bp-language">Language</label>
     <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-black/20 bg-transparent px-2 py-2 text-xs font-bold sm:block" aria-label="Language">
      {langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}
     </select>
