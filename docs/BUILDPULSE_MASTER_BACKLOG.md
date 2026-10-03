@@ -7,7 +7,7 @@
 - [x] Restore Next.js/Vercel production build to READY — fixed malformed/unclosed Arts contribute component; production deployment dpl_HbuDava2HYUqrrLkrNmE8WHkgZc6 READY at c1cecddd70fa3792b778d02f8cb60bed37e414a8.
 - [ ] Verify buildpulse.news serves current production SHA and complete browser/mobile route QA.
 - [ ] Verify mobile navigation, PWA install control and visible update flow on production.
-- [x] Repair secure cron authentication for /api/cron/buildpulse-ingest; never fail-open — current route requires configured CRON_SECRET and production ingestion succeeded hourly on 2026-10-03.
+- [x] Repair secure scheduled ingestion without fail-open — Vercel cron authentication now passes but its runtime lacks Supabase admin access; a service-authenticated Supabase pg_cron + pg_net → Edge fallback is ACTIVE hourly and production ingestion completed successfully on 2026-10-03.
 - [ ] Run production route, security, accessibility, performance, SEO and PWA checks.
 
 ## P0 — Identity, workforce and control plane
