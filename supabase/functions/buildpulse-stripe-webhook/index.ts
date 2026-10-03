@@ -146,6 +146,39 @@ async function handleDispute(admin:any,event:any,dispute:any){
   return {ignored:"unsupported_dispute_event"};
 }
 
+async function settleSubscriptionCheckout(admin:any,session:any){
+  const planTag=String(session?.metadata?.buildpulse_subscription_plan||"");
+  if(!planTag)return {ignored:"not_buildpulse_subscription"};
+  const [planCode,billingInterval]=planTag.endsWith("_annual")?[planTag.replace("_annual",""),"year"]:[planTag.replace("_monthly",""),"month"];
+  const normalizedPlan=planCode==="pro"?"professional":planCode;
+  const {data:plan}=await admin.from("buildpulse_subscription_plans").select("*").eq("code",normalizedPlan).eq("active",true).maybeSingle();
+  if(!plan)return {ignored:"subscription_plan_not_found"};
+  const expectedPrice=billingInterval==="year"?plan.stripe_annual_price_id:plan.stripe_monthly_price_id;
+  const sessionPrice=typeof session?.line_items?.data?.[0]?.price==="string"?session.line_items.data[0].price:session?.line_items?.data?.[0]?.price?.id;
+  if(sessionPrice&&sessionPrice!==expectedPrice)return {ignored:"subscription_price_mismatch"};
+  const email=String(session?.customer_details?.email||session?.customer_email||"").trim().toLowerCase();
+  if(!email)return {ignored:"subscription_email_missing"};
+  const customer=typeof session.customer==="string"?session.customer:session.customer?.id??null;
+  const subscription=typeof session.subscription==="string"?session.subscription:session.subscription?.id??null;
+  if(!subscription)return {ignored:"subscription_id_missing"};
+  const now=new Date().toISOString();
+  const {error}=await admin.from("buildpulse_intelligence_subscriptions").upsert({
+    email,plan_code:normalizedPlan,billing_interval:billingInterval,status:session.payment_status==="paid"||session.payment_status==="no_payment_required"?"active":"pending",
+    stripe_customer_id:customer,stripe_subscription_id:subscription,stripe_checkout_session_id:session.id,updated_at:now
+  },{onConflict:"stripe_subscription_id"});
+  if(error)throw error;
+  return {subscriptionActivated:true,plan:normalizedPlan,billingInterval};
+}
+async function syncSubscription(admin:any,subscription:any){
+  const id=String(subscription?.id||"");if(!id)return {ignored:"subscription_id_missing"};
+  const stripeStatus=String(subscription?.status||"");
+  const status=stripeStatus==="active"||stripeStatus==="trialing"?"active":stripeStatus==="past_due"||stripeStatus==="unpaid"?"past_due":stripeStatus==="paused"?"paused":stripeStatus==="canceled"?"cancelled":"pending";
+  const periodEnd=subscription?.current_period_end?new Date(Number(subscription.current_period_end)*1000).toISOString():null;
+  const cancelledAt=subscription?.canceled_at?new Date(Number(subscription.canceled_at)*1000).toISOString():null;
+  const {error}=await admin.from("buildpulse_intelligence_subscriptions").update({status,current_period_end:periodEnd,cancelled_at:cancelledAt,updated_at:new Date().toISOString()}).eq("stripe_subscription_id",id);
+  if(error)throw error;return {subscriptionSynced:true,status};
+}
+
 Deno.serve(async(req:Request)=>{
   if(req.method!=="POST")return reply({ok:false,error:"method_not_allowed"},405);
   try{
@@ -160,10 +193,12 @@ Deno.serve(async(req:Request)=>{
     try{event=JSON.parse(raw)}catch{return reply({ok:false,error:"invalid_json"},400)}
     const type=String(event?.type??""),object=event?.data?.object??{};
     let result:any={ignored:"unsupported_event"};
-    if(type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")result=await settleCheckout(admin,event,object);
+    if((type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")&&object?.mode==="subscription")result=await settleSubscriptionCheckout(admin,object);
+    else if(type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")result=await settleCheckout(admin,event,object);
     else if(type==="checkout.session.async_payment_failed"||type==="checkout.session.expired")result={ignored:type};
     else if(type==="charge.refunded")result=await handleRefund(admin,event,object);
     else if(type==="charge.dispute.created"||type==="charge.dispute.closed")result=await handleDispute(admin,event,object);
+    else if(type==="customer.subscription.updated"||type==="customer.subscription.deleted")result=await syncSubscription(admin,object);
     return reply({ok:true,...result});
   }catch(error){
     console.error("buildpulse_stripe_webhook_error",error);
