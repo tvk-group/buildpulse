@@ -48,7 +48,7 @@ export default async function InvoicePage({params}:{params:Promise<{invoiceNumbe
       </section>
       <footer className="flex flex-wrap gap-3 border-t pt-6 print:hidden">
         <Link href="/advertiser" className="rounded-xl border px-4 py-2 text-sm font-bold">← Advertiser portal</Link>
-        <p className="text-xs text-slate-500">Use your browser’s Print command to print or save this invoice as PDF.</p>
+        <button type="button" onClick={()=>window.print()} className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-bold text-white">Print / Save PDF</button>\n        <p className="text-xs text-slate-500">This print-optimized invoice can be saved as PDF from the browser print dialog.</p>
       </footer>
     </article>
   </main>
