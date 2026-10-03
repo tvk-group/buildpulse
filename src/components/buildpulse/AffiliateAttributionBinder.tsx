@@ -1,0 +1,1 @@
+"use client";import {useEffect} from "react";export function AffiliateAttributionBinder(){useEffect(()=>{fetch("/api/account/affiliate-attribution",{method:"POST",credentials:"same-origin"}).catch(()=>{})},[]);return null}
