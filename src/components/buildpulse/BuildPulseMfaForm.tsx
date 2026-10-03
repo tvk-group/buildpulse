@@ -1,5 +1,5 @@
 "use client";
-import {FormEvent,useEffect,useMemo,useState} from "react";
+import {FormEvent,useEffect,useState} from "react";
 import {createClient} from "@/utils/supabase/client";
 
 type Factor={id:string;friendly_name?:string|null;status?:string};
@@ -22,10 +22,10 @@ export default function BuildPulseMfaForm({nextPath}:{nextPath:string}){
     if(created.error){setMessage(created.error.message);return}
     setEnroll({id:created.data.id,qr:created.data.totp.qr_code,secret:created.data.totp.secret});
     setMessage("Scan the QR code, then enter the 6-digit code to complete enrollment.");
-  })()},[nextPath,supabase]);
+  })()},[nextPath]);
 
   async function verify(e:FormEvent<HTMLFormElement>){
-    e.preventDefault();const fd=new FormData(e.currentTarget),code=String(fd.get("code")??"").trim();
+    e.preventDefault();const supabase=createClient();const fd=new FormData(e.currentTarget),code=String(fd.get("code")??"").trim();
     const factorId=factor?.id??enroll?.id;if(!factorId||!/^[0-9]{6,8}$/.test(code)){setMessage("Enter a valid authenticator code.");return}
     setBusy(true);setMessage("Verifying…");
     const result=await supabase.auth.mfa.challengeAndVerify({factorId,code});
