@@ -1,0 +1,2 @@
+alter table public.buildpulse_technology_articles drop constraint if exists buildpulse_technology_articles_topic_check;
+alter table public.buildpulse_technology_articles add constraint buildpulse_technology_articles_topic_check check(topic in ('ai','cybersecurity','developer-infrastructure','blockchain-infrastructure','digital-economy','tvk-ecosystem','entelekron','sovereign-ai','energiemind','presale-technology'));
