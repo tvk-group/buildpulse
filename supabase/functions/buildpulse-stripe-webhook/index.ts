@@ -113,6 +113,27 @@ async function settleCheckout(admin:any,event:any,session:any){
   const affiliate=await bindAffiliateAdConversion(admin,order.user_id,order.id,amountUsd);
   return {settled:true,orderId,affiliate};
 }
+async function handleCheckoutFailure(admin:any,event:any,session:any){
+  const orderId=String(session.client_reference_id||session?.metadata?.buildpulse_order_id||"");
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return {ignored:"missing_order_reference"};
+  const {data:seen}=await admin.from("buildpulse_ad_payment_events").select("id").eq("provider_event_key",`stripe:${event.id}`).maybeSingle();
+  if(seen)return {idempotent:true};
+  const {data:order,error}=await admin.from("buildpulse_ad_orders").select("id,status,amount_usd").eq("id",orderId).maybeSingle();
+  if(error||!order)return {ignored:"order_not_found"};
+  if(["review","approved","scheduled","active","completed"].includes(order.status))return {ignored:"order_already_settled"};
+  const paymentIntent=typeof session.payment_intent==="string"?session.payment_intent:session.payment_intent?.id??null;
+  const state=event.type==="checkout.session.expired"?"checkout_expired":"async_payment_failed";
+  await appendPaymentEvent(admin,event,order.id,"rejected",paymentIntent,Number(session.amount_total??0)/100,{
+    kind:state,checkout_session_id:session.id,payment_status:session.payment_status??null
+  });
+  const now=new Date().toISOString();
+  await Promise.all([
+    admin.from("buildpulse_ad_orders").update({status:"draft",payment_reference:null,updated_at:now}).eq("id",order.id).in("status",["awaiting_payment","payment_detected"]),
+    admin.from("buildpulse_billing_invoices").update({status:"void",updated_at:now,metadata:{stripe_checkout_session_id:session.id,stripe_event_id:event.id,failure_state:state}}).eq("order_id",order.id).eq("status","open")
+  ]);
+  return {checkoutFailed:true,state,orderId};
+}
+
 async function paymentOrderByIntent(admin:any,paymentIntent:string){
   const {data:event}=await admin.from("buildpulse_ad_payment_events").select("order_id")
     .eq("crypto_network","stripe").eq("tx_hash",paymentIntent).eq("state","confirmed")
@@ -300,7 +321,7 @@ Deno.serve(async(req:Request)=>{
     if((type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")&&object?.mode==="subscription")result=await settleSubscriptionCheckout(admin,object);
     else if((type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")&&String(object?.metadata?.buildpulse_kind||"")==="contributor_submission")result=await settleContributorCheckout(admin,object);
     else if(type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")result=await settleCheckout(admin,event,object);
-    else if(type==="checkout.session.async_payment_failed"||type==="checkout.session.expired")result={ignored:type};
+    else if(type==="checkout.session.async_payment_failed"||type==="checkout.session.expired")result=await handleCheckoutFailure(admin,event,object);
     else if(type==="charge.refunded")result=await handleRefund(admin,event,object);
     else if(type==="charge.dispute.created"||type==="charge.dispute.closed")result=await handleDispute(admin,event,object);
     else if(type==="customer.subscription.updated"||type==="customer.subscription.deleted")result=await syncSubscription(admin,object);
