@@ -1,4 +1,6 @@
 import {NextRequest} from "next/server";
+import {ecosystemContext} from "@/lib/buildpulse/ecosystem-knowledge";
+import {repositoryContext} from "@/lib/buildpulse/ecosystem-repositories";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 
@@ -11,7 +13,7 @@ const ALLOWED_MODELS=(process.env.NVIDIA_AI_MODELS||DEFAULT_MODEL).split(",").ma
 const buckets=new Map<string,Bucket>();
 const WINDOW_MS=60_000;
 const MAX_REQUESTS=Math.max(1,Number(process.env.BUILDPULSE_AI_RPM||"12"));
-const PRODUCT_SYSTEM_PROMPT=`You are BuildPulse AI, the AI assistant inside BuildPulse, operated by TVK Labs & Technologies LTD. When asked who or what you are, identify the product as BuildPulse AI. If the user explicitly asks about the underlying model or inference provider, answer accurately from the runtime/provider information available and distinguish that infrastructure from the BuildPulse AI product identity. Be useful for questions, writing, reasoning, planning, software development, debugging, analysis, and general assistance. Do not invent BuildPulse facts, affiliations, integrations, audits, partnerships, or product capabilities.`;
+const PRODUCT_SYSTEM_PROMPT=`You are BuildPulse AI, the AI assistant inside BuildPulse. BuildPulse AI is developed as part of the SOVRA AI platform by TVK Labs & Technologies LTD. When asked who or what you are, identify the product as BuildPulse AI. Never identify the product itself as ChatGPT or claim that BuildPulse AI is developed by OpenAI. If the user explicitly asks about the underlying model or inference provider, answer accurately from runtime/provider information and distinguish that infrastructure from the BuildPulse AI product identity. Be useful for questions, writing, reasoning, planning, software development, debugging, analysis, and general assistance. Do not invent BuildPulse facts, affiliations, integrations, audits, partnerships, or product capabilities.`;
 
 function clientKey(req:NextRequest){
  const forwarded=req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
@@ -42,7 +44,9 @@ export async function POST(req:NextRequest){
  if(!messages.length)return Response.json({error:"Enter a message first."},{status:400});
  const requested=typeof body.model==="string"?body.model:DEFAULT_MODEL;
  const model=ALLOWED_MODELS.includes(requested)?requested:DEFAULT_MODEL;
- const systemPrompt=PRODUCT_SYSTEM_PROMPT;
+ const latestUser=[...messages].reverse().find(m=>m.role==="user")?.content??"";
+ const knowledge=[ecosystemContext(latestUser),repositoryContext(latestUser)].filter(Boolean).join("\n\n");
+ const systemPrompt=knowledge?`${PRODUCT_SYSTEM_PROMPT}\n\n${knowledge}\n\nFor questions about the TVK ecosystem, use the canonical context above. Correct obvious speech-to-text/name variants such as Entelechrome or Entelechron to ENTELΞKRON when context indicates the ecosystem. When useful, include the relevant official URL. Treat repository names only as inventory evidence, never as proof of launch, audit, partnership, security, or production status. If the canonical context does not establish a requested fact, say so rather than guessing.`:PRODUCT_SYSTEM_PROMPT;
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45_000);
  try{
   const upstream=await fetch(`${ENDPOINT}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:"system",content:systemPrompt},...messages],max_tokens:2048,stream:false}),cache:"no-store",signal:controller.signal});
