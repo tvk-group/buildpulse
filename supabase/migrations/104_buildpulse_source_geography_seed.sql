@@ -1,0 +1,3 @@
+update public.buildpulse_sources set country_code='TR',source_language='tr',geographic_scope='country' where name='Anadolu Agency Türkiye';
+update public.buildpulse_sources set source_language='en',geographic_scope='global' where name='Anadolu Agency English';
+update public.buildpulse_sources set source_language='en',geographic_scope='global' where name in ('AWS Security Blog','Cloudflare Blog','Ethereum Foundation Blog','GitHub Blog','Google AI Blog','Microsoft Security Blog','OpenAI News','U.S. SEC Press Releases');
