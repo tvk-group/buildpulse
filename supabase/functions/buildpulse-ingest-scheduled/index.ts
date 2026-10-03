@@ -19,12 +19,15 @@ Deno.serve(async(req:Request)=>{
  const {data:setting}=await admin.from("buildpulse_private_settings").select("value").eq("key","ingest_scheduler_secret").maybeSingle();
  const supplied=req.headers.get("x-buildpulse-scheduler-secret")??"";
  if(!setting?.value||supplied!==setting.value)return reply({ok:false,error:"unauthorized"},401);
+ const body=await req.json().catch(()=>({}));
+ const requestedNames=Array.isArray(body?.sourceNames)?body.sourceNames.filter((x:unknown)=>typeof x==="string").slice(0,20):[];
  const {data:run}=await admin.from("buildpulse_job_runs").insert({job_name:"ingest-supabase-fallback",status:"running"}).select("id").single();
  let discovered=0,accepted=0,rejected=0,verified=0;const failures:string[]=[];const sourceStats:Array<Record<string,unknown>>=[];
  try{
   const {data:sources,error:sourceError}=await admin.from("buildpulse_sources").select("id,name,feed_url,category,trust_tier,enabled").eq("enabled",true).not("feed_url","is",null);
   if(sourceError)throw sourceError;
-  for(const source of sources??[]){
+  const selectedSources=requestedNames.length?(sources??[]).filter((s:any)=>requestedNames.includes(s.name)):(sources??[]);
+  for(const source of selectedSources){
    try{
     if(!safeUrl(source.feed_url))throw new Error("unsafe_feed_url");
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
@@ -59,7 +62,7 @@ Deno.serve(async(req:Request)=>{
     await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"ok",last_fetch_error:null}).eq("id",source.id);
    }catch(e){const m=e instanceof Error?e.message:"unknown";failures.push(source.name+": "+m);await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"failed",last_fetch_error:m.slice(0,500)}).eq("id",source.id)}
   }
-  const metrics={sources:(sources??[]).length,discovered,accepted,rejected,verified,failures,sourceStats};
+  const metrics={sources:selectedSources.length,discovered,accepted,rejected,verified,failures,sourceStats};
   if(run?.id)await admin.from("buildpulse_job_runs").update({status:"ok",metrics,finished_at:new Date().toISOString(),error:null}).eq("id",run.id);
   return reply({ok:true,...metrics});
  }catch(e){const m=e instanceof Error?e.message:"unknown";if(run?.id)await admin.from("buildpulse_job_runs").update({status:"failed",finished_at:new Date().toISOString(),error:m.slice(0,2000)}).eq("id",run.id);return reply({ok:false,error:m},500)}
