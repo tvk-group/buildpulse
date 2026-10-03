@@ -165,7 +165,9 @@ async function handleRefund(admin:any,event:any,charge:any){
       p_metadata:{stripe_event_id:event.id,charge_id:charge.id,payment_intent:paymentIntent,cumulative_refund_usd:refundedUsd}
     });
     if(creditError)throw creditError;
-    creditNoteNumber=Array.isArray(credit)?credit[0]?.credit_note_number??null:credit?.credit_note_number??null;
+    const creditRow=Array.isArray(credit)?credit[0]:credit;
+    creditNoteNumber=creditRow?.credit_note_number??null;
+    if(creditRow?.id){const {error:journalError}=await admin.rpc("buildpulse_post_credit_note_journal",{p_credit_note_id:creditRow.id});if(journalError)throw journalError;}
   }
   const now=new Date().toISOString();
   await Promise.all([
