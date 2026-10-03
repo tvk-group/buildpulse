@@ -9,7 +9,7 @@ export const metadata={title:"Account | BuildPulse",robots:{index:false,follow:f
 export default async function AccountPage(){
  const supabase=createClientSafe(await cookies());if(!supabase)redirect("/auth?next=/account");
  const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/auth?next=/account");
- await supabase.rpc("buildpulse_claim_own_subscriptions");
+ {const admin=createAdminClient();if(admin)await admin.rpc("buildpulse_claim_own_subscriptions_for_user",{p_user_id:user.id,p_email:String(user.email||"")});}
  const db=createAdminClient();if(!db)throw new Error("Account service unavailable");
  const [{data:subs},{data:customer},{data:social},{count:contrib},{count:arts},{count:ads}]=await Promise.all([
   db.from("buildpulse_intelligence_subscriptions").select("id,plan_code,billing_interval,status,current_period_end,cancelled_at,created_at").or(`user_id.eq.${user.id},email.eq.${String(user.email).toLowerCase()}`).order("created_at",{ascending:false}).limit(5),
