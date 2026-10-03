@@ -2,7 +2,7 @@ import {NextResponse} from "next/server";
 import {cookies} from "next/headers";
 import {createClientSafe} from "@/utils/supabase/server";
 
-type QueryResult={data:any;error:any};
+type QueryResult={data:unknown;error:{code?:string}|null};
 const failed=(name:string,r:QueryResult)=>r.error?{name,error:r.error.code||"query_failed"}:null;
 
 export async function GET(){
@@ -34,7 +34,7 @@ export async function GET(){
  const failures=results.map((r,i)=>failed(names[i],r as QueryResult)).filter(Boolean);
  if(failures.length)return NextResponse.json({ok:false,error:"export_incomplete",failedQueries:failures},{status:503,headers:{"cache-control":"no-store"}});
  const [profile,posts,followsOut,followsIn,members,appeals,marketListings,marketInquiries,marketOrders,contributor,arts,advertiser,adOrders,subscriptions,cryptoPayments,customer,connections]=results.map(r=>r.data);
- const ids=(members??[]).map((x:any)=>x.conversation_id);
+ const ids=((members??[]) as Array<{conversation_id:string}>).map(x=>x.conversation_id);
  const messages:QueryResult=ids.length?await db.from("buildpulse_social_messages").select("id,conversation_id,sender_id,ciphertext,nonce,key_version,client_message_id,created_at,expires_at").in("conversation_id",ids).eq("sender_id",user.id).order("created_at"):{data:[],error:null};
  if(messages.error)return NextResponse.json({ok:false,error:"export_incomplete",failedQueries:[failed("social.sentCiphertextMessages",messages)]},{status:503,headers:{"cache-control":"no-store"}});
  let documents:any[]=[];
