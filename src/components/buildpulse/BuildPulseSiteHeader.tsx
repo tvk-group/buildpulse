@@ -6,7 +6,7 @@ import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localiza
 
 const groups=[
  {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/archive?category=politics"],["Economy","/markets"]]},
- {label:"Intelligence",items:[["Subscriptions","/subscriptions"],["Markets","/markets"],["Methodology","/methodology"]]},
+ {label:"Intelligence",items:[["Build with AI","/build-with-ai"],["Subscriptions","/subscriptions"],["Markets","/markets"],["Methodology","/methodology"]]},
  {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"]]},
  {label:"Culture",items:[["Sports","/sports"],["Arts","/arts"],["Marketplace","/marketplace"]]},
  {label:"About",items:[["About BuildPulse","/about"],["Contribute","/contribute"],["Advertise","/advertise"]]},
