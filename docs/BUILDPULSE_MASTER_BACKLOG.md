@@ -102,7 +102,7 @@
 - [ ] Complete translations for all supported navigation languages; no fake translated UI.
 - [x] Add source-grounded AI story-localization draft pipeline and audited approve/reject workflow.
 - [ ] Localize SEO metadata, transactional email, notifications and legally appropriate invoice text.
-- [ ] Local currency/date/time/number formatting and time-zone aware scheduling.
+- [ ] Local currency/date/time/number formatting and time-zone aware scheduling. Locale-aware date, number and currency primitives now respect the persisted BuildPulse locale and IANA time zone; the authenticated account portal and advertiser campaign/payment portal use them for customer-facing dates, monetary values and metrics. Broader surface coverage and recipient-time-zone-aware outbound scheduling remain open.
 - [ ] Localize Social/Blogs/Marketplace/Connections/Workforce surfaces.
 - [x] Compact masthead navigation into editorial dropdown groups while preserving BuildPulse design.
 - [x] Add Local news source geography model, localized-story storage, verified Local API and /local edition page.
