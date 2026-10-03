@@ -34,7 +34,7 @@ function validTimeZone(v:string){if(!v||v.length>64)return false;try{new Intl.Da
 function cleanTopics(v:unknown){return Array.isArray(v)?[...new Set(v.filter(x=>typeof x==="string"&&TOPICS.has(x)))].slice(0,6):[]}
 async function subscribe(admin:any,body:any){
  const email=String(body.email??"").trim().toLowerCase();if(!validEmail(email)||body.consent!==true)throw new Error("invalid_request");
- const cadence=["daily","weekly","both"].includes(body.cadence)?body.cadence:"weekly",topics=cleanTopics(body.topics),deliveryTimezone=String(body.deliveryTimezone??"UTC");
+ const cadence=["daily","weekly","both"].includes(body.cadence)?body.cadence:"weekly",topics=cleanTopics(body.topics),deliveryTimezone=String(body.deliveryTimezone??body.timeZone??"UTC");
  if(!topics.length||!validTimeZone(deliveryTimezone))throw new Error("invalid_request");
  const {data:blocked}=await admin.from("email_marketing_unsubscribes").select("id").ilike("email",email).maybeSingle();if(blocked)throw new Error("suppressed");
  const now=new Date().toISOString(),patch={
@@ -61,7 +61,7 @@ async function resolve(admin:any,token:string){
 }
 async function updatePreferences(admin:any,body:any){
  const v=await verify(admin,String(body.token??""));if(!v)throw new Error("invalid_or_expired_token");
- const cadence=String(body.cadence??""),topics=cleanTopics(body.topics),locale=String(body.locale??"").slice(0,10),deliveryTimezone=String(body.deliveryTimezone??"UTC");
+ const cadence=String(body.cadence??""),topics=cleanTopics(body.topics),locale=String(body.locale??"").slice(0,10),deliveryTimezone=String(body.deliveryTimezone??body.timeZone??"UTC");
  if(!["daily","weekly","both"].includes(cadence)||!topics.length||locale.length<2||!validTimeZone(deliveryTimezone))throw new Error("invalid_request");
  const {data:s}=await admin.from("buildpulse_subscribers").select("id,status").ilike("email",v.email).maybeSingle();if(!s||s.status!=="active")throw new Error("not_found");
  const {error}=await admin.from("buildpulse_subscribers").update({locale,cadence,topics,delivery_timezone:deliveryTimezone,updated_at:new Date().toISOString()}).eq("id",s.id);if(error)throw error;
