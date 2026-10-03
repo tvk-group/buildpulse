@@ -1,6 +1,6 @@
 import { getServerEnv } from "@/config/env";
 
-export type BuildPulseCryptoAsset = "ETH"|"BTC"|"USDC"|"USDT"|"XRP";
+export type BuildPulseCryptoAsset = "ETH"|"BTC"|"USDC"|"USDT"|"XRP"|"SOL"|"BNB"|"POL"|"TRX"|"ADA"|"SUI"|"AVAX";
 
 export const buildPulseInvoiceIssuer = {
   name: "TVK LABS & TECHNOLOGIES LTD",
@@ -17,18 +17,32 @@ type Rail={asset:BuildPulseCryptoAsset;network:string;destination:string;memo?:s
 
 export function configuredCryptoRails():Rail[]{
   const env=getServerEnv();
-  const rails:Rail[]=[
-    {asset:"ETH",network:"Ethereum",destination:env.BUILDPULSE_ETH_ADDRESS??"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:8,requiredConfirmations:12},
-    {asset:"BTC",network:"Bitcoin",destination:env.BUILDPULSE_BTC_ADDRESS??"bc1q6gyckg3ya4zwhslnr3regspj8pk5anyaz50ynl",decimals:8,requiredConfirmations:3},
-    {asset:"USDC",network:env.BUILDPULSE_USDC_NETWORK??"Base",destination:env.BUILDPULSE_USDC_ADDRESS??"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:6,requiredConfirmations:20},
-    {asset:"USDT",network:env.BUILDPULSE_USDT_NETWORK??"Ethereum",destination:env.BUILDPULSE_USDT_ADDRESS??"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:6,requiredConfirmations:12},
-    {asset:"XRP",network:"XRPL",destination:env.BUILDPULSE_XRP_ADDRESS??"rPoLiQPahRkwi9dkhiCgw98x84fQCviT7Z",memo:env.BUILDPULSE_XRP_DESTINATION_TAG??"1234",decimals:6,requiredConfirmations:1},
+  const candidates:Array<Rail|null>=[
+    env.BUILDPULSE_ETH_ADDRESS?{asset:"ETH",network:"Ethereum",destination:env.BUILDPULSE_ETH_ADDRESS,decimals:18,requiredConfirmations:12}:null,
+    env.BUILDPULSE_ETH_BASE_ADDRESS?{asset:"ETH",network:"Base",destination:env.BUILDPULSE_ETH_BASE_ADDRESS,decimals:18,requiredConfirmations:20}:null,
+    env.BUILDPULSE_BTC_ADDRESS?{asset:"BTC",network:"Bitcoin",destination:env.BUILDPULSE_BTC_ADDRESS,decimals:8,requiredConfirmations:3}:null,
+    env.BUILDPULSE_USDC_ETH_ADDRESS?{asset:"USDC",network:"Ethereum",destination:env.BUILDPULSE_USDC_ETH_ADDRESS,decimals:6,requiredConfirmations:12}:null,
+    env.BUILDPULSE_USDC_BASE_ADDRESS?{asset:"USDC",network:"Base",destination:env.BUILDPULSE_USDC_BASE_ADDRESS,decimals:6,requiredConfirmations:20}:null,
+    env.BUILDPULSE_USDT_ETH_ADDRESS?{asset:"USDT",network:"Ethereum",destination:env.BUILDPULSE_USDT_ETH_ADDRESS,decimals:6,requiredConfirmations:12}:null,
+    env.BUILDPULSE_USDT_BASE_ADDRESS?{asset:"USDT",network:"Base",destination:env.BUILDPULSE_USDT_BASE_ADDRESS,decimals:6,requiredConfirmations:20}:null,
+    env.BUILDPULSE_XRP_ADDRESS?{asset:"XRP",network:"XRPL",destination:env.BUILDPULSE_XRP_ADDRESS,memo:env.BUILDPULSE_XRP_DESTINATION_TAG,decimals:6,requiredConfirmations:1}:null,
+    env.BUILDPULSE_SOL_ADDRESS?{asset:"SOL",network:"Solana",destination:env.BUILDPULSE_SOL_ADDRESS,decimals:9,requiredConfirmations:1}:null,
+    env.BUILDPULSE_BNB_ADDRESS?{asset:"BNB",network:"BNB Chain",destination:env.BUILDPULSE_BNB_ADDRESS,decimals:18,requiredConfirmations:15}:null,
+    env.BUILDPULSE_POL_ADDRESS?{asset:"POL",network:"Polygon",destination:env.BUILDPULSE_POL_ADDRESS,decimals:18,requiredConfirmations:64}:null,
+    env.BUILDPULSE_TRX_ADDRESS?{asset:"TRX",network:"TRON",destination:env.BUILDPULSE_TRX_ADDRESS,decimals:6,requiredConfirmations:20}:null,
+    env.BUILDPULSE_ADA_ADDRESS?{asset:"ADA",network:"Cardano",destination:env.BUILDPULSE_ADA_ADDRESS,decimals:6,requiredConfirmations:15}:null,
+    env.BUILDPULSE_SUI_ADDRESS?{asset:"SUI",network:"Sui",destination:env.BUILDPULSE_SUI_ADDRESS,decimals:9,requiredConfirmations:1}:null,
+    env.BUILDPULSE_AVAX_ADDRESS?{asset:"AVAX",network:"Avalanche C-Chain",destination:env.BUILDPULSE_AVAX_ADDRESS,decimals:18,requiredConfirmations:12}:null,
   ];
-  return rails.filter(r=>Boolean(r.destination));
+  return candidates.filter((rail):rail is Rail=>rail!==null);
 }
 
-export function getCryptoRail(asset:string){
-  return configuredCryptoRails().find(r=>r.asset===asset.toUpperCase());
+export function getCryptoRail(asset:string,network?:string){
+  const normalizedAsset=asset.toUpperCase();
+  const normalizedNetwork=network?.trim().toLowerCase();
+  const matches=configuredCryptoRails().filter(r=>r.asset===normalizedAsset);
+  if(normalizedNetwork)return matches.find(r=>r.network.toLowerCase()===normalizedNetwork);
+  return matches.length===1?matches[0]:undefined;
 }
 
 export async function fetchUsdSpot(asset:BuildPulseCryptoAsset){
@@ -46,6 +60,6 @@ export async function fetchUsdSpot(asset:BuildPulseCryptoAsset){
 }
 
 export function quoteAmount(usd:number, rate:number, decimals:number){
-  const factor=10**decimals;
+  const factor=10**Math.min(decimals,12);
   return Math.ceil((usd/rate)*factor)/factor;
 }
