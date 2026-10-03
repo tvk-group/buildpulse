@@ -8,8 +8,7 @@ begin
         case when j.status='failed' then 'Automation job failed: '||j.job_name else 'Automation job stale: '||j.job_name end,
         jsonb_build_object('job_name',j.job_name,'status',j.status,'error',j.error,'started_at',j.started_at,'metrics',j.metrics),
         coalesce(j.started_at,now()),now()
- from public.buildpulse_job_runs j
- where (j.status='failed' and j.started_at>=now()-interval '24 hours') or (j.status='running' and j.started_at<now()-interval '30 minutes')
+ from (select distinct on (job_name,status) job_name,status,error,started_at,metrics from public.buildpulse_job_runs where (status='failed' and started_at>=now()-interval '24 hours') or (status='running' and started_at<now()-interval '30 minutes') order by job_name,status,started_at desc) j
  on conflict (source,summary) where status in ('open','investigating','mitigated') do update set details=excluded.details,updated_at=now();
  get diagnostics n=row_count;return n;
 end $$;
