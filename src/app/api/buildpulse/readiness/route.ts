@@ -1,6 +1,5 @@
 import {NextResponse} from "next/server";
 import {getSupabasePublicConfig} from "@/lib/supabase/env";
-import {configuredCryptoRails} from "@/lib/buildpulse/payments";
 
 export async function GET(){
   const config=getSupabasePublicConfig();
@@ -14,8 +13,9 @@ export async function GET(){
       status=null;
     }
   }
-  const cryptoRails=configuredCryptoRails().map(r=>r.asset);
-  const cryptoReady=["ETH","BTC","USDC","USDT","XRP"].every(asset=>cryptoRails.includes(asset as any));
+  const cryptoRailDetails=Array.isArray(status?.cryptoRails)?status.cryptoRails:[];
+  const cryptoRails=[...new Set(cryptoRailDetails.map((r:{asset?:string})=>String(r?.asset||"")).filter(Boolean))];
+  const cryptoReady=["ETH","BTC","USDC","USDT","XRP"].every(asset=>cryptoRails.includes(asset));
   const stripeReady=Boolean(status?.checks?.stripeInventory);
   const paymentsReady=stripeReady&&cryptoReady;
   const webPipelineReady=Boolean(status?.checks?.database&&status?.checks?.sourceHealth&&status?.checks?.ingestionFresh&&status?.checks?.editorialControl&&status?.checks?.editionControl&&status?.checks?.webPublication);
@@ -32,6 +32,7 @@ export async function GET(){
     stripeReady,
     cryptoReady,
     cryptoRails,
+    cryptoRailDetails,
     supabaseConfigured:config.configured,
     mail:status?.mail??{provider:"resend",domain:"buildpulse.news",domainStatus:"unknown",deliveryEnabled:false},
     checks:status?.checks??{},
