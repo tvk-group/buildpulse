@@ -15,7 +15,7 @@ export async function GET(){
   }
   const cryptoRailDetails=Array.isArray(status?.cryptoRails)?status.cryptoRails:[];
   const cryptoRails=[...new Set(cryptoRailDetails.map((r:{asset?:string})=>String(r?.asset||"")).filter(Boolean))];
-  const cryptoReady=["ETH","BTC","USDC","USDT","XRP"].every(asset=>cryptoRails.includes(asset));
+  const requiredCryptoAssets=["ETH","BTC","USDC","USDT","XRP"] as const;\n  const missingCryptoAssets=requiredCryptoAssets.filter(asset=>!cryptoRails.includes(asset));\n  const cryptoReady=missingCryptoAssets.length===0;
   const stripeReady=Boolean(status?.checks?.stripeInventory);
   const paymentsReady=stripeReady&&cryptoReady;
   const webPipelineReady=Boolean(status?.checks?.database&&status?.checks?.sourceHealth&&status?.checks?.ingestionFresh&&status?.checks?.editorialControl&&status?.checks?.editionControl&&status?.checks?.webPublication);
