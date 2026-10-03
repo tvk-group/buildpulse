@@ -6,32 +6,51 @@ type Factor={id:string;friendly_name?:string|null;status?:string};
 function safeNext(value:string){return value.startsWith("/")&&!value.startsWith("//")?value:"/workforce"}
 
 export default function BuildPulseMfaForm({nextPath}:{nextPath:string}){
-  const supabase=useMemo(()=>createClient(),[]);
   const [factor,setFactor]=useState<Factor|null>(null);
   const [enroll,setEnroll]=useState<{id:string;qr:string;secret:string}|null>(null);
-  const [busy,setBusy]=useState(false),[message,setMessage]=useState("Checking MFA…");
+  const [busy,setBusy]=useState(false);
+  const [message,setMessage]=useState("Checking MFA…");
 
-  useEffect(()=>{void (async()=>{
-    const aal=await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-    if(aal.data?.currentLevel==="aal2"){window.location.replace(safeNext(nextPath));return}
-    const factors=await supabase.auth.mfa.listFactors();
-    if(factors.error){setMessage(factors.error.message);return}
-    const existing=(factors.data?.totp??[]).find((x:any)=>x.status==="verified")??factors.data?.totp?.[0]??null;
-    if(existing){setFactor(existing);setMessage("Enter the 6-digit code from your authenticator app.");return}
-    const created=await supabase.auth.mfa.enroll({factorType:"totp",friendlyName:"BuildPulse Workforce"});
-    if(created.error){setMessage(created.error.message);return}
-    setEnroll({id:created.data.id,qr:created.data.totp.qr_code,secret:created.data.totp.secret});
-    setMessage("Scan the QR code, then enter the 6-digit code to complete enrollment.");
-  })()},[nextPath]);
+  useEffect(()=>{
+    void (async()=>{
+      const supabase=createClient();
+      const aal=await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if(aal.data?.currentLevel==="aal2"){
+        window.location.replace(safeNext(nextPath));
+        return;
+      }
+      const factors=await supabase.auth.mfa.listFactors();
+      if(factors.error){setMessage(factors.error.message);return}
+      const existing=(factors.data?.totp??[]).find((x:any)=>x.status==="verified")??factors.data?.totp?.[0]??null;
+      if(existing){
+        setFactor(existing);
+        setMessage("Enter the 6-digit code from your authenticator app.");
+        return;
+      }
+      const created=await supabase.auth.mfa.enroll({factorType:"totp",friendlyName:"BuildPulse Workforce"});
+      if(created.error){setMessage(created.error.message);return}
+      setEnroll({id:created.data.id,qr:created.data.totp.qr_code,secret:created.data.totp.secret});
+      setMessage("Scan the QR code, then enter the 6-digit code to complete enrollment.");
+    })();
+  },[nextPath]);
 
   async function verify(e:FormEvent<HTMLFormElement>){
-    e.preventDefault();const supabase=createClient();const fd=new FormData(e.currentTarget),code=String(fd.get("code")??"").trim();
-    const factorId=factor?.id??enroll?.id;if(!factorId||!/^[0-9]{6,8}$/.test(code)){setMessage("Enter a valid authenticator code.");return}
-    setBusy(true);setMessage("Verifying…");
+    e.preventDefault();
+    const supabase=createClient();
+    const fd=new FormData(e.currentTarget);
+    const code=String(fd.get("code")??"").trim();
+    const factorId=factor?.id??enroll?.id;
+    if(!factorId||!/^[0-9]{6,8}$/.test(code)){setMessage("Enter a valid authenticator code.");return}
+    setBusy(true);
+    setMessage("Verifying…");
     const result=await supabase.auth.mfa.challengeAndVerify({factorId,code});
     if(result.error){setMessage(result.error.message);setBusy(false);return}
     const aal=await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-    if(aal.data?.currentLevel!=="aal2"){setMessage("MFA verification did not upgrade this session. Please try again.");setBusy(false);return}
+    if(aal.data?.currentLevel!=="aal2"){
+      setMessage("MFA verification did not upgrade this session. Please try again.");
+      setBusy(false);
+      return;
+    }
     window.location.assign(safeNext(nextPath));
   }
 
