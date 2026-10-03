@@ -8,7 +8,7 @@ const starters=["Explain a technical concept","Draft a project plan","Help me de
 export function BuildPulseAIWorkspace(){
  const [expanded,setExpanded]=useState(false),[messages,setMessages]=useState<Message[]>([]),[input,setInput]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState("");
  const end=useRef<HTMLDivElement>(null);
- useEffect(()=>{if(expanded)document.body.style.overflow="hidden";else document.body.style.overflow="";return()=>{document.body.style.overflow=""}},[expanded]);
+ useEffect(()=>{try{const saved=localStorage.getItem("buildpulse-ai-chat");if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed))setMessages(parsed.slice(-16))}}catch{}},[]);\n useEffect(()=>{try{localStorage.setItem("buildpulse-ai-chat",JSON.stringify(messages.slice(-16)))}catch{}},[messages]);\n useEffect(()=>{if(expanded)document.body.style.overflow="hidden";else document.body.style.overflow="";return()=>{document.body.style.overflow=""}},[expanded]);
  useEffect(()=>end.current?.scrollIntoView({behavior:"smooth"}),[messages,busy]);
  async function send(e?:FormEvent){e?.preventDefault();const q=input.trim();if(!q||busy)return;const next=[...messages,{role:"user" as const,content:q}];setMessages(next);setInput("");setBusy(true);setError("");
   try{const r=await fetch("/api/ai/chat",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({messages:next})});const d=await r.json();if(!r.ok)throw new Error(d.error||"AI request failed.");setMessages(v=>[...v,{role:"assistant",content:d.content}]);}
@@ -17,7 +17,7 @@ export function BuildPulseAIWorkspace(){
  const panel=<div className={expanded?"flex h-full flex-col":"flex min-h-[390px] flex-col"}>
    <div className="flex items-center justify-between border-b border-black/10 px-5 py-4 md:px-7">
     <div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#0b6b63]">BuildPulse AI</p><h3 className="mt-1 text-xl font-black tracking-tight">Build with AI</h3></div>
-    <div className="flex gap-2">{messages.length>0&&<button onClick={()=>setMessages([])} className="rounded-full border border-black/15 px-3 py-2 text-[10px] font-black uppercase">New</button>}<button onClick={()=>setExpanded(v=>!v)} className="rounded-full bg-[#17202a] px-4 py-2 text-[10px] font-black uppercase text-white">{expanded?"Collapse":"Expand ↗"}</button></div>
+    <div className="flex gap-2">{messages.length>0&&<button onClick={()=>{setMessages([]);setError("");try{localStorage.removeItem("buildpulse-ai-chat")}catch{}}} className="rounded-full border border-black/15 px-3 py-2 text-[10px] font-black uppercase">New</button>}<button onClick={()=>setExpanded(v=>!v)} className="rounded-full bg-[#17202a] px-4 py-2 text-[10px] font-black uppercase text-white">{expanded?"Collapse":"Expand ↗"}</button></div>
    </div>
    <div className="flex-1 overflow-y-auto px-5 py-5 md:px-7">
     {messages.length===0?<div className="mx-auto max-w-3xl py-5 md:py-10"><h4 className="text-3xl font-black tracking-[-.04em] md:text-5xl">What do you want to build?</h4><p className="mt-3 max-w-xl leading-7 text-[#53606b]">Ask questions, develop ideas, write, reason, plan or code inside BuildPulse.</p><div className="mt-7 grid gap-2 sm:grid-cols-2">{starters.map(s=><button key={s} onClick={()=>setInput(s+": ")} className="border border-black/15 bg-white/60 p-4 text-left text-sm font-bold hover:border-[#0b6b63]">{s} →</button>)}</div></div>:
