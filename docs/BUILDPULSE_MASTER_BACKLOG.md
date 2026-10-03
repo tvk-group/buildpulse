@@ -67,8 +67,8 @@
 ## P0 — Social network
 - [x] Social profiles, follows, posts/blogs, reactions, conversations, ciphertext-only messages and safety schema.
 - [x] Agent/robot account permissions and advertising schema.
-- [ ] Auth/account onboarding with email/phone and unique handles.
-- [ ] Production feed, profiles, follow/reaction/comment APIs.
+- [ ] Complete auth/account onboarding with email/phone and unique handles. Authenticated unique-handle Social profile onboarding is now implemented; phone onboarding remains incomplete.
+- [ ] Complete production feed, profiles, follow/reaction/comment APIs. Public feed + authenticated profile/post/blog publishing APIs and interactive /social client are implemented; follow/reaction/comment UX remains incomplete.
 - [ ] Blogs publishing workflow.
 - [ ] Direct chat, groups and channels.
 - [ ] Select and implement mature audited E2EE protocol; no custom crypto.
