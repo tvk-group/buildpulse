@@ -12,16 +12,19 @@ export default async function InvoicePage({params}:{params:Promise<{invoiceNumbe
   if(!user)redirect("/advertiser");
   const {invoiceNumber}=await params;
   const {data:invoice,error}=await supabase.from("buildpulse_billing_invoices")
-    .select("invoice_number,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,customer_type,billing_address_line1,billing_address_line2,billing_city,billing_region,billing_postal_code,billing_country_code,tax_id,tax_id_type,tax_id_validation_status,amount_usd,currency,payment_method,payment_reference,status,issued_at,paid_at,order_id")
+    .select("id,invoice_number,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,customer_type,billing_address_line1,billing_address_line2,billing_city,billing_region,billing_postal_code,billing_country_code,tax_id,tax_id_type,tax_id_validation_status,amount_usd,currency,payment_method,payment_reference,status,issued_at,paid_at,order_id")
     .eq("invoice_number",decodeURIComponent(invoiceNumber))
     .eq("user_id",user.id)
     .maybeSingle();
   if(error||!invoice)notFound();
-  const {data:order}=await supabase.from("buildpulse_ad_orders")
+  const [{data:order},{data:creditNotes}]=await Promise.all([
+    supabase.from("buildpulse_ad_orders")
     .select("headline,copy_text,destination_url,status,created_at")
     .eq("id",invoice.order_id)
     .eq("user_id",user.id)
-    .maybeSingle();
+    .maybeSingle(),
+    supabase.from("buildpulse_billing_credit_notes").select("credit_note_number,amount_usd,currency,reason,issued_at").eq("invoice_id",invoice.id).eq("user_id",user.id).order("issued_at",{ascending:true})
+  ]);
 
   return <main className="min-h-screen bg-slate-100 px-4 py-10 text-slate-950 print:bg-white print:p-0">
     <article className="mx-auto max-w-3xl rounded-2xl border bg-white p-8 shadow-sm print:max-w-none print:border-0 print:shadow-none">
@@ -40,6 +43,7 @@ export default async function InvoicePage({params}:{params:Promise<{invoiceNumbe
         <div className="flex justify-between text-lg"><span className="font-bold">Total</span><strong>{invoice.currency} {Number(invoice.amount_usd).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></div>
         {invoice.payment_method&&<p className="mt-5 text-sm text-slate-600">Payment method: <span className="font-bold text-slate-900">{invoice.payment_method}</span></p>}
         {invoice.payment_reference&&<p className="mt-1 break-all text-xs text-slate-500">Payment reference: {invoice.payment_reference}</p>}
+        {creditNotes&&creditNotes.length>0&&<div className="mt-6 rounded-xl border border-slate-200 p-4"><p className="text-xs font-black uppercase tracking-wider text-slate-500">Credit notes</p>{creditNotes.map(note=><div key={note.credit_note_number} className="mt-3 flex flex-wrap justify-between gap-3 text-sm"><div><p className="font-bold">{note.credit_note_number}</p><p className="text-xs text-slate-500">{note.reason.replaceAll("_"," ")} · {new Date(note.issued_at).toLocaleString("en-GB",{timeZone:"Europe/London"})} UK time</p></div><strong>-{note.currency} {Number(note.amount_usd).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></div>)}</div>}
         <p className="mt-6 rounded-xl bg-slate-50 p-4 text-xs leading-5 text-slate-600">Payment confirms commercial settlement only. Advertising remains subject to BuildPulse creative, safety and publication review.</p>
       </section>
       <footer className="flex flex-wrap gap-3 border-t pt-6 print:hidden">
