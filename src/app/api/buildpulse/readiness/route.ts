@@ -3,10 +3,17 @@ import {getSupabasePublicConfig} from "@/lib/supabase/env";
 import {configuredCryptoRails} from "@/lib/buildpulse/payments";
 
 export async function GET(){
-  const {url,key}=getSupabasePublicConfig();
-  const endpoint=new URL(url+"/functions/v1/buildpulse-status-runtime");
-  const response=await fetch(endpoint,{cache:"no-store",headers:{apikey:key}}).catch(()=>null);
-  const status=response?.ok?await response.json().catch(()=>null):null;
+  const config=getSupabasePublicConfig();
+  let status:any=null;
+  if(config.configured){
+    try{
+      const endpoint=new URL("/functions/v1/buildpulse-status-runtime",config.url);
+      const response=await fetch(endpoint,{cache:"no-store",headers:{apikey:config.key}});
+      status=response.ok?await response.json().catch(()=>null):null;
+    }catch{
+      status=null;
+    }
+  }
   const cryptoRails=configuredCryptoRails().map(r=>r.asset);
   const cryptoReady=["ETH","BTC","USDC","USDT","XRP"].every(asset=>cryptoRails.includes(asset as any));
   const stripeReady=Boolean(status?.checks?.stripeInventory);
@@ -25,6 +32,7 @@ export async function GET(){
     stripeReady,
     cryptoReady,
     cryptoRails,
+    supabaseConfigured:config.configured,
     mail:status?.mail??{provider:"resend",domain:"buildpulse.news",domainStatus:"unknown",deliveryEnabled:false},
     checks:status?.checks??{},
     counts:status?.counts??{},
