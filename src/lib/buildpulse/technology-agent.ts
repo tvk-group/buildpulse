@@ -38,11 +38,11 @@ export async function runTechnologyEditorialAgent(){
  if(error)throw error;if(!(stories??[]).length)return{skipped:true,reason:"no_recent_verified_sources",topic};
  const relevantStories=stories!.filter((s:any)=>relevant(topic,s));
  if(!relevantStories.length)return{skipped:true,reason:"no_topic_relevant_verified_sources",topic};
- const sourceText=relevantStories.map((s:any,i:number)=>`[${i+1}] ${s.title}\nSummary: ${s.summary??""}\nSource: ${s.canonical_source_url}`).join("\n\n");
+ const sourceText=`Editorial focus: ${labels[topic]}\n\n`+relevantStories.map((s:any,i:number)=>`[${i+1}] ${s.title}\nSummary: ${s.summary??""}\nSource: ${s.canonical_source_url}`).join("\n\n");
  const key=createHash("sha256").update(topic+"|"+relevantStories.map((s:any)=>s.id).join("|")+"|"+new Date().toISOString().slice(0,10)).digest("hex");
  const {data:existing}=await db.from("buildpulse_technology_articles").select("id").eq("generation_key",key).maybeSingle();if(existing)return{skipped:true,reason:"already_generated",topic};
  const system=`You are BuildPulse Technology Editorial Agent. Write rigorous technology journalism only from supplied verified source material. Focus: ${labels[topic]}. Never invent audits, partnerships, listings, prices, performance, regulatory status, security guarantees or roadmap completion. Do not turn the article into investment solicitation. Distinguish architecture/design goals from deployed facts. Output exactly TITLE:, DEK:, BODY:. BODY is Markdown, 700-1200 words, with descriptive subheadings and a final "Sources" section containing only supplied source URLs.`;
- const out=await runBuildPulseAi({task:"news_draft",system,input:sourceText,maxOutputTokens:2200,temperature:0.15});
+ const out=await runBuildPulseAi({task:"news_draft",promptKey:"technology-editorial",system,input:sourceText,maxOutputTokens:2200,temperature:0.15});
  const parsed=parse(out.text),slug=`${slugify(parsed.title)}-${new Date().toISOString().slice(0,10)}`;
  const {data:article,error:write}=await db.from("buildpulse_technology_articles").insert({slug,topic,title:parsed.title,dek:parsed.dek,body_markdown:parsed.body,status:"review",source_story_ids:relevantStories.map((s:any)=>s.id),source_urls:relevantStories.map((s:any)=>s.canonical_source_url),provider:out.provider,model:out.model,generation_key:key}).select("id,slug").single();
  if(write)throw write;return{skipped:false,topic,articleId:article.id,slug:article.slug,provider:out.provider,model:out.model,sources:relevantStories.length}
