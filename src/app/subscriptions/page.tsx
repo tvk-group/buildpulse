@@ -1,4 +1,4 @@
-export const metadata={title:"Intelligence Subscriptions | BuildPulse",description:"Premium BuildPulse intelligence from public and licensed sources, delivered daily or weekly."};
+export const metadata={title:"Intelligence Subscriptions",description:"Premium BuildPulse intelligence from public and licensed sources, delivered daily or weekly.",alternates:{canonical:"/subscriptions"},openGraph:{url:"/subscriptions"}};
 const plans=[
  {name:"Intelligence Daily",price:"$19",annual:"$190/year",cadence:"Daily",features:["Daily market & macro brief","Crypto and metals intelligence","Company & product monitoring","Scenario-based outlooks"]},
  {name:"Intelligence Weekly",price:"$29",annual:"$290/year",cadence:"Weekly deep dive",features:["Weekly research edition","Sector and company themes","Digital-asset & metals outlook","Source-backed scenario analysis"]},
