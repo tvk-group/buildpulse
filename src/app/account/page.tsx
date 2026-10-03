@@ -19,7 +19,8 @@ export default async function AccountPage(){
   db.from("buildpulse_social_profiles").select("handle,display_name,account_type,verified_kind").eq("user_id",user.id).maybeSingle(),
   db.from("buildpulse_contributor_submissions").select("id",{head:true,count:"exact"}).eq("user_id",user.id),
   db.from("buildpulse_art_submissions").select("id",{head:true,count:"exact"}).eq("user_id",user.id),
-  db.from("buildpulse_ad_orders").select("id",{head:true,count:"exact"}).eq("user_id",user.id)
+  db.from("buildpulse_ad_orders").select("id",{head:true,count:"exact"}).eq("user_id",user.id),
+  db.from("buildpulse_notifications").select("id,kind,title,body,href,read_at,created_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(12)
  ]);
  const {data:sessions,error:sessionsError}=await supabase.rpc("buildpulse_list_own_sessions");
  const docs=customer?.id?(await db.from("buildpulse_accounting_documents").select("id,document_number,document_type,currency,gross_amount,status,issued_at,paid_at,provider_pdf_url").eq("customer_id",customer.id).order("created_at",{ascending:false}).limit(20)).data??[]:[];
