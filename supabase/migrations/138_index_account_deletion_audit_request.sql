@@ -1,0 +1,1 @@
+create index if not exists idx_bp_account_deletion_audit_request on public.buildpulse_account_deletion_audit(request_id);
