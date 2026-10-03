@@ -97,6 +97,9 @@
 - [ ] Localize SEO metadata, transactional email, notifications and legally appropriate invoice text.
 - [ ] Local currency/date/time/number formatting and time-zone aware scheduling.
 - [ ] Localize Social/Blogs/Marketplace/Connections/Workforce surfaces.
+- [x] Compact masthead navigation into editorial dropdown groups while preserving BuildPulse design.
+- [x] Add Local news source geography model, localized-story storage, verified Local API and /local edition page.
+- [ ] Populate country/region/city source registry and automate localized-source ingestion at scale.
 - [ ] Keep billing/tax jurisdiction independent from browser language/time zone.
 
 ## P1 — Mobile/PWA
