@@ -12,7 +12,7 @@ GRANT INSERT, UPDATE, DELETE ON public.buildpulse_social_profiles TO authenticat
 
 DROP POLICY IF EXISTS bp_social_profiles_public_read ON public.buildpulse_social_profiles;
 CREATE POLICY bp_social_profiles_public_read ON public.buildpulse_social_profiles
-FOR SELECT TO anon, authenticated
+FOR SELECT TO authenticated
 USING (discoverable = TRUE OR user_id = (SELECT auth.uid()));
 
 DROP POLICY IF EXISTS bp_social_profiles_own_insert ON public.buildpulse_social_profiles;
@@ -59,7 +59,7 @@ GRANT INSERT, UPDATE, DELETE ON public.buildpulse_social_posts TO authenticated;
 
 DROP POLICY IF EXISTS bp_social_posts_read ON public.buildpulse_social_posts;
 CREATE POLICY bp_social_posts_read ON public.buildpulse_social_posts
-FOR SELECT TO anon, authenticated
+FOR SELECT TO authenticated
 USING (
   author_id = (SELECT auth.uid())
   OR (
@@ -298,3 +298,10 @@ CREATE INDEX IF NOT EXISTS idx_bp_social_conversations_creator ON public.buildpu
 CREATE INDEX IF NOT EXISTS idx_bp_social_crypto_devices_user ON public.buildpulse_social_crypto_devices(user_id,created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_bp_social_ad_campaigns_owner ON public.buildpulse_social_ad_campaigns(advertiser_user_id,created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_bp_social_ad_creatives_campaign ON public.buildpulse_social_ad_creatives(campaign_id,created_at DESC);
+
+
+-- Anonymous clients receive only explicitly public Social data; authenticated-only predicates never run for anon.
+DROP POLICY IF EXISTS bp_social_posts_public_read ON public.buildpulse_social_posts;
+CREATE POLICY bp_social_posts_public_read ON public.buildpulse_social_posts FOR SELECT TO anon USING(status='published' AND visibility='public');
+DROP POLICY IF EXISTS bp_social_profiles_anon_read ON public.buildpulse_social_profiles;
+CREATE POLICY bp_social_profiles_anon_read ON public.buildpulse_social_profiles FOR SELECT TO anon USING(discoverable=true);
