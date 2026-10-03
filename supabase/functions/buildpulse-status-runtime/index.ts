@@ -39,9 +39,19 @@ Deno.serve(async(req:Request)=>{
     const ingestion=latest["ingest-supabase-fallback"]??latest.ingest??null;
     const ingestFresh=Boolean(ingestion?.status==="ok"&&Date.now()-Date.parse(ingestion.started_at)<2.5*3600000);
     const mailDomainStatus=mailSetting.data?.value??"not_configured";
+    const cryptoRails=[
+      Deno.env.get("BUILDPULSE_ETH_ADDRESS")?.trim()?{asset:"ETH",network:"Ethereum"}:null,
+      Deno.env.get("BUILDPULSE_ETH_BASE_ADDRESS")?.trim()?{asset:"ETH",network:"Base"}:null,
+      Deno.env.get("BUILDPULSE_BTC_ADDRESS")?.trim()?{asset:"BTC",network:"Bitcoin"}:null,
+      Deno.env.get("BUILDPULSE_USDC_ETH_ADDRESS")?.trim()?{asset:"USDC",network:"Ethereum"}:null,
+      Deno.env.get("BUILDPULSE_USDC_BASE_ADDRESS")?.trim()?{asset:"USDC",network:"Base"}:null,
+      Deno.env.get("BUILDPULSE_USDT_ETH_ADDRESS")?.trim()?{asset:"USDT",network:"Ethereum"}:null,
+      Deno.env.get("BUILDPULSE_XRP_ADDRESS")?.trim()?{asset:"XRP",network:"XRPL"}:null
+    ].filter(Boolean);
     return reply({
       ok:true,
       counts,
+      cryptoRails,
       checks:{
         database:true,
         sourceHealth,
