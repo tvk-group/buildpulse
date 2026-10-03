@@ -24,6 +24,14 @@ export async function latestPublicEditions(limit=7):Promise<PublicEdition[]>{
   const data=await runtime({action:"latest",limit:String(limit)});
   return Array.isArray(data?.editions)?data.editions:[];
 }
+export type PublicStory={
+  id:string;title:string;summary:string|null;canonicalSourceUrl:string;publishedAt:string|null;
+  category:string|null;editorialScore:number|null;verifiedAt:string;sourceName:string;
+};
+export async function listVerifiedStories(options:{limit?:number;category?:string;sinceHours?:number}={}):Promise<PublicStory[]>{
+  const data=await runtime({action:"stories",limit:String(options.limit??20),category:options.category??"",sinceHours:String(options.sinceHours??0)});
+  return Array.isArray(data?.stories)?data.stories:[];
+}
 export async function getPublicEdition(slug:string):Promise<PublicEdition|null>{
   const data=await runtime({action:"get",slug});
   return data?.edition??null;
