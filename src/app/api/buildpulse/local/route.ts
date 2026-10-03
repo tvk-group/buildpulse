@@ -1,0 +1,13 @@
+import {NextRequest,NextResponse} from "next/server";import {createAdminClient} from "@/lib/supabase/admin";
+const clean=(v:string|null,n:number)=>String(v??"").trim().slice(0,n);
+export async function GET(req:NextRequest){const db=createAdminClient();if(!db)return NextResponse.json({ok:false,error:"unavailable"},{status:503});const u=new URL(req.url),country=clean(u.searchParams.get("country"),2).toUpperCase(),region=clean(u.searchParams.get("region"),80),city=clean(u.searchParams.get("city"),80),locale=clean(u.searchParams.get("locale"),10).toLowerCase()||"en";if(country&&!/^[A-Z]{2}$/.test(country))return NextResponse.json({ok:false,error:"invalid_country"},{status:400});
+ let sq=db.from("buildpulse_sources").select("id,name,country_code,region_name,city_name,source_language,geographic_scope").eq("enabled",true);
+ if(country)sq=sq.eq("country_code",country);if(region)sq=sq.ilike("region_name",region);if(city)sq=sq.ilike("city_name",city);
+ let {data:sources,error:se}=await sq.limit(100);if(se)return NextResponse.json({ok:false,error:"source_query_failed"},{status:500});
+ if(!(sources??[]).length&&city&&country){const r=await db.from("buildpulse_sources").select("id,name,country_code,region_name,city_name,source_language,geographic_scope").eq("enabled",true).eq("country_code",country).limit(100);sources=r.data??[]}
+ const ids=(sources??[]).map((s:any)=>s.id);if(!ids.length)return NextResponse.json({ok:true,locale,country,region,city,stories:[]});
+ const {data:stories,error}=await db.from("buildpulse_stories").select("id,title,summary,category,canonical_url,published_at,source_id,verified_at,verified_by").in("source_id",ids).eq("verification_state","verified").order("published_at",{ascending:false}).limit(80);if(error)return NextResponse.json({ok:false,error:"story_query_failed"},{status:500});
+ const storyIds=(stories??[]).map((s:any)=>s.id);let localized:any[]=[];if(storyIds.length){const r=await db.from("buildpulse_story_localizations").select("story_id,locale,title,summary").in("story_id",storyIds).eq("locale",locale).eq("translation_state","approved");localized=r.data??[]}
+ const lm=new Map(localized.map((x:any)=>[x.story_id,x]));const sm=new Map((sources??[]).map((x:any)=>[x.id,x]));
+ return NextResponse.json({ok:true,locale,country,region,city,stories:(stories??[]).map((s:any)=>{const l=lm.get(s.id),src=sm.get(s.source_id);return{id:s.id,title:l?.title??s.title,summary:l?.summary??s.summary,category:s.category,url:s.canonical_url,publishedAt:s.published_at,translated:Boolean(l),source:{name:src?.name,country:src?.country_code,region:src?.region_name,city:src?.city_name,language:src?.source_language}}})});
+}
