@@ -57,7 +57,7 @@
 - [ ] Monthly close package, VAT/GST/sales-tax reports, annual balance/P&L/trial balance and accountant export.
 - [ ] Complete subscription entitlement lifecycle before exposing all checkout buttons.
 - [ ] Daily/weekly subscriber preferences, watchlists, delivery, unsubscribe and service-email controls.
-- [ ] Refactor payment function to lazy per-rail environment loading.
+- [x] Refactor payment function to lazy per-rail environment loading — rail configuration now resolves lazily and fails closed when required server-side settings are absent.
 - [ ] Complete secure verifiers for SOL/BNB/POL/TRX/ADA/SUI/AVAX and verify USDT Base contract authoritatively.
 - [ ] Never accept tx hash alone as proof of payment.
 
