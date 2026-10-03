@@ -1,10 +1,6 @@
 {
   "crons": [
     {
-      "path": "/api/cron/buildpulse-ingest",
-      "schedule": "17 * * * *"
-    },
-    {
       "path": "/api/cron/technology-editorial",
       "schedule": "37 */6 * * *"
     },
