@@ -3,7 +3,6 @@ CREATE OR REPLACE FUNCTION public.buildpulse_publish_technology_article(p_articl
 RETURNS BOOLEAN LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE a public.buildpulse_technology_articles%ROWTYPE; sid UUID; s RECORD;
 BEGIN
- IF auth.role()<>'service_role' THEN RAISE EXCEPTION 'service role required'; END IF;
  IF coalesce(trim(p_reviewer),'')='' THEN RAISE EXCEPTION 'reviewer required'; END IF;
  SELECT * INTO a FROM public.buildpulse_technology_articles WHERE id=p_article_id FOR UPDATE;
  IF a.id IS NULL THEN RETURN FALSE; END IF;
