@@ -163,7 +163,7 @@ async function verifyContributorClaim(admin:any,user:any,submissionId:string,txH
   const {data:submission,error}=await admin.from("buildpulse_contributor_submissions").select("id,user_id,status,payment_status").eq("id",submissionId).eq("user_id",user.id).maybeSingle();
   if(error||!submission)throw new Error("submission_not_found");
   if(!["draft","payment_pending","submitted"].includes(submission.status))throw new Error("submission_not_verifiable");
-  const {data:quote,error:qe}=await admin.from("buildpulse_contributor_payment_quotes").select("id,asset,network,expected_amount,destination,memo,quoted_at,expires_at,required_confirmations,state").eq("submission_id",submission.id).in("state",["open","observed","confirmed"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
+  const {data:quote,error:qe}=await admin.from("buildpulse_contributor_payment_quotes").select("id,asset,network,expected_amount,destination,memo,rate_usd,usd_amount,quoted_at,expires_at,required_confirmations,state").eq("submission_id",submission.id).in("state",["open","observed","confirmed"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
   if(qe||!quote)throw new Error("payment_quote_not_found");
   const asset=String(quote.asset).toUpperCase() as Asset,rail=railFor(asset,String(quote.network));
   if(normalizeAddress(rail.destination)!==normalizeAddress(String(quote.destination)))throw new Error("payment_destination_mismatch");
@@ -175,6 +175,7 @@ async function verifyContributorClaim(admin:any,user:any,submissionId:string,txH
   const actualAmount=atomicToDecimal(verified.actual,rail.decimals);
   const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_contributor_crypto_payment",{p_quote_id:quote.id,p_tx_hash:txHash,p_observed_amount:actualAmount,p_confirmations:verified.confirmations,p_metadata:{verified_at:new Date().toISOString()}});
   if(se)throw new Error(se.message||"crypto_settlement_failed");
+  await admin.rpc("buildpulse_record_service_crypto_evidence",{p_service_type:"contributor_review",p_service_reference_id:submission.id,p_user_id:user.id,p_asset:asset,p_network:rail.network,p_tx_hash:txHash,p_destination:quote.destination,p_expected:Number(quote.expected_amount),p_observed:actualAmount,p_rate:Number((quote as any).rate_usd||0),p_gross:149,p_confirmations:verified.confirmations,p_evidence:{quote_id:quote.id,verified_at:new Date().toISOString()}});
   return {state:"confirmed",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,actualAmount,settled};
 }
 
@@ -203,7 +204,7 @@ async function verifySubscriptionClaim(admin:any,user:any,paymentId:string,txHas
   if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,payment.quoted_at,payment.expires_at))throw new Error("transaction_outside_quote_window");
   if(verified.state!=="confirmed"){await admin.from("buildpulse_subscription_crypto_payments").update({state:"observed",tx_hash:txHash}).eq("id",payment.id).eq("state","open");return {state:"confirming",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
   const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_subscription_crypto_payment",{p_payment_id:payment.id,p_tx_hash:txHash,p_confirmations:verified.confirmations});
-  if(se)throw new Error(se.message||"crypto_settlement_failed");return {state:"confirmed",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,settled};
+  if(se)throw new Error(se.message||"crypto_settlement_failed");const observed=atomicToDecimal(verified.actual,rail.decimals);await admin.rpc("buildpulse_record_service_crypto_evidence",{p_service_type:"intelligence_subscription",p_service_reference_id:payment.id,p_user_id:user.id,p_asset:asset,p_network:rail.network,p_tx_hash:txHash,p_destination:payment.destination,p_expected:Number(payment.expected_amount),p_observed:observed,p_rate:Number(payment.rate_usd),p_gross:Number(payment.usd_amount),p_confirmations:verified.confirmations,p_evidence:{plan_code:payment.plan_code,billing_interval:payment.billing_interval,verified_at:new Date().toISOString()}});return {state:"confirmed",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,settled};
 }
 
 async function prepareStripe(admin:any,user:any,orderId:string){
