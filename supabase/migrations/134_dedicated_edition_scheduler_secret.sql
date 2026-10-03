@@ -1,0 +1,3 @@
+insert into public.buildpulse_private_settings(key,value,updated_at) select 'edition_scheduler_secret',encode(gen_random_bytes(32),'hex'),now() where not exists(select 1 from public.buildpulse_private_settings where key='edition_scheduler_secret');
+select cron.unschedule('buildpulse-editions-db');
+select cron.schedule('buildpulse-editions-db','15 5 * * *',$$select net.http_post(url := 'https://jdgddwutqypxxvfvkypw.supabase.co/functions/v1/buildpulse-editions-scheduled',headers := jsonb_build_object('Content-Type','application/json','x-buildpulse-scheduler-secret',(select value from public.buildpulse_private_settings where key='edition_scheduler_secret')),body := '{}'::jsonb);$$);
