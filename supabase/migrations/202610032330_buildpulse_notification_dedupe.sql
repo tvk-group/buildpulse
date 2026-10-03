@@ -1,0 +1,2 @@
+alter table public.buildpulse_notifications add column if not exists dedupe_key text;
+create unique index if not exists idx_buildpulse_notifications_user_dedupe on public.buildpulse_notifications(user_id,dedupe_key) where dedupe_key is not null;
