@@ -8,7 +8,8 @@ import {redirect} from "next/navigation";
 import {createClientSafe} from "@/utils/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {AccountDeletionControl} from "@/components/buildpulse/AccountDeletionControl";
-import {NotificationPreferences} from "@/components/buildpulse/NotificationPreferences";\nimport {LocalizedCurrency,LocalizedDate} from "@/components/buildpulse/LocalizedValue";
+import {NotificationPreferences} from "@/components/buildpulse/NotificationPreferences";
+import {LocalizedCurrency,LocalizedDate} from "@/components/buildpulse/LocalizedValue";
 
 export const metadata={title:"Account | BuildPulse",robots:{index:false,follow:false}};
 
