@@ -55,7 +55,7 @@ Deno.serve(async(req:Request)=>{
       });
       if(insertError){if(insertError.code==="23505")rejected++;else throw insertError}else{accepted++;if(autoVerified)verified++}
     }
-    sourceStats.push({name:source.name,parsed:items.length,eligible:items.slice(0,100).length,accepted:accepted-beforeAccepted,rejected:rejected-beforeRejected});
+    sourceStats.push({name:source.name,contentType,parsed:items.length,itemMarkers:(text.match(/<item\b/gi)??[]).length,entryMarkers:(text.match(/<entry\b/gi)??[]).length,eligible:items.slice(0,100).length,accepted:accepted-beforeAccepted,rejected:rejected-beforeRejected});
     await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"ok",last_fetch_error:null}).eq("id",source.id);
    }catch(e){const m=e instanceof Error?e.message:"unknown";failures.push(source.name+": "+m);await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"failed",last_fetch_error:m.slice(0,500)}).eq("id",source.id)}
   }
