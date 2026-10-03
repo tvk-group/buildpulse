@@ -1,6 +1,6 @@
 "use client";
 import {useEffect} from "react";
-export const BUILDPULSE_LOCALES=["en","de","tr","fr","es","it","pt","nl","pl","ro","el","ar","zh","ja","ko","hi"] as const;
+export const BUILDPULSE_LOCALES=["en","de","fr","tr","es","it","pt","ru","pl","nl","sv","no","fi","da","ro","hu","cs","el","bg","uk","zh","ja","ko","ar","hi"] as const;
 export type BuildPulseLocale=typeof BUILDPULSE_LOCALES[number];
 const KEY="buildpulse.locale",TZ="buildpulse.timeZone",CTX="buildpulse.context";
 export type BuildPulseContext={country:string;region:string;city:string;timezone:string;localeHint:string;source:string;precision:"coarse";ipStored:false};
