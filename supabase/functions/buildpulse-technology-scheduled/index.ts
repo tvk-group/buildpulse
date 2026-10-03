@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import {createClient} from "https://esm.sh/@supabase/supabase-js@2";
-const topics=["artificial-intelligence","cybersecurity","semiconductors","cloud-infrastructure","robotics"] as const;
-const terms:Record<string,string[]>={"artificial-intelligence":["artificial intelligence"," ai ","machine learning","foundation model","llm"],cybersecurity:["cybersecurity","cyber security","ransomware","malware","vulnerability","security breach"],semiconductors:["semiconductor","chip","gpu","foundry","wafer"],"cloud-infrastructure":["cloud","data center","datacenter","server","infrastructure"],robotics:["robot","robotics","autonomous system","humanoid"]};
+const topics=["ai","cybersecurity","developer-infrastructure","blockchain-infrastructure","digital-economy"] as const;
+const terms:Record<string,string[]>={ai:["artificial intelligence"," ai ","machine learning","foundation model","llm"],cybersecurity:["cybersecurity","cyber security","ransomware","malware","vulnerability","security breach"],"developer-infrastructure":["developer","software","cloud","data center","datacenter","server","infrastructure","open source"],"blockchain-infrastructure":["blockchain","distributed ledger","layer 2","rollup","validator","smart contract"],"digital-economy":["digital economy","fintech","payments","e-commerce","digital asset","platform economy"]};
 const json=(x:unknown,s=200)=>new Response(JSON.stringify(x),{status:s,headers:{"content-type":"application/json"}});
 const slug=(v:string)=>v.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,88);
 Deno.serve(async(req)=>{
