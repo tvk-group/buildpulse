@@ -18,9 +18,11 @@ export default async function FinancePage(){
  const registrationsResult=await db.from("buildpulse_tax_registrations").select("id,jurisdiction,tax_type,status").order("jurisdiction");
  const registrations:any[]=registrationsResult.data??[];
  const cryptoResult=await db.from("buildpulse_crypto_accounting_evidence").select("id,tax_status").limit(500);
- const reconciliationResult=await db.from("buildpulse_finance_reconciliation_queue").select("document_id,document_number,currency,gross_amount,reconciliation_state,journal_id").neq("reconciliation_state","ok").limit(100);
+ const journalResult=await db.from("buildpulse_journal_entries").select("id,entity_id,source_type,source_id,status").eq("source_type","accounting_invoice").limit(500);
  const crypto:any[]=cryptoResult.data??[];
- const reconciliation:any[]=reconciliationResult.data??[];
+ const journals:any[]=journalResult.data??[];
+ const journalByDocument=new Map(journals.filter(j=>j.status==="posted").map(j=>[j.source_id,j]));
+ const reconciliation=docs.filter(d=>d.status==="paid").map(d=>({document_id:d.id,document_number:d.document_number,currency:d.currency,gross_amount:d.gross_amount,reconciliation_state:d.immutable_snapshot?.fx_posting_required?"fx_review_required":journalByDocument.has(d.id)?"ok":"missing_journal"})).filter(x=>x.reconciliation_state!=="ok");
  const foreignPaid=docs.filter(d=>d.status==="paid"&&entity?.base_currency&&d.currency!==entity.base_currency);
  const unresolvedTax=docs.filter(d=>d.status==="paid"&&!d.immutable_snapshot?.automatic_tax?.enabled);
  const cryptoTaxPending=crypto.filter(x=>x.tax_status==="pending_determination");
