@@ -40,7 +40,7 @@
 - [x] Implement source-grounded daily News of Day selection — homepage selects the highest-scored recent verified story; runtime requires verification timestamp, reviewer and canonical source provenance and fails empty rather than fabricating filler.
 - [x] Complete newsroom control-plane workflows, corrections, complaints and takedowns — public case intake, rate limiting, editorial review, corrected/withheld/restored publication controls and workforce audit logging are implemented.
 - [ ] Require sourced verification before factual publication; maintain provenance.
-- [ ] Complete daily/weekly automated editions with human approval where required.
+- [ ] Complete daily/weekly automated editions with human approval where required. Daily plus Monday-weekly source-grounded draft generation is now implemented behind CRON_SECRET; composition sends revision-bound founder review and does not trigger delivery. Production scheduling/invocation verification remains open.
 
 ## P0 — Payments, subscriptions, invoicing and accounting
 - [x] Stripe Intelligence products/prices/payment links created.
