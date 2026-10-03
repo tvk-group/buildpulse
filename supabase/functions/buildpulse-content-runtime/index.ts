@@ -32,7 +32,7 @@ Deno.serve(async(req:Request)=>{
     const category=(url.searchParams.get("category")??"").trim().slice(0,80);
     const sinceHours=Math.max(0,Math.min(24*30,Number(url.searchParams.get("sinceHours")??0)||0));
     let query=admin.from("buildpulse_stories")
-      .select("id,title,summary,canonical_source_url,published_at,category,editorial_score,verified_at,verified_by,source_id,publication_state,correction_note,corrected_at")
+      .select("id,title,summary,canonical_source_url,image_url,published_at,category,editorial_score,verified_at,verified_by,source_id,publication_state,correction_note,corrected_at")
       .eq("verification_state","verified")
       .neq("publication_state","withheld")
       .not("verified_at","is",null)
@@ -52,7 +52,7 @@ Deno.serve(async(req:Request)=>{
     if(sourceError)throw sourceError;
     const sourceMap=new Map((sources??[]).map((x:any)=>[x.id,x.name]));
     return reply({ok:true,stories:(data??[]).map((x:any)=>({
-      id:x.id,title:x.title,summary:x.summary,canonicalSourceUrl:x.canonical_source_url,
+      id:x.id,title:x.title,summary:x.summary,canonicalSourceUrl:x.canonical_source_url,imageUrl:x.image_url,
       publishedAt:x.published_at,category:x.category,editorialScore:x.editorial_score,
       verifiedAt:x.verified_at,sourceName:sourceMap.get(x.source_id)??"Source",publicationState:x.publication_state,correctionNote:x.correction_note,correctedAt:x.corrected_at
     }))});
