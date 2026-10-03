@@ -2,17 +2,21 @@ import {createHash} from "crypto";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {runBuildPulseAi} from "@/lib/buildpulse/ai-gateway";
 
-const topics=["tvk-ecosystem","entelekron","sovereign-ai","energiemind","presale-technology"] as const;
+const topics=["ai","cybersecurity","developer-infrastructure","blockchain-infrastructure","digital-economy"] as const;
 const labels:Record<(typeof topics)[number],string>={
- "tvk-ecosystem":"TVK ecosystem technology",
- entelekron:"ENTELΞKRON ecosystem",
- "sovereign-ai":"Sovereign AI",
- energiemind:"EnergieMIND",
- "presale-technology":"presale infrastructure and technology"
+ ai:"artificial intelligence and machine learning",
+ cybersecurity:"cybersecurity and digital resilience",
+ "developer-infrastructure":"developer platforms, cloud and software infrastructure",
+ "blockchain-infrastructure":"blockchain protocols, wallets, custody and infrastructure",
+ "digital-economy":"digital economy, platforms, payments and technology regulation"
 };
 function slugify(v:string){return v.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,88)}
 const topicTerms:Record<(typeof topics)[number],string[]>={
- "tvk-ecosystem":["tvk","teverka"],entelekron:["entelekron","entelξkron","enk"],"sovereign-ai":["sovereign ai","ai sovereignty","sovereign artificial intelligence"],energiemind:["energiemind","energie mind","enm"],"presale-technology":["presale","pre-sale","token sale","vesting","kyc","wallet","payment rail","smart contract","token infrastructure"]
+ ai:["artificial intelligence"," ai ","machine learning","model","inference","llm","foundation model"],
+ cybersecurity:["cybersecurity","security","breach","vulnerability","malware","ransomware","zero-day","identity security"],
+ "developer-infrastructure":["developer","github","cloud","database","api","software","kubernetes","serverless","infrastructure"],
+ "blockchain-infrastructure":["blockchain","ethereum","wallet","custody","smart contract","layer 2","stablecoin","crypto infrastructure"],
+ "digital-economy":["digital economy","payments","fintech","platform","commerce","regulation","digital assets","tokenization"]
 };
 function relevant(topic:(typeof topics)[number],s:any){const hay=`${s.title??""} ${s.summary??""} ${s.category??""}`.toLowerCase();return topicTerms[topic].some(term=>hay.includes(term))}
 function parse(text:string){const title=text.match(/^TITLE:\s*(.+)$/mi)?.[1]?.trim();const dek=text.match(/^DEK:\s*(.+)$/mi)?.[1]?.trim();const body=text.split(/^BODY:\s*$/mi)[1]?.trim();if(!title||!body)throw new Error("Technology agent returned invalid article format");return{title,dek:dek||null,body}}
@@ -21,9 +25,9 @@ export async function runTechnologyEditorialAgent(){
  const {data:agent,error:ae}=await db.from("buildpulse_agents").select("id,enabled").eq("code","technology-editorial").maybeSingle();
  if(ae||!agent?.enabled)throw new Error("Technology editorial agent unavailable");
  const {data:last}=await db.from("buildpulse_technology_articles").select("topic").order("generated_at",{ascending:false}).limit(1).maybeSingle();
- const idx=last?Math.max(0,topics.indexOf(last.topic as any)): -1,topic=topics[(idx+1)%topics.length];
+ const priorIndex=last?topics.indexOf(last.topic as any):-1,idx=priorIndex>=0?priorIndex:-1,topic=topics[(idx+1)%topics.length];
  const since=new Date(Date.now()-14*86400000).toISOString();
- const {data:stories,error}=await db.from("buildpulse_stories").select("id,title,summary,category,canonical_source_url,published_at,verified_at,verified_by").eq("verification_state","verified").not("canonical_source_url","is",null).not("verified_at","is",null).not("verified_by","is",null).gte("published_at",since).order("editorial_score",{ascending:false}).limit(12);
+ const {data:stories,error}=await db.from("buildpulse_stories").select("id,title,summary,category,canonical_source_url,published_at,verified_at,verified_by").eq("verification_state","verified").neq("publication_state","withheld").not("canonical_source_url","is",null).not("verified_at","is",null).not("verified_by","is",null).gte("published_at",since).order("editorial_score",{ascending:false}).limit(12);
  if(error)throw error;if(!(stories??[]).length)return{skipped:true,reason:"no_recent_verified_sources",topic};
  const relevantStories=stories!.filter((s:any)=>relevant(topic,s));
  if(!relevantStories.length)return{skipped:true,reason:"no_topic_relevant_verified_sources",topic};
