@@ -314,6 +314,15 @@ Deno.serve(async(req:Request)=>{
     const body=await req.json().catch(()=>null);
     if(!body||typeof body!=="object")return reply({ok:false,error:"invalid_request"},400);
     const action=String(body.action??"");
+    if(action==="capabilities"){
+      const supported=new Set(["ETH","BTC","USDC","USDT","XRP"]);
+      const rails=Object.values(RAIL_DEFINITIONS).filter(def=>{
+        if(!supported.has(def.asset))return false;
+        if(def.asset==="USDT"&&def.network==="Base")return false;
+        return Boolean(optionalEnv(def.destinationEnv));
+      }).map(def=>({asset:def.asset,network:def.network,requiresMemo:Boolean(def.memoEnv&&optionalEnv(def.memoEnv))}));
+      return reply({ok:true,rails});
+    }
     const orderId=String(body.orderId??"");
     if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return reply({ok:false,error:"invalid_order"},400);
     if(action==="stripe"){
