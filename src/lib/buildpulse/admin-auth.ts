@@ -27,5 +27,5 @@ export async function requireBuildPulseAdmin(){
   const {data:aal,error}=await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
   if(error||aal?.currentLevel!=="aal2")return {ok:false as const,mfaRequired:true as const};
  }
- return {ok:true as const,email};
+ return {ok:true as const,email,userId:user.id};
 }
