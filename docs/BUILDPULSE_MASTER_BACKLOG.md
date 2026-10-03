@@ -142,7 +142,7 @@
 - [x] Crypto and FX ticker foundations.
 - [ ] Licensed/verified indices, metals and global exchange feeds; never fabricate. Twelve Data/Finnhub market adapters and TradingView visualization are integrated; quote API now exposes provider, observation time and real-time/reference status, while full licensed global indices/metals coverage remains incomplete.
 - [x] Align ticker behavior consistently across BuildPulse pages — shared market tape consumes the normalized market endpoint and visibly labels source plus LIVE/REF freshness semantics.
-- [ ] Intelligence subscriber dashboard/watchlists.
+- [x] Intelligence subscriber dashboard/watchlists — authenticated /account/intelligence claims eligible signed-Stripe entitlements, exposes active/past-due/paused plan state, and persists bounded topic/watchlist, IANA delivery-time-zone, service-email and separate marketing-consent preferences with an audit event trail.
 - [ ] Public/licensed-data-only analysis; never sell MNPI/leaked/confidential information.
 - [ ] Forecast methodology, provenance, timestamps and uncertainty.
 
