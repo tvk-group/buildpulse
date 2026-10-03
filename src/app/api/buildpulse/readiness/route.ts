@@ -33,6 +33,8 @@ export async function GET(){
     paymentsReady,
     stripeReady,
     cryptoReady,
+    requiredCryptoAssets,
+    missingCryptoAssets,
     cryptoRails,
     cryptoRailDetails,
     supabaseConfigured:config.configured,
