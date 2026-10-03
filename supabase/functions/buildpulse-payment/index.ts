@@ -178,6 +178,34 @@ async function verifyContributorClaim(admin:any,user:any,submissionId:string,txH
   return {state:"confirmed",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,actualAmount,settled};
 }
 
+async function issueSubscriptionQuote(admin:any,user:any,planCode:string,billingInterval:string,asset:Asset,network?:string){
+  if(!["month","year"].includes(billingInterval))throw new Error("invalid_billing_interval");
+  const rail=railFor(asset,network);
+  const {data:plan,error}=await admin.from("buildpulse_subscription_plans").select("code,monthly_usd,annual_usd,active").eq("code",planCode).eq("active",true).maybeSingle();
+  if(error||!plan)throw new Error("subscription_plan_not_found");
+  const usd=Number(billingInterval==="year"?plan.annual_usd:plan.monthly_usd);if(!Number.isFinite(usd)||usd<=0)throw new Error("invalid_plan_amount");
+  const price=await fetchJson(`https://api.coinbase.com/v2/prices/${asset}-USD/spot`,{headers:{"Accept":"application/json"}});
+  const rate=Number(price?.data?.amount);if(!Number.isFinite(rate)||rate<=0)throw new Error("market_rate_unavailable");
+  const expected=ceilQuote(usd,rate,rail.decimals),now=new Date(),expires=new Date(now.getTime()+30*60_000);
+  await admin.from("buildpulse_subscription_crypto_payments").update({state:"cancelled"}).eq("user_id",user.id).in("state",["open","observed"]);
+  const {data:payment,error:pe}=await admin.from("buildpulse_subscription_crypto_payments").insert({user_id:user.id,email:user.email??"",plan_code:plan.code,billing_interval:billingInterval,usd_amount:usd,asset:rail.asset,network:rail.network,expected_amount:expected,destination:rail.destination,memo:rail.memo??null,rate_usd:rate,quoted_at:now.toISOString(),expires_at:expires.toISOString(),required_confirmations:rail.requiredConfirmations,state:"open"}).select("id,plan_code,billing_interval,usd_amount,asset,network,expected_amount,destination,memo,rate_usd,quoted_at,expires_at,required_confirmations,state").single();
+  if(pe||!payment)throw new Error("quote_persistence_failed");return {payment};
+}
+async function verifySubscriptionClaim(admin:any,user:any,paymentId:string,txHashRaw:string){
+  const txHash=txHashRaw.trim();
+  const {data:payment,error}=await admin.from("buildpulse_subscription_crypto_payments").select("*").eq("id",paymentId).eq("user_id",user.id).maybeSingle();
+  if(error||!payment)throw new Error("payment_not_found");if(!["open","observed","confirmed"].includes(payment.state))throw new Error("payment_not_verifiable");
+  const asset=String(payment.asset).toUpperCase() as Asset,rail=railFor(asset,String(payment.network));
+  if(normalizeAddress(rail.destination)!==normalizeAddress(String(payment.destination)))throw new Error("payment_destination_mismatch");
+  if(asset==="ETH"||asset==="USDC"||asset==="USDT"){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
+  let verified;if(asset==="ETH"||asset==="USDC"||asset==="USDT")verified=await verifyEvm(asset,rail,payment,txHash);else if(asset==="BTC")verified=await verifyBitcoin(rail,txHash);else verified=await verifyXrp(rail,txHash);
+  if(verified.actual<decimalToAtomic(payment.expected_amount,rail.decimals))throw new Error("payment_underpaid");
+  if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,payment.quoted_at,payment.expires_at))throw new Error("transaction_outside_quote_window");
+  if(verified.state!=="confirmed"){await admin.from("buildpulse_subscription_crypto_payments").update({state:"observed",tx_hash:txHash}).eq("id",payment.id).eq("state","open");return {state:"confirming",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
+  const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_subscription_crypto_payment",{p_payment_id:payment.id,p_tx_hash:txHash,p_confirmations:verified.confirmations});
+  if(se)throw new Error(se.message||"crypto_settlement_failed");return {state:"confirmed",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,settled};
+}
+
 async function prepareStripe(admin:any,user:any,orderId:string){
   const [{data:order,error:orderError},{data:profile,error:profileError}]=await Promise.all([
     admin.from("buildpulse_ad_orders").select("id,user_id,product_id,status,amount_usd,created_at").eq("id",orderId).eq("user_id",user.id).maybeSingle(),
@@ -358,6 +386,9 @@ Deno.serve(async(req:Request)=>{
       }).map(def=>({asset:def.asset,network:def.network,requiresMemo:Boolean(def.memoEnv&&optionalEnv(def.memoEnv))}));
       return reply({ok:true,rails});
     }
+    const subscriptionPaymentId=String(body.paymentId??"");
+    if(action==="subscription_quote"){const asset=String(body.asset??"").toUpperCase() as Asset;let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){return reply({ok:false,error:e instanceof Error?e.message:"unsupported_network"},400)}if(!["ETH","BTC","USDC","USDT","XRP"].includes(asset)||(asset==="USDT"&&rail.network==="Base"))return reply({ok:false,error:"verification_not_enabled_for_asset"},503);return reply({ok:true,method:asset,...await issueSubscriptionQuote(admin,user,String(body.planCode??""),String(body.billingInterval??""),asset,rail.network)})}
+    if(action==="subscription_verify"){if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(subscriptionPaymentId))return reply({ok:false,error:"invalid_payment"},400);return reply({ok:true,...await verifySubscriptionClaim(admin,user,subscriptionPaymentId,String(body.txHash??""))})}
     const submissionId=String(body.submissionId??"");
     if(action==="contributor_quote"||action==="contributor_verify"){
       if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId))return reply({ok:false,error:"invalid_submission"},400);
@@ -386,10 +417,10 @@ Deno.serve(async(req:Request)=>{
     return reply({ok:false,error:"unsupported_action"},400);
   }catch(error){
     const message=error instanceof Error?error.message:"payment_operation_failed";
-    const status=["order_not_found","submission_not_found","payment_quote_not_found"].includes(message)?404:
+    const status=["order_not_found","submission_not_found","payment_not_found","subscription_plan_not_found","payment_quote_not_found"].includes(message)?404:
       ["active_advertiser_profile_required"].includes(message)?403:
       ["order_not_payable","order_not_verifiable","submission_not_payable","submission_not_verifiable","transaction_already_used","order_price_mismatch","fee_mismatch"].includes(message)?409:
-      ["network_required","unsupported_network","invalid_transaction_hash","payment_underpaid","transaction_outside_quote_window","destination_mismatch","destination_tag_mismatch","not_xrp_payment","non_xrp_amount","payment_rail_mismatch","payment_destination_mismatch","transaction_failed"].includes(message)?400:500;
+      ["network_required","unsupported_network","invalid_billing_interval","invalid_transaction_hash","payment_underpaid","transaction_outside_quote_window","destination_mismatch","destination_tag_mismatch","not_xrp_payment","non_xrp_amount","payment_rail_mismatch","payment_destination_mismatch","transaction_failed"].includes(message)?400:500;
     return reply({ok:false,error:message},status);
   }
 });
