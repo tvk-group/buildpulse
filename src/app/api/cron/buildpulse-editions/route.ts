@@ -1,6 +1,6 @@
 import {NextRequest,NextResponse} from "next/server";
 import {buildEdition} from "@/lib/buildpulse/edition-builder";
-import {composeBuildPulseEdition} from "@/lib/buildpulse/compose";
+import {composeBuildPulseEdition} from "@/lib/buildpulse/compose";\nimport {createAdminClient} from "@/lib/supabase/admin";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
