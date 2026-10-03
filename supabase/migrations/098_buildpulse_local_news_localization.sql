@@ -1,0 +1,9 @@
+alter table public.buildpulse_sources add column if not exists country_code text;
+alter table public.buildpulse_sources add column if not exists region_name text;
+alter table public.buildpulse_sources add column if not exists city_name text;
+alter table public.buildpulse_sources add column if not exists source_language text;
+alter table public.buildpulse_sources add column if not exists geographic_scope text not null default 'global' check(geographic_scope in ('global','country','region','city'));
+create index if not exists idx_buildpulse_sources_geo on public.buildpulse_sources(country_code,region_name,city_name) where enabled=true;
+create table if not exists public.buildpulse_story_localizations(id uuid primary key default gen_random_uuid(),story_id uuid not null references public.buildpulse_stories(id) on delete cascade,locale text not null,title text not null,summary text,body_text text,translation_state text not null default 'draft' check(translation_state in ('draft','review','approved','rejected')),provider text,model text,source_language text,provenance jsonb not null default '{}'::jsonb,reviewed_by uuid references auth.users(id) on delete set null,reviewed_at timestamptz,created_at timestamptz not null default now(),updated_at timestamptz not null default now(),unique(story_id,locale));
+alter table public.buildpulse_story_localizations enable row level security;revoke all on public.buildpulse_story_localizations from anon,authenticated;grant all on public.buildpulse_story_localizations to service_role;
+create index if not exists idx_buildpulse_story_localizations_story_locale on public.buildpulse_story_localizations(story_id,locale,translation_state);
