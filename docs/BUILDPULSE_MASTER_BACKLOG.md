@@ -90,7 +90,7 @@
 - [ ] Hybrid classical + ML-KEM key establishment where mature audited runtime supports it.
 - [ ] Hybrid classical + ML-DSA signatures where appropriate.
 - [ ] Verify TLS/CDN hybrid-PQ capability.
-- [ ] Admin passkeys/MFA, secret rotation, SBOM/dependency review and backup/storage encryption. Workforce sensitive actions enforce AAL2 MFA; weekly Dependabot and CodeQL configuration are committed, with major dependency upgrades held for compatibility review. Passkey runtime enforcement, secret-rotation evidence, SBOM and backup/storage encryption verification remain open.
+- [ ] Admin passkeys/MFA, secret rotation, SBOM/dependency review and backup/storage encryption. Workforce sensitive actions enforce AAL2 MFA; weekly Dependabot and CodeQL configuration are committed, with major dependency upgrades held for compatibility review. Supply-chain CI now runs locked dependency installation, high-severity npm audit and pinned CycloneDX SBOM generation with 30-day artifact evidence on main/PR/weekly runs. Passkey runtime enforcement, secret-rotation evidence and backup/storage encryption verification remain open; SBOM workflow execution evidence must be green before that sub-gate is considered verified.
 - [ ] Downgrade protection, key rotation/recovery and independent security review.
 - [ ] Do not market as quantum-secure until protocol and review gates are satisfied.
 
