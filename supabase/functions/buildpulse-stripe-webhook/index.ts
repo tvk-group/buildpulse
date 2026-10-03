@@ -182,6 +182,44 @@ async function syncSubscription(admin:any,subscription:any){
   if(error)throw error;return {subscriptionSynced:true,status};
 }
 
+async function syncAccountingInvoice(admin:any,event:any,invoice:any){
+  const stripeInvoiceId=String(invoice?.id||"");if(!stripeInvoiceId)return {ignored:"invoice_id_missing"};
+  const issuedAt=invoice?.created?new Date(Number(invoice.created)*1000).toISOString():new Date().toISOString();
+  const paidAt=event.type==="invoice.paid"?(invoice?.status_transitions?.paid_at?new Date(Number(invoice.status_transitions.paid_at)*1000).toISOString():new Date().toISOString()):null;
+  const currency=String(invoice?.currency||"").toUpperCase();if(!/^[A-Z]{3}$/.test(currency))return {ignored:"invoice_currency_missing"};
+  const gross=Number(invoice?.total??invoice?.amount_due??0)/100;
+  const netRaw=invoice?.total_excluding_tax??invoice?.subtotal_excluding_tax??invoice?.subtotal??invoice?.total??0;
+  const net=Number(netRaw)/100,tax=Math.max(0,gross-net);
+  const stripeCustomer=typeof invoice.customer==="string"?invoice.customer:invoice.customer?.id??null;
+  const email=String(invoice?.customer_email||invoice?.customer_details?.email||"").trim().toLowerCase()||null;
+  const {data:entity}=await admin.from("buildpulse_accounting_entities").select("id,base_currency").eq("is_default",true).maybeSingle();
+  if(!entity)return {ignored:"accounting_entity_missing"};
+  let customerId:null|string=null;
+  if(stripeCustomer||email){
+    let existing:any=null;
+    if(stripeCustomer){const r=await admin.from("buildpulse_accounting_customers").select("id").eq("stripe_customer_id",stripeCustomer).maybeSingle();existing=r.data}
+    if(!existing&&email){const r=await admin.from("buildpulse_accounting_customers").select("id").ilike("email",email).maybeSingle();existing=r.data}
+    if(existing)customerId=existing.id;
+    else{
+      const {data:newCustomer}=await admin.from("buildpulse_accounting_customers").insert({
+        stripe_customer_id:stripeCustomer,email,legal_name:invoice?.customer_name??null,
+        country_code:invoice?.customer_address?.country??null,billing_address:invoice?.customer_address??{},
+        location_evidence:{source:"stripe_invoice",invoice_id:stripeInvoiceId}
+      }).select("id").single();customerId=newCustomer?.id??null;
+    }
+  }
+  const {data:existingDoc}=await admin.from("buildpulse_accounting_documents").select("id,document_number").eq("stripe_invoice_id",stripeInvoiceId).maybeSingle();
+  let documentNumber=existingDoc?.document_number??null;
+  if(!documentNumber){const {data:num,error:numErr}=await admin.rpc("buildpulse_next_document_number",{p_entity_id:entity.id,p_document_type:"invoice",p_issued_at:issuedAt});if(numErr||!num)throw new Error("document_number_allocation_failed");documentNumber=num}
+  const subscriptionId=typeof invoice.subscription==="string"?invoice.subscription:invoice.subscription?.id??null;
+  const paymentIntent=typeof invoice.payment_intent==="string"?invoice.payment_intent:invoice.payment_intent?.id??null;
+  const status=event.type==="invoice.paid"?"paid":String(invoice?.status||"open");
+  const snapshot={stripe_event_id:event.id,stripe_invoice_id:stripeInvoiceId,automatic_tax:invoice?.automatic_tax??null,total_taxes:invoice?.total_taxes??null,customer_tax_ids:invoice?.customer_tax_ids??null,billing_reason:invoice?.billing_reason??null,hosted_invoice_url:invoice?.hosted_invoice_url??null,base_currency:entity.base_currency,fx_posting_required:currency!==String(entity.base_currency).toUpperCase()};
+  const row={entity_id:entity.id,customer_id:customerId,document_type:"invoice",document_number:documentNumber,currency,net_amount:net,tax_amount:tax,gross_amount:gross,tax_jurisdiction:invoice?.customer_address?.country??null,tax_treatment:null,tax_rate:net>0?tax/net:null,reverse_charge:false,stripe_invoice_id:stripeInvoiceId,stripe_payment_intent_id:paymentIntent,stripe_subscription_id:subscriptionId,provider_pdf_url:invoice?.invoice_pdf??null,status,issued_at:issuedAt,due_at:invoice?.due_date?new Date(Number(invoice.due_date)*1000).toISOString():null,paid_at:paidAt,immutable_snapshot:snapshot};
+  const {data:doc,error:docErr}=await admin.from("buildpulse_accounting_documents").upsert(row,{onConflict:"stripe_invoice_id"}).select("id,document_number").single();if(docErr)throw docErr;
+  return {accountingInvoiceSynced:true,documentId:doc.id,documentNumber:doc.document_number,status,fxPostingRequired:snapshot.fx_posting_required};
+}
+
 Deno.serve(async(req:Request)=>{
   if(req.method!=="POST")return reply({ok:false,error:"method_not_allowed"},405);
   try{
@@ -202,6 +240,7 @@ Deno.serve(async(req:Request)=>{
     else if(type==="charge.refunded")result=await handleRefund(admin,event,object);
     else if(type==="charge.dispute.created"||type==="charge.dispute.closed")result=await handleDispute(admin,event,object);
     else if(type==="customer.subscription.updated"||type==="customer.subscription.deleted")result=await syncSubscription(admin,object);
+    else if(type==="invoice.paid"||type==="invoice.payment_failed")result=await syncAccountingInvoice(admin,event,object);
     return reply({ok:true,...result});
   }catch(error){
     console.error("buildpulse_stripe_webhook_error",error);
