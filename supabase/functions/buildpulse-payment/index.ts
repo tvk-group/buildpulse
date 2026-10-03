@@ -289,34 +289,11 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
   }
 
   const actualAmount=atomicToDecimal(verified.actual,rail.decimals);
-  const {error:eventError}=await admin.from("buildpulse_ad_payment_events").insert({
-    order_id:order.id,provider_event_key:eventKey,crypto_asset:asset,crypto_network:rail.network,tx_hash:txHash,
-    observed_amount:actualAmount,confirmations:verified.confirmations,state:"confirmed",
-    metadata:{provider:"buildpulse_supabase_onchain_verifier",quote_id:quote.id,onchain_verified:true,required_confirmations:rail.requiredConfirmations}
+  const {error:settlementError}=await admin.rpc("buildpulse_finalize_crypto_ad_payment",{
+    p_order_id:order.id,p_quote_id:quote.id,p_provider_event_key:eventKey,p_tx_hash:txHash,
+    p_observed_amount:actualAmount,p_confirmations:verified.confirmations,p_verified_at:new Date().toISOString()
   });
-  if(eventError){
-    if(eventError.code==="23505")throw new Error("transaction_already_used");
-    throw eventError;
-  }
-  const {data:invoice,error:invoiceLookupError}=await admin.from("buildpulse_billing_invoices").select("id,user_id,amount_usd").eq("order_id",order.id).maybeSingle();
-  if(invoiceLookupError||!invoice)throw new Error("invoice_not_found");
-  await Promise.all([
-    admin.from("buildpulse_ad_payment_quotes").update({state:"confirmed"}).eq("id",quote.id),
-    admin.from("buildpulse_ad_orders").update({
-      status:"review",paid_tx_hash:txHash,paid_at:now,payment_method:asset,payment_provider:"crypto",payment_reference:quote.id,updated_at:now
-    }).eq("id",order.id).in("status",["awaiting_payment","payment_detected"]),
-    admin.from("buildpulse_billing_invoices").update({
-      status:"paid",paid_at:now,payment_method:asset,payment_reference:quote.id,updated_at:now,
-      metadata:{tx_hash:txHash,asset,network:rail.network,amount:actualAmount,onchain_verified:true}
-    }).eq("order_id",order.id),
-    admin.from("buildpulse_crypto_accounting_evidence").insert({
-      order_id:order.id,invoice_id:invoice.id,user_id:invoice.user_id,quote_id:quote.id,asset,network:rail.network,tx_hash:txHash,
-      destination:quote.destination,expected_crypto_amount:quote.expected_amount,observed_crypto_amount:actualAmount,
-      quote_rate_usd:quote.rate_usd,gross_amount_usd:invoice.amount_usd,confirmations:verified.confirmations,
-      verifier:"buildpulse_supabase_onchain_verifier",tax_status:"pending_determination",
-      evidence:{quoted_at:quote.quoted_at,expires_at:quote.expires_at,required_confirmations:rail.requiredConfirmations,onchain_verified:true}
-    })
-  ]);
+  if(settlementError)throw new Error(settlementError.message||"crypto_settlement_failed");
   return {state:"confirmed",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,actualAmount};
 }
 
