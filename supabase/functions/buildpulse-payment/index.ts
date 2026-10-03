@@ -16,13 +16,7 @@ const ISSUER={
 
 type Asset="ETH"|"BTC"|"USDC"|"USDT"|"XRP";
 type Rail={asset:Asset;network:string;destination:string;memo?:string;decimals:number;requiredConfirmations:number};
-const RAILS:Record<Asset,Rail>={
-  ETH:{asset:"ETH",network:"Ethereum",destination:"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:18,requiredConfirmations:12},
-  BTC:{asset:"BTC",network:"Bitcoin",destination:"bc1q6gyckg3ya4zwhslnr3regspj8pk5anyaz50ynl",decimals:8,requiredConfirmations:3},
-  USDC:{asset:"USDC",network:"Base",destination:"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:6,requiredConfirmations:20},
-  USDT:{asset:"USDT",network:"Ethereum",destination:"0x1A5a410a35d8685A0C5F58E61B3083Ea20820e0f",decimals:6,requiredConfirmations:12},
-  XRP:{asset:"XRP",network:"XRPL",destination:"rPoLiQPahRkwi9dkhiCgw98x84fQCviT7Z",memo:"1234",decimals:6,requiredConfirmations:1}
-};
+function requiredEnv(name:string){const v=Deno.env.get(name)?.trim();if(!v)throw new Error(`missing_payment_config:${name}`);return v}\nfunction rails():Record<Asset,Rail>{return {\n  ETH:{asset:"ETH",network:"Ethereum",destination:requiredEnv("BUILDPULSE_ETH_ADDRESS"),decimals:18,requiredConfirmations:12},\n  BTC:{asset:"BTC",network:"Bitcoin",destination:requiredEnv("BUILDPULSE_BTC_ADDRESS"),decimals:8,requiredConfirmations:3},\n  USDC:{asset:"USDC",network:Deno.env.get("BUILDPULSE_USDC_NETWORK")?.trim()||"Base",destination:requiredEnv("BUILDPULSE_USDC_ADDRESS"),decimals:6,requiredConfirmations:20},\n  USDT:{asset:"USDT",network:Deno.env.get("BUILDPULSE_USDT_NETWORK")?.trim()||"Ethereum",destination:requiredEnv("BUILDPULSE_USDT_ADDRESS"),decimals:6,requiredConfirmations:12},\n  XRP:{asset:"XRP",network:"XRPL",destination:requiredEnv("BUILDPULSE_XRP_ADDRESS"),memo:Deno.env.get("BUILDPULSE_XRP_DESTINATION_TAG")?.trim()||undefined,decimals:6,requiredConfirmations:1}\n}}
 const ERC20:Partial<Record<Asset,string>>={
   USDC:"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   USDT:"0xdAC17F958D2ee523a2206206994597C13D831ec7"
@@ -67,7 +61,7 @@ function topicForAddress(address:string){return "0x"+address.toLowerCase().repla
 function normalizeAddress(address:string|null|undefined){return (address||"").toLowerCase()}
 
 async function issueQuote(admin:any,user:any,orderId:string,asset:Asset){
-  const rail=RAILS[asset];
+  const rail=rails()[asset];
   const [{data:order,error:orderError},{data:profile,error:profileError}]=await Promise.all([
     admin.from("buildpulse_ad_orders").select("id,user_id,status,amount_usd,created_at").eq("id",orderId).eq("user_id",user.id).maybeSingle(),
     admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,status").eq("user_id",user.id).maybeSingle()
@@ -220,7 +214,7 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
     .eq("order_id",order.id).in("state",["open","observed","confirmed"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
   if(quoteError||!quote)throw new Error("payment_quote_not_found");
   const asset=String(quote.asset).toUpperCase() as Asset;
-  const rail=RAILS[asset];
+  const rail=rails()[asset];
   if(!rail||rail.network.toLowerCase()!==String(quote.network).toLowerCase())throw new Error("payment_rail_mismatch");
   if(normalizeAddress(rail.destination)!==normalizeAddress(String(quote.destination)))throw new Error("payment_destination_mismatch");
 
@@ -301,7 +295,7 @@ Deno.serve(async(req:Request)=>{
     }
     if(action==="quote"){
       const asset=String(body.asset??"").toUpperCase() as Asset;
-      if(!RAILS[asset])return reply({ok:false,error:"unsupported_asset"},400);
+      if(!rails()[asset])return reply({ok:false,error:"unsupported_asset"},400);
       const result=await issueQuote(admin,user,orderId,asset);
       return reply({ok:true,method:asset,...result});
     }
