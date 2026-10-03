@@ -35,7 +35,7 @@
 - [x] Source ingestion/orchestration, story verification state and review provenance foundations.
 - [x] Edition generation/review/scheduling/delivery foundations and immutable sent artifacts.
 - [x] Make World/current news dynamic; remove stale hard-coded stories — /world now renders only verified runtime stories with canonical source provenance.
-- [ ] Implement source-grounded daily News of Day selection.
+- [x] Implement source-grounded daily News of Day selection — homepage selects the highest-scored recent verified story; runtime requires verification timestamp, reviewer and canonical source provenance and fails empty rather than fabricating filler.
 - [ ] Complete newsroom control-plane workflows, corrections, complaints and takedowns.
 - [ ] Require sourced verification before factual publication; maintain provenance.
 - [ ] Complete daily/weekly automated editions with human approval where required.
