@@ -20,7 +20,8 @@ export default async function AccountPage(){
   db.from("buildpulse_art_submissions").select("id",{head:true,count:"exact"}).eq("user_id",user.id),
   db.from("buildpulse_ad_orders").select("id",{head:true,count:"exact"}).eq("user_id",user.id)
  ]);
- const {data:sessions,error:sessionsError}=await supabase.rpc("buildpulse_list_own_sessions");\n const docs=customer?.id?(await db.from("buildpulse_accounting_documents").select("id,document_number,document_type,currency,gross_amount,status,issued_at,paid_at,provider_pdf_url").eq("customer_id",customer.id).order("created_at",{ascending:false}).limit(20)).data??[]:[];
+ const {data:sessions,error:sessionsError}=await supabase.rpc("buildpulse_list_own_sessions");
+ const docs=customer?.id?(await db.from("buildpulse_accounting_documents").select("id,document_number,document_type,currency,gross_amount,status,issued_at,paid_at,provider_pdf_url").eq("customer_id",customer.id).order("created_at",{ascending:false}).limit(20)).data??[]:[];
  const active=(subs??[]).find((s:any)=>["active","trialing"].includes(s.status));const cryptoActive=(cryptoTerms??[]).find((p:any)=>p.state==="confirmed"&&p.entitlement_end&&new Date(p.entitlement_end)>new Date());const isStripe=Boolean(active?.stripe_subscription_id);
  const cards=[["Intelligence",active?active.plan_code:"No active plan",active?"/account/intelligence":"/subscriptions"],["Invoices & receipts",docs.length,"/account#documents"],["Contributor submissions",contrib??0,"/contribute"],["Art submissions",arts??0,"/arts/contribute"],["Advertising campaigns",ads??0,"/advertiser"],["Social",social?("@"+social.handle):"Set up profile",social?"/account/social":"/social"]];
  return <main className="min-h-screen bg-[#fbfaf6] text-[#17202a]"><div className="mx-auto max-w-[1280px] px-5 py-12">
