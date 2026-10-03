@@ -16,7 +16,7 @@
 - [x] Role-scoped /workforce portal and server authorization helper.
 - [x] Initial /workforce/control operations command center.
 - [x] Enforce Supabase AAL2 MFA assurance before sensitive workforce actions; passkey requirement remains policy metadata until provider/runtime enforcement is completed.
-- [ ] Add workforce device/session management and periodic access reviews. Periodic access-review records and founder/admin retain/revoke controls are implemented; the workforce security surface reports current Supabase Auth assurance/factors and can revoke all other active sessions behind workforce+AAL2 authorization. Per-device session inventory remains incomplete.
+- [x] Add workforce device/session management and periodic access reviews — periodic review records and founder/admin retain/revoke controls are implemented; the workforce security surface reports provider-backed current-session assurance/factors and can revoke all other active sessions behind workforce+AAL2 authorization. BuildPulse intentionally does not maintain a shadow session-token/device database; provider-wide other-session revocation is the supported session-management boundary.
 - [x] Add secure workforce invitation/onboarding and offboarding with hashed expiring invite tokens, scoped roles, contractor expiry, MFA redirect and audit logging.
 - [x] Add unified authenticated client portal at /account for subscriptions, accounting documents, Social identity, contributor/art activity and advertiser access; production deployment dpl_EXva3NG8kQSjsKeBFjji1HJdW39q READY.
 - [ ] Expand control plane: editorial, Social, ads, subscriptions, finance/tax, localization, moderation, infrastructure, incidents, analytics, approvals, audit explorer and notifications.
