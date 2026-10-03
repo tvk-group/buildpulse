@@ -2,6 +2,7 @@ import Link from "next/link";
 import {getSupabasePublicConfig} from "@/lib/supabase/env";
 
 export const dynamic="force-dynamic";
+export const metadata={title:"System Status",description:"BuildPulse production system status.",robots:{index:false,follow:false},alternates:{canonical:"/status"}};
 type StatusData={
   ok:boolean;
   counts:{enabledSources:number;healthySources:number;stories:number;verifiedStories:number;pendingStories:number;activeSubscribers:number;editions:number;publishedEditions:number;sentEditions:number;scheduledOrActiveAds:number;stripePaymentLinks:number};
