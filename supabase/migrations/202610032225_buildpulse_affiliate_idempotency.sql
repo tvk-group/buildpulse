@@ -1,0 +1,2 @@
+create unique index if not exists uq_buildpulse_affiliate_attributions_token on public.buildpulse_affiliate_attributions(visitor_token_hash);
+create unique index if not exists uq_buildpulse_affiliate_attributions_conversion on public.buildpulse_affiliate_attributions(conversion_reference) where conversion_reference is not null;
