@@ -20,7 +20,7 @@ Deno.serve(async(req:Request)=>{
  const supplied=req.headers.get("x-buildpulse-scheduler-secret")??"";
  if(!setting?.value||supplied!==setting.value)return reply({ok:false,error:"unauthorized"},401);
  const {data:run}=await admin.from("buildpulse_job_runs").insert({job_name:"ingest-supabase-fallback",status:"running"}).select("id").single();
- let discovered=0,accepted=0,rejected=0,verified=0;const failures:string[]=[];
+ let discovered=0,accepted=0,rejected=0,verified=0;const failures:string[]=[];const sourceStats:Array<Record<string,unknown>>=[];
  try{
   const {data:sources,error:sourceError}=await admin.from("buildpulse_sources").select("id,name,feed_url,category,trust_tier,enabled").eq("enabled",true).not("feed_url","is",null);
   if(sourceError)throw sourceError;
@@ -34,6 +34,7 @@ Deno.serve(async(req:Request)=>{
     const text=await response.text();if(text.length>2_000_000)throw new Error("source_too_large");
     let items:any[]=[];if(contentType.includes("json"))items=parseJson(JSON.parse(text));else items=parseXml(text);
     discovered+=items.length;
+    const beforeAccepted=accepted,beforeRejected=rejected;
     for(const item of items.slice(0,100)){
       const normalized=normalize(item.title),hash=await sha256(normalized+"|"+item.summary);
       const {data:urlDupe,error:urlDupeError}=await admin.from("buildpulse_stories").select("id").eq("canonical_url",item.url).limit(1).maybeSingle();
@@ -54,10 +55,11 @@ Deno.serve(async(req:Request)=>{
       });
       if(insertError){if(insertError.code==="23505")rejected++;else throw insertError}else{accepted++;if(autoVerified)verified++}
     }
+    sourceStats.push({name:source.name,parsed:items.length,eligible:items.slice(0,100).length,accepted:accepted-beforeAccepted,rejected:rejected-beforeRejected});
     await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"ok",last_fetch_error:null}).eq("id",source.id);
    }catch(e){const m=e instanceof Error?e.message:"unknown";failures.push(source.name+": "+m);await admin.from("buildpulse_sources").update({last_fetched_at:new Date().toISOString(),last_fetch_status:"failed",last_fetch_error:m.slice(0,500)}).eq("id",source.id)}
   }
-  const metrics={sources:(sources??[]).length,discovered,accepted,rejected,verified,failures};
+  const metrics={sources:(sources??[]).length,discovered,accepted,rejected,verified,failures,sourceStats};
   if(run?.id)await admin.from("buildpulse_job_runs").update({status:"ok",metrics,finished_at:new Date().toISOString(),error:null}).eq("id",run.id);
   return reply({ok:true,...metrics});
  }catch(e){const m=e instanceof Error?e.message:"unknown";if(run?.id)await admin.from("buildpulse_job_runs").update({status:"failed",finished_at:new Date().toISOString(),error:m.slice(0,2000)}).eq("id",run.id);return reply({ok:false,error:m},500)}
