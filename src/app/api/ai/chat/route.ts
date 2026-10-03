@@ -21,6 +21,7 @@ function clientKey(req:NextRequest){
 }
 function limited(key:string){
  const now=Date.now(),current=buckets.get(key);
+ if(buckets.size>5000){for(const [k,v] of buckets){if(v.reset<=now)buckets.delete(k)}}
  if(!current||current.reset<=now){buckets.set(key,{count:1,reset:now+WINDOW_MS});return false}
  current.count+=1;return current.count>MAX_REQUESTS;
 }
