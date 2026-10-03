@@ -18,7 +18,8 @@ export default async function FinancePage(){
  const registrationsResult=await db.from("buildpulse_tax_registrations").select("id,jurisdiction,tax_type,status").order("jurisdiction");
  const registrations:any[]=registrationsResult.data??[];
  const cryptoResult=await db.from("buildpulse_crypto_accounting_evidence").select("id,tax_status").limit(500);
- const journalResult=await db.from("buildpulse_journal_entries").select("id,entity_id,source_type,source_id,status").eq("source_type","accounting_invoice").limit(500);
+ const paidDocumentIds=docs.filter(d=>d.status==="paid").map(d=>d.id);
+ const journalResult=paidDocumentIds.length?await db.from("buildpulse_journal_entries").select("id,entity_id,source_type,source_id,status").eq("source_type","accounting_invoice").in("source_id",paidDocumentIds):{data:[]};
  const crypto:any[]=cryptoResult.data??[];
  const journals:any[]=journalResult.data??[];
  const journalByDocument=new Map(journals.filter(j=>j.status==="posted").map(j=>[j.source_id,j]));
