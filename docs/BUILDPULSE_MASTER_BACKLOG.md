@@ -130,8 +130,8 @@
 - [x] Contributor and art submission database foundations/pages.
 - [ ] Authenticated submission forms and uploads. Authenticated contributor and Arts submission forms are implemented and account-bound; file uploads remain disabled until scanned media storage is available.
 - [x] Tie contributor fee to submission ID and verified webhook — Stripe Checkout binds submission/user IDs in metadata and the signed webhook validates USD 149, ownership, state and idempotency before marking the submission paid.
-- [ ] Human review/publishing, labels, corrections, complaints/takedowns.
-- [ ] Arts showcase, rights evidence and admin review.
+- [ ] Human review/publishing, labels, corrections, complaints/takedowns. A founder/admin human review queue now covers paid contributor and Arts submissions with explicit approve/reject decisions and workforce audit logging; publication transformation plus submission-specific correction/complaint linkage remains open.
+- [ ] Arts showcase, rights evidence and admin review. Rights/original-work/release declarations and portfolio evidence are captured, and founder/admin human review is implemented; public showcase rendering of approved works remains open.
 
 ## P1 — Marketplace and Connections
 - [x] Core database/page foundations.
