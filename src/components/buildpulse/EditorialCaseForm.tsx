@@ -1,9 +1,10 @@
 "use client";
 import {useState} from "react";
+import type {FormEvent} from "react";
 
 export function EditorialCaseForm(){
  const [state,setState]=useState<"idle"|"sending"|"done"|"error">("idle"),[message,setMessage]=useState("");
- async function submit(e:React.FormEvent<HTMLFormElement>){
+ async function submit(e:FormEvent<HTMLFormElement>){
   e.preventDefault();setState("sending");setMessage("");
   const fd=new FormData(e.currentTarget);
   const payload={type:fd.get("type"),targetUrl:fd.get("targetUrl"),email:fd.get("email"),summary:fd.get("summary"),evidence:fd.get("evidence")};
