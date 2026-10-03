@@ -29,7 +29,10 @@ async function ensureInvoice(admin:any,order:any,profile:any,method:string,refer
   const {data,error}=await admin.from("buildpulse_billing_invoices").upsert({
     order_id:order.id,user_id:order.user_id,invoice_number:invoiceNumber(order.id,order.created_at),
     issuer_name:ISSUER.name,issuer_company_number:ISSUER.companyNumber,issuer_registered_office:ISSUER.registeredOffice,
-    billing_company:profile?.company_name??null,billing_email:profile?.billing_email??null,amount_usd:order.amount_usd,
+    billing_company:profile?.company_name??null,billing_email:profile?.billing_email??null,
+    customer_type:profile?.customer_type??null,billing_address_line1:profile?.billing_address_line1??null,billing_address_line2:profile?.billing_address_line2??null,
+    billing_city:profile?.billing_city??null,billing_region:profile?.billing_region??null,billing_postal_code:profile?.billing_postal_code??null,billing_country_code:profile?.billing_country_code??null,
+    tax_id:profile?.tax_id??null,tax_id_type:profile?.tax_id_type??null,tax_id_validation_status:profile?.tax_id_validation_status??"unverified",amount_usd:order.amount_usd,
     currency:"USD",payment_method:method,payment_reference:reference,status:"open",updated_at:now
   },{onConflict:"order_id"}).select("id,invoice_number,status").single();
   if(error||!data)throw new Error("invoice_persistence_failed");
@@ -55,7 +58,7 @@ async function settleCheckout(admin:any,event:any,session:any){
   if(orderError||!order)return {ignored:"order_not_found"};
   const [{data:product},{data:profile}]=await Promise.all([
     admin.from("buildpulse_ad_products").select("stripe_product_id,stripe_price_id,stripe_payment_link_id,price_usd").eq("id",order.product_id).maybeSingle(),
-    admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email").eq("user_id",order.user_id).maybeSingle()
+    admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,customer_type,billing_address_line1,billing_address_line2,billing_city,billing_region,billing_postal_code,billing_country_code,tax_id,tax_id_type,tax_id_validation_status").eq("user_id",order.user_id).maybeSingle()
   ]);
   const sessionLink=typeof session.payment_link==="string"?session.payment_link:session.payment_link?.id;
   const paymentIntent=typeof session.payment_intent==="string"?session.payment_intent:session.payment_intent?.id??null;
