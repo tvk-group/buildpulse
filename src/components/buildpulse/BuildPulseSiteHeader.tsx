@@ -4,7 +4,7 @@ import {usePathname} from "next/navigation";
 import {useEffect,useState} from "react";
 import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localization";import {uiCopy} from "@/lib/buildpulse/ui-copy";
 
-const groups=[
+const groupDefs=[
  {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/archive?category=politics"],["Economy","/markets"]]},
  {label:"Intelligence",items:[["Markets","/markets"],["Methodology","/methodology"]]},
  {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"]]},
@@ -14,7 +14,7 @@ const groups=[
 const langs=[["EN","English"],["DE","Deutsch"],["TR","Türkçe"],["FR","Français"],["ES","Español"],["IT","Italiano"],["PT","Português"],["NL","Nederlands"],["PL","Polski"],["RO","Română"],["EL","Ελληνικά"],["AR","العربية"],["ZH","中文"],["JA","日本語"],["KO","한국어"],["HI","हिन्दी"]];
 
 export function BuildPulseSiteHeader(){
- const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN"); const t=uiCopy(locale.toLowerCase());
+ const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN"); const t=uiCopy(locale.toLowerCase()); const groups=groupDefs.map((g,gi)=>({...g,label:[t.news,t.intelligence,t.community,t.culture,t.about][gi],items:g.items.map(([n,h],ii)=>{const names=[[t.latest,t.local,t.world,t.technology,t.politics,t.economy],[t.markets,t.methodology],[t.social,t.blogs,t.people,t.connections],[t.sports,t.arts,t.marketplace],[t.account,t.aboutBp,t.contribute,t.advertise]][gi];return [names[ii]||n,h] as const})}));
  useEffect(()=>setOpen(false),[p]);
  useEffect(()=>setLocale(getBuildPulseLocale().toUpperCase()),[]);
  const choose=(v:string)=>{setLocale(v);setBuildPulseLocale(v);window.location.reload()};
