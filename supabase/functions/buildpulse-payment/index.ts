@@ -143,6 +143,41 @@ async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?
   return {quote,invoice};
 }
 
+async function issueContributorQuote(admin:any,user:any,submissionId:string,asset:Asset,network?:string){
+  const rail=railFor(asset,network);
+  const {data:submission,error}=await admin.from("buildpulse_contributor_submissions").select("id,user_id,status,payment_status,fee_usd").eq("id",submissionId).eq("user_id",user.id).maybeSingle();
+  if(error||!submission)throw new Error("submission_not_found");
+  if(!["draft","payment_pending"].includes(submission.status)||!["unpaid","pending"].includes(submission.payment_status))throw new Error("submission_not_payable");
+  const usd=Number(submission.fee_usd);if(Math.round(usd*100)!==14900)throw new Error("fee_mismatch");
+  const price=await fetchJson(`https://api.coinbase.com/v2/prices/${asset}-USD/spot`,{headers:{"Accept":"application/json"}});
+  const rate=Number(price?.data?.amount);if(!Number.isFinite(rate)||rate<=0)throw new Error("market_rate_unavailable");
+  const expected=ceilQuote(usd,rate,rail.decimals),now=new Date(),expires=new Date(now.getTime()+30*60_000);
+  await admin.from("buildpulse_contributor_payment_quotes").update({state:"cancelled"}).eq("submission_id",submission.id).in("state",["open","observed"]);
+  const {data:quote,error:qe}=await admin.from("buildpulse_contributor_payment_quotes").insert({submission_id:submission.id,asset:rail.asset,network:rail.network,expected_amount:expected,destination:rail.destination,memo:rail.memo??null,usd_amount:usd,rate_usd:rate,quoted_at:now.toISOString(),expires_at:expires.toISOString(),required_confirmations:rail.requiredConfirmations,state:"open"}).select("id,asset,network,expected_amount,destination,memo,rate_usd,quoted_at,expires_at,required_confirmations,state").single();
+  if(qe||!quote)throw new Error("quote_persistence_failed");
+  await admin.from("buildpulse_contributor_submissions").update({status:"payment_pending",payment_status:"pending",updated_at:now.toISOString()}).eq("id",submission.id).eq("user_id",user.id);
+  return {quote};
+}
+async function verifyContributorClaim(admin:any,user:any,submissionId:string,txHashRaw:string){
+  const txHash=txHashRaw.trim();
+  const {data:submission,error}=await admin.from("buildpulse_contributor_submissions").select("id,user_id,status,payment_status").eq("id",submissionId).eq("user_id",user.id).maybeSingle();
+  if(error||!submission)throw new Error("submission_not_found");
+  if(!["draft","payment_pending","submitted"].includes(submission.status))throw new Error("submission_not_verifiable");
+  const {data:quote,error:qe}=await admin.from("buildpulse_contributor_payment_quotes").select("id,asset,network,expected_amount,destination,memo,quoted_at,expires_at,required_confirmations,state").eq("submission_id",submission.id).in("state",["open","observed","confirmed"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
+  if(qe||!quote)throw new Error("payment_quote_not_found");
+  const asset=String(quote.asset).toUpperCase() as Asset,rail=railFor(asset,String(quote.network));
+  if(normalizeAddress(rail.destination)!==normalizeAddress(String(quote.destination)))throw new Error("payment_destination_mismatch");
+  if(asset==="ETH"||asset==="USDC"||asset==="USDT"){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
+  let verified;if(asset==="ETH"||asset==="USDC"||asset==="USDT")verified=await verifyEvm(asset,rail,quote,txHash);else if(asset==="BTC")verified=await verifyBitcoin(rail,txHash);else verified=await verifyXrp(rail,txHash);
+  if(verified.actual<decimalToAtomic(quote.expected_amount,rail.decimals))throw new Error("payment_underpaid");
+  if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,quote.quoted_at,quote.expires_at))throw new Error("transaction_outside_quote_window");
+  if(verified.state!=="confirmed"){await admin.from("buildpulse_contributor_payment_quotes").update({state:"observed"}).eq("id",quote.id).eq("state","open");return {state:"confirming",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
+  const actualAmount=atomicToDecimal(verified.actual,rail.decimals);
+  const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_contributor_crypto_payment",{p_quote_id:quote.id,p_tx_hash:txHash,p_observed_amount:actualAmount,p_confirmations:verified.confirmations,p_metadata:{verified_at:new Date().toISOString()}});
+  if(se)throw new Error(se.message||"crypto_settlement_failed");
+  return {state:"confirmed",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,actualAmount,settled};
+}
+
 async function prepareStripe(admin:any,user:any,orderId:string){
   const [{data:order,error:orderError},{data:profile,error:profileError}]=await Promise.all([
     admin.from("buildpulse_ad_orders").select("id,user_id,product_id,status,amount_usd,created_at").eq("id",orderId).eq("user_id",user.id).maybeSingle(),
@@ -323,6 +358,12 @@ Deno.serve(async(req:Request)=>{
       }).map(def=>({asset:def.asset,network:def.network,requiresMemo:Boolean(def.memoEnv&&optionalEnv(def.memoEnv))}));
       return reply({ok:true,rails});
     }
+    const submissionId=String(body.submissionId??"");
+    if(action==="contributor_quote"||action==="contributor_verify"){
+      if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId))return reply({ok:false,error:"invalid_submission"},400);
+      if(action==="contributor_quote"){const asset=String(body.asset??"").toUpperCase() as Asset;let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){return reply({ok:false,error:e instanceof Error?e.message:"unsupported_network"},400)}if(!["ETH","BTC","USDC","USDT","XRP"].includes(asset)||(asset==="USDT"&&rail.network==="Base"))return reply({ok:false,error:"verification_not_enabled_for_asset"},503);return reply({ok:true,method:asset,...await issueContributorQuote(admin,user,submissionId,asset,rail.network)})}
+      return reply({ok:true,...await verifyContributorClaim(admin,user,submissionId,String(body.txHash??""))});
+    }
     const orderId=String(body.orderId??"");
     if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return reply({ok:false,error:"invalid_order"},400);
     if(action==="stripe"){
@@ -345,9 +386,9 @@ Deno.serve(async(req:Request)=>{
     return reply({ok:false,error:"unsupported_action"},400);
   }catch(error){
     const message=error instanceof Error?error.message:"payment_operation_failed";
-    const status=["order_not_found","payment_quote_not_found"].includes(message)?404:
+    const status=["order_not_found","submission_not_found","payment_quote_not_found"].includes(message)?404:
       ["active_advertiser_profile_required"].includes(message)?403:
-      ["order_not_payable","order_not_verifiable","transaction_already_used","order_price_mismatch"].includes(message)?409:
+      ["order_not_payable","order_not_verifiable","submission_not_payable","submission_not_verifiable","transaction_already_used","order_price_mismatch","fee_mismatch"].includes(message)?409:
       ["network_required","unsupported_network","invalid_transaction_hash","payment_underpaid","transaction_outside_quote_window","destination_mismatch","destination_tag_mismatch","not_xrp_payment","non_xrp_amount","payment_rail_mismatch","payment_destination_mismatch","transaction_failed"].includes(message)?400:500;
     return reply({ok:false,error:message},status);
   }
