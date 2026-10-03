@@ -38,7 +38,8 @@ export async function GET(){
  const messages:QueryResult=ids.length?await db.from("buildpulse_social_messages").select("id,conversation_id,sender_id,ciphertext,nonce,key_version,client_message_id,created_at,expires_at").in("conversation_id",ids).eq("sender_id",user.id).order("created_at"):{data:[],error:null};
  if(messages.error)return NextResponse.json({ok:false,error:"export_incomplete",failedQueries:[failed("social.sentCiphertextMessages",messages)]},{status:503,headers:{"cache-control":"no-store"}});
  let documents:unknown[]=[];
- if(customer?.id){const docs=await db.from("buildpulse_accounting_documents").select("id,document_type,document_number,currency,net_amount,tax_amount,gross_amount,tax_jurisdiction,tax_treatment,tax_rate,reverse_charge,status,issued_at,due_at,paid_at,created_at").eq("customer_id",customer.id).order("created_at");if(docs.error)return NextResponse.json({ok:false,error:"export_incomplete",failedQueries:[failed("accounting.documents",docs)]},{status:503,headers:{"cache-control":"no-store"}});documents=docs.data??[]}
+ const customerId=customer&&typeof customer==="object"&&"id" in customer?String((customer as {id:string}).id):null;
+ if(customerId){const docs=await db.from("buildpulse_accounting_documents").select("id,document_type,document_number,currency,net_amount,tax_amount,gross_amount,tax_jurisdiction,tax_treatment,tax_rate,reverse_charge,status,issued_at,due_at,paid_at,created_at").eq("customer_id",customerId).order("created_at");if(docs.error)return NextResponse.json({ok:false,error:"export_incomplete",failedQueries:[failed("accounting.documents",docs)]},{status:503,headers:{"cache-control":"no-store"}});documents=docs.data??[]}
  return NextResponse.json({
   exportedAt:new Date().toISOString(),
   account:{id:user.id,email:email||null,phone:user.phone??null,createdAt:user.created_at,lastSignInAt:user.last_sign_in_at??null},
