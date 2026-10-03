@@ -14,7 +14,7 @@ const ISSUER={
   registeredOffice:"Office 23, Unit 5, 399-405 Oxford Street, London, United Kingdom, W1C 2BU"
 };
 
-type Asset="ETH"|"BTC"|"USDC"|"USDT"|"XRP";
+type Asset="ETH"|"BTC"|"USDC"|"USDT"|"XRP"|"SOL"|"BNB"|"POL"|"TRX"|"ADA"|"SUI"|"AVAX";
 type Rail={asset:Asset;network:string;destination:string;memo?:string;decimals:number;requiredConfirmations:number};
 function requiredEnv(name:string){const v=Deno.env.get(name)?.trim();if(!v)throw new Error(`missing_payment_config:${name}`);return v}
 function rails():Record<Asset,Rail>{return {
@@ -22,7 +22,14 @@ function rails():Record<Asset,Rail>{return {
   BTC:{asset:"BTC",network:"Bitcoin",destination:requiredEnv("BUILDPULSE_BTC_ADDRESS"),decimals:8,requiredConfirmations:3},
   USDC:{asset:"USDC",network:Deno.env.get("BUILDPULSE_USDC_NETWORK")?.trim()||"Base",destination:requiredEnv("BUILDPULSE_USDC_ADDRESS"),decimals:6,requiredConfirmations:20},
   USDT:{asset:"USDT",network:Deno.env.get("BUILDPULSE_USDT_NETWORK")?.trim()||"Ethereum",destination:requiredEnv("BUILDPULSE_USDT_ADDRESS"),decimals:6,requiredConfirmations:12},
-  XRP:{asset:"XRP",network:"XRPL",destination:requiredEnv("BUILDPULSE_XRP_ADDRESS"),memo:Deno.env.get("BUILDPULSE_XRP_DESTINATION_TAG")?.trim()||undefined,decimals:6,requiredConfirmations:1}
+  XRP:{asset:"XRP",network:"XRPL",destination:requiredEnv("BUILDPULSE_XRP_ADDRESS"),memo:Deno.env.get("BUILDPULSE_XRP_DESTINATION_TAG")?.trim()||undefined,decimals:6,requiredConfirmations:1},
+  SOL:{asset:"SOL",network:"Solana",destination:requiredEnv("BUILDPULSE_SOL_ADDRESS"),decimals:9,requiredConfirmations:1},
+  BNB:{asset:"BNB",network:"BNB Chain",destination:requiredEnv("BUILDPULSE_BNB_ADDRESS"),decimals:18,requiredConfirmations:15},
+  POL:{asset:"POL",network:"Polygon",destination:requiredEnv("BUILDPULSE_POL_ADDRESS"),decimals:18,requiredConfirmations:64},
+  TRX:{asset:"TRX",network:"TRON",destination:requiredEnv("BUILDPULSE_TRX_ADDRESS"),decimals:6,requiredConfirmations:20},
+  ADA:{asset:"ADA",network:"Cardano",destination:requiredEnv("BUILDPULSE_ADA_ADDRESS"),decimals:6,requiredConfirmations:15},
+  SUI:{asset:"SUI",network:"Sui",destination:requiredEnv("BUILDPULSE_SUI_ADDRESS"),decimals:9,requiredConfirmations:1},
+  AVAX:{asset:"AVAX",network:"Avalanche C-Chain",destination:requiredEnv("BUILDPULSE_AVAX_ADDRESS"),decimals:18,requiredConfirmations:12}
 }}
 const ERC20:Partial<Record<Asset,string>>={
   USDC:"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
@@ -302,7 +309,9 @@ Deno.serve(async(req:Request)=>{
     }
     if(action==="quote"){
       const asset=String(body.asset??"").toUpperCase() as Asset;
-      if(!rails()[asset])return reply({ok:false,error:"unsupported_asset"},400);
+      const rail=rails()[asset];
+      if(!rail)return reply({ok:false,error:"unsupported_asset"},400);
+      if(!["ETH","BTC","USDC","USDT","XRP"].includes(asset))return reply({ok:false,error:"verification_not_enabled_for_asset"},503);
       const result=await issueQuote(admin,user,orderId,asset);
       return reply({ok:true,method:asset,...result});
     }
