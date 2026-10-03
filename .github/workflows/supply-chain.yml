@@ -1,0 +1,47 @@
+name: Supply Chain Evidence
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "41 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-and-sbom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high
+
+      - name: Generate CycloneDX SBOM
+        run: npx --yes @cyclonedx/cyclonedx-npm@4.0.3 --output-file buildpulse-sbom.cdx.json --output-format JSON --spec-version 1.6
+
+      - name: Validate SBOM exists
+        run: test -s buildpulse-sbom.cdx.json
+
+      - name: Upload SBOM evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: buildpulse-sbom-cyclonedx
+          path: buildpulse-sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 30
