@@ -136,7 +136,7 @@
 ## P1 — Marketplace and Connections
 - [x] Core database/page foundations.
 - [ ] Complete listing/sell/search/contact transaction workflows. Production now has active-listing search, authenticated seller moderation submission, rate-limited buyer inquiries and MFA-gated audited approve/reject publication; protected checkout/order settlement remains gated on a regulated marketplace payment provider.
-- [ ] Trust/safety, reporting, moderation and anti-fraud.
+- [ ] Trust/safety, reporting, moderation and anti-fraud. Active listings now have authenticated rate-limited reporting with bounded reason codes, duplicate suppression, RLS-protected report records and an MFA/role-gated workforce review API; action decisions pause listings for review and are audit logged. Broader transaction anti-fraud remains incomplete.
 - [ ] Connections discovery/messaging/privacy workflows.
 
 ## P1 — Markets/Intelligence
