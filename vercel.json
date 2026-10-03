@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/buildpulse-agents",
       "schedule": "7 * * * *"
+    },
+    {
+      "path": "/api/cron/buildpulse-localize",
+      "schedule": "27 * * * *"
     }
   ],
   "framework": "nextjs"
