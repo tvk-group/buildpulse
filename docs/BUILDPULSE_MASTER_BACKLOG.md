@@ -57,8 +57,8 @@
 - [ ] Automatic credit notes/refunds/disputes and journal entries. Stripe refunds now create idempotent sequential CRN documents and update invoice/order state; dispute handling exists, while tax/FX-safe refund and dispute journal posting remains incomplete.
 - [ ] Journal Stripe fees, deferred subscription revenue and revenue recognition after verified FX/reconciliation. Paid base-currency invoices now post balanced cash/tax/revenue journals automatically; foreign-currency invoices remain fail-closed pending FX.
 - [x] Add equivalent settlement accounting evidence for crypto/off-Stripe payments — verified crypto settlements now atomically persist invoice/payment state plus immutable quote/rate/destination/tx/confirmation evidence; tax determination remains separately fail-closed.
-- [ ] Monthly close package, VAT/GST/sales-tax reports, annual balance/P&L/trial balance and accountant export.
-- [ ] Complete subscription entitlement lifecycle before exposing all checkout buttons.
+- [ ] Monthly close package, VAT/GST/sales-tax reports, annual balance/P&L/trial balance and accountant export. MFA/finance-role close-control surface is implemented with fail-closed FX/tax/crypto-tax blockers; statutory tax reports and accountant export remain incomplete.
+- [ ] Complete subscription entitlement lifecycle. Six verified live Stripe subscription links are now exposed; signed checkout/subscription/invoice webhooks activate, pause/cancel and mark past-due entitlements, and authenticated accounts can safely claim matching unbound entitlements. Stripe Customer Portal is not yet configured, so self-service subscription management remains incomplete.
 - [x] Persist signed Stripe invoice paid/payment-failed events into accounting customer/document records; Stripe webhook Edge Function v6 ACTIVE and posts paid base-currency invoices to balanced journals.
 - [ ] Daily/weekly subscriber preferences, watchlists, delivery, unsubscribe and service-email controls.
 - [x] Refactor payment function to lazy per-rail environment loading — rail configuration now resolves lazily and fails closed when required server-side settings are absent.
@@ -148,7 +148,7 @@
 
 ## P1 — Email/delivery
 - [x] Brevo bulk/newsletter foundation.
-- [ ] Proton/company-domain transactional mail adapter.
+- [ ] Company-domain transactional mail adapter. buildpulse.news exists in Resend but verification is not started; live DNS inspection on 2026-10-03 confirmed required DKIM, send MX/SPF and rsend CNAME records are absent, so delivery remains fail-closed.
 - [ ] Create/verify required company mailboxes before using them.
 - [ ] Keep suppression/bounce/unsubscribe safety for bulk mail.
 - [ ] Localized invoice, subscription, workforce and system emails.
