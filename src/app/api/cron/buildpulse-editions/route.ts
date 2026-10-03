@@ -1,6 +1,7 @@
 import {NextRequest,NextResponse} from "next/server";
 import {buildEdition} from "@/lib/buildpulse/edition-builder";
-import {composeBuildPulseEdition} from "@/lib/buildpulse/compose";\nimport {createAdminClient} from "@/lib/supabase/admin";
+import {composeBuildPulseEdition} from "@/lib/buildpulse/compose";
+import {createAdminClient} from "@/lib/supabase/admin";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -23,7 +24,10 @@ export async function GET(req:NextRequest){
    const composed=await composeBuildPulseEdition(built.editionId);
    results.push({type,...built,composed:true,revision:composed.revision});
   }catch(error){
-   results.push({type,error:error instanceof Error?error.message:"edition_generation_failed"});
+   const message=error instanceof Error?error.message:"edition_generation_failed";
+   const db=createAdminClient();
+   if(db)await db.from("buildpulse_job_runs").insert({job_name:`edition-${type}-scheduled`,status:"failed",started_at:new Date().toISOString(),finished_at:new Date().toISOString(),error:message.slice(0,2000)});
+   results.push({type,error:message});
   }
  }
  return NextResponse.json({ok:results.every(x=>!("error" in x)),approvalRequired:true,deliveryTriggered:false,results});
