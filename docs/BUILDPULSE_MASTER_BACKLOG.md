@@ -156,7 +156,7 @@
 
 ## P1 — SEO, measurement, accessibility
 - [x] NewsArticle schema, RSS, robots/sitemap/news sitemap, OG/X metadata and consent-gated measurement foundations.
-- [ ] Production validation of canonical URLs, structured data and feeds.
+- [ ] Production validation of canonical URLs, structured data and feeds. Validation found and repaired stale `/story/{id}` links that had no owned route: RSS verified-story items now use their actual canonical source URLs, while the Google News sitemap is restricted to BuildPulse-owned published Technology article URLs from the last 48 hours. Remaining: broader structured-data/canonical audit across public page types.
 - [ ] Accessibility audit and remediation.
 - [ ] Performance/Core Web Vitals optimization.
 - [ ] Consent/privacy validation for analytics and ads.
