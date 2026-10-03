@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
+import {LocalizedPrice} from "@/components/buildpulse/LocalizedPrice";
 
 export const dynamic="force-dynamic";
 export const metadata={title:"BuildPulse Invoice",description:"BuildPulse advertising invoice."};
@@ -37,18 +38,19 @@ export default async function InvoicePage({params}:{params:Promise<{invoiceNumbe
         <div className="md:text-right"><p className="text-xs font-black uppercase tracking-wider text-slate-500">Status</p><p className="mt-2 text-xl font-black uppercase">{invoice.status}</p><p className="mt-1 text-sm text-slate-600">Issued {new Date(invoice.issued_at).toLocaleString("en-GB",{timeZone:"Europe/London"})} UK time</p>{invoice.paid_at&&<p className="text-sm text-slate-600">Paid {new Date(invoice.paid_at).toLocaleString("en-GB",{timeZone:"Europe/London"})} UK time</p>}</div>
       </section>
       <section className="border-b py-7">
-        <div className="flex items-start justify-between gap-6"><div><p className="font-black">{order?.headline||"BuildPulse advertising placement"}</p><p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">{order?.copy_text||"Digital advertising placement on BuildPulse."}</p>{order?.destination_url&&<p className="mt-2 break-all text-xs text-slate-500">{order.destination_url}</p>}</div><p className="whitespace-nowrap text-xl font-black">{invoice.currency} {Number(invoice.amount_usd).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</p></div>
+        <div className="flex items-start justify-between gap-6"><div><p className="font-black">{order?.headline||"BuildPulse advertising placement"}</p><p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">{order?.copy_text||"Digital advertising placement on BuildPulse."}</p>{order?.destination_url&&<p className="mt-2 break-all text-xs text-slate-500">{order.destination_url}</p>}</div><p className="whitespace-nowrap text-xl font-black"><LocalizedPrice value={invoice.amount_usd} currency={invoice.currency}/></p></div>
       </section>
       <section className="py-7">
-        <div className="flex justify-between text-lg"><span className="font-bold">Total</span><strong>{invoice.currency} {Number(invoice.amount_usd).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></div>
+        <div className="flex justify-between text-lg"><span className="font-bold">Total</span><strong><LocalizedPrice value={invoice.amount_usd} currency={invoice.currency}/></strong></div>
         {invoice.payment_method&&<p className="mt-5 text-sm text-slate-600">Payment method: <span className="font-bold text-slate-900">{invoice.payment_method}</span></p>}
         {invoice.payment_reference&&<p className="mt-1 break-all text-xs text-slate-500">Payment reference: {invoice.payment_reference}</p>}
-        {creditNotes&&creditNotes.length>0&&<div className="mt-6 rounded-xl border border-slate-200 p-4"><p className="text-xs font-black uppercase tracking-wider text-slate-500">Credit notes</p>{creditNotes.map(note=><div key={note.credit_note_number} className="mt-3 flex flex-wrap justify-between gap-3 text-sm"><div><p className="font-bold">{note.credit_note_number}</p><p className="text-xs text-slate-500">{note.reason.replaceAll("_"," ")} · {new Date(note.issued_at).toLocaleString("en-GB",{timeZone:"Europe/London"})} UK time</p></div><strong>-{note.currency} {Number(note.amount_usd).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></div>)}</div>}
+        {creditNotes&&creditNotes.length>0&&<div className="mt-6 rounded-xl border border-slate-200 p-4"><p className="text-xs font-black uppercase tracking-wider text-slate-500">Credit notes</p>{creditNotes.map(note=><div key={note.credit_note_number} className="mt-3 flex flex-wrap justify-between gap-3 text-sm"><div><p className="font-bold">{note.credit_note_number}</p><p className="text-xs text-slate-500">{note.reason.replaceAll("_"," ")} · {new Date(note.issued_at).toLocaleString("en-GB",{timeZone:"Europe/London"})} UK time</p></div><strong>-<LocalizedPrice value={note.amount_usd} currency={note.currency}/></strong></div>)}</div>}
         <p className="mt-6 rounded-xl bg-slate-50 p-4 text-xs leading-5 text-slate-600">Payment confirms commercial settlement only. Advertising remains subject to BuildPulse creative, safety and publication review.</p>
       </section>
       <footer className="flex flex-wrap gap-3 border-t pt-6 print:hidden">
         <Link href="/advertiser" className="rounded-xl border px-4 py-2 text-sm font-bold">← Advertiser portal</Link>
-        <button type="button" onClick={()=>window.print()} className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-bold text-white">Print / Save PDF</button>\n        <p className="text-xs text-slate-500">This print-optimized invoice can be saved as PDF from the browser print dialog.</p>
+        <button type="button" onClick={()=>window.print()} className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-bold text-white">Print / Save PDF</button>
+        <p className="text-xs text-slate-500">This print-optimized invoice can be saved as PDF from the browser print dialog.</p>
       </footer>
     </article>
   </main>
