@@ -3,7 +3,7 @@ import {createClient as createSupabaseClient} from "@supabase/supabase-js";
 import {getSupabasePublicConfig} from "@/lib/supabase/env";
 
 export const dynamic="force-dynamic";
-export const metadata={title:"Advertise with BuildPulse",description:"Self-service advertising inventory for BuildPulse Global Technology & Digital Intelligence."};
+export const metadata={title:"Advertise",description:"Self-service advertising inventory for BuildPulse Global Technology & Digital Intelligence.",alternates:{canonical:"/advertise"},openGraph:{url:"/advertise"}};
 
 export default async function Advertise(){
   const {url,key,configured}=getSupabasePublicConfig();
