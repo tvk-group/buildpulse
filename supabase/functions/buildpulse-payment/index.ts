@@ -323,6 +323,7 @@ Deno.serve(async(req:Request)=>{
       const asset=String(body.asset??"").toUpperCase() as Asset;
       let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){const m=e instanceof Error?e.message:"unsupported_network";return reply({ok:false,error:m},400)}
       if(!["ETH","BTC","USDC","USDT","XRP"].includes(asset))return reply({ok:false,error:"verification_not_enabled_for_asset"},503);
+      if(asset==="USDT"&&rail.network==="Base")return reply({ok:false,error:"verification_not_enabled_for_network"},503);
       const result=await issueQuote(admin,user,orderId,asset,rail.network);
       return reply({ok:true,method:asset,...result});
     }
