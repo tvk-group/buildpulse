@@ -1,6 +1,6 @@
-const CACHE="buildpulse-shell-v4";
+const CACHE="buildpulse-shell-v5";
 const SHELL=["/","/archive","/local","/world","/technology","/markets","/people","/sports","/arts","/social","/blog","/marketplace","/subscriptions","/about","/methodology"];
-const PRIVATE=["/api/","/admin","/advertiser","/auth","/contribute","/workforce"];
+const PRIVATE=["/api/","/account","/admin","/advertiser","/auth","/contribute","/preferences","/review","/workforce"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
