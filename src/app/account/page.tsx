@@ -11,8 +11,8 @@ export default async function AccountPage(){
  const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/auth?next=/account");
  const db=createAdminClient();if(!db)throw new Error("Account service unavailable");
  const [{data:subs},{data:customer},{data:social},{count:contrib},{count:arts},{count:ads}]=await Promise.all([
-  db.from("buildpulse_intelligence_subscriptions").select("id,plan_code,billing_interval,status,current_period_end,cancelled_at,created_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(5),
-  db.from("buildpulse_accounting_customers").select("id,legal_name,business_customer,country_code,tax_id_status,billing_address").eq("user_id",user.id).maybeSingle(),
+  db.from("buildpulse_intelligence_subscriptions").select("id,plan_code,billing_interval,status,current_period_end,cancelled_at,created_at").or(`user_id.eq.${user.id},email.eq.${String(user.email).toLowerCase()}`).order("created_at",{ascending:false}).limit(5),
+  db.from("buildpulse_accounting_customers").select("id,legal_name,business_customer,country_code,tax_id_status,billing_address").or(`user_id.eq.${user.id},email.eq.${String(user.email).toLowerCase()}`).limit(1).maybeSingle(),
   db.from("buildpulse_social_profiles").select("handle,display_name,account_type,verified_kind").eq("user_id",user.id).maybeSingle(),
   db.from("buildpulse_contributor_submissions").select("id",{head:true,count:"exact"}).eq("user_id",user.id),
   db.from("buildpulse_art_submissions").select("id",{head:true,count:"exact"}).eq("user_id",user.id),
