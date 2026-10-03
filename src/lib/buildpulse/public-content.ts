@@ -25,7 +25,7 @@ export async function latestPublicEditions(limit=7):Promise<PublicEdition[]>{
   return Array.isArray(data?.editions)?data.editions:[];
 }
 export type PublicStory={
-  id:string;title:string;summary:string|null;canonicalSourceUrl:string;publishedAt:string|null;
+  id:string;title:string;summary:string|null;canonicalSourceUrl:string;imageUrl?:string|null;publishedAt:string|null;
   category:string|null;editorialScore:number|null;verifiedAt:string;sourceName:string;sourceLanguage:string;publicationState?:"active"|"corrected"|"withheld";correctionNote?:string|null;correctedAt?:string|null;
 };
 export async function listVerifiedStories(options:{limit?:number;category?:string;sinceHours?:number}={}):Promise<PublicStory[]>{
