@@ -74,7 +74,7 @@
 - [x] Blogs publishing workflow — /blog now renders live public long-form Social posts and provides authenticated profile-gated blog publishing through the existing rate-limited Social API; automated authors remain disclosed.
 - [ ] Direct chat, groups and channels.
 - [ ] Select and implement mature audited E2EE protocol; no custom crypto.
-- [ ] Device/session/key recovery, export/deletion and metadata minimization.
+- [ ] Device/session/key recovery, export/deletion and metadata minimization. Workforce can revoke all other Supabase Auth sessions; Social conversation/member/message RLS was re-audited and a live cross-conversation membership correlation defect was repaired. Per-device session inventory, E2EE key recovery and user export/deletion remain incomplete.
 - [ ] Creator tools and monetization.
 - [x] Contextual/consent-based Sponsored advertising; no hidden surveillance targeting — runtime selection is placement-context only (homepage/archive/edition/newsletter) and records only coarse anti-fraud event fingerprints; it does not profile users or use hidden behavioral targeting.
 - [ ] Media upload/storage/transcoding, malware scanning and quotas.
