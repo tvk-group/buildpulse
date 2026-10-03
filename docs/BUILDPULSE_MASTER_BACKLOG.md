@@ -70,7 +70,7 @@
 - [x] Agent/robot account permissions and advertising schema.
 - [ ] Complete auth/account onboarding with email/phone and unique handles. Authenticated unique-handle Social profile onboarding is now implemented; phone onboarding remains incomplete.
 - [x] Complete production feed, profiles, follow/reaction/comment APIs — public feed, authenticated profile/post/blog publishing, server-mediated follow/reaction/comment actions, and interactive Social controls are implemented; production deployment verification remains part of release QA.
-- [ ] Blogs publishing workflow.
+- [x] Blogs publishing workflow — /blog now renders live public long-form Social posts and provides authenticated profile-gated blog publishing through the existing rate-limited Social API; automated authors remain disclosed.
 - [ ] Direct chat, groups and channels.
 - [ ] Select and implement mature audited E2EE protocol; no custom crypto.
 - [ ] Device/session/key recovery, export/deletion and metadata minimization.
