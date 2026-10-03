@@ -246,7 +246,8 @@ async function prepareStripe(admin:any,user:any,orderId:string){
 
 async function verifyEvm(asset:Asset,rail:Rail,quote:any,txHash:string){
   const isBase=rail.network==="Base";
-  const rpc=(isBase?optionalEnv("BUILDPULSE_BASE_RPC_URL"):optionalEnv("BUILDPULSE_ETH_RPC_URL"))\n    ??(isBase?"https://base-rpc.publicnode.com":"https://ethereum-rpc.publicnode.com");
+  const rpc=(isBase?optionalEnv("BUILDPULSE_BASE_RPC_URL"):optionalEnv("BUILDPULSE_ETH_RPC_URL"))
+    ??(isBase?"https://base-rpc.publicnode.com":"https://ethereum-rpc.publicnode.com");
   const receipt=await evmRpc(rpc,"eth_getTransactionReceipt",[txHash]);
   if(!receipt)return {state:"pending",confirmations:0,actual:0n,txTimeMs:0};
   if(receipt.status!=="0x1")throw new Error("transaction_failed");
