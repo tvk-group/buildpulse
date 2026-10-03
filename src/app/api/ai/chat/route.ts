@@ -11,7 +11,7 @@ const DEFAULT_MODEL=process.env.NVIDIA_AI_MODEL||"openai/gpt-oss-20b";
 const ALLOWED_MODELS=(process.env.NVIDIA_AI_MODELS||DEFAULT_MODEL).split(",").map(x=>x.trim()).filter(Boolean);
 const buckets=new Map<string,Bucket>();
 const WINDOW_MS=60_000;
-const MAX_REQUESTS=Math.max(1,Number(process.env.BUILDPULSE_AI_RPM||"12"));
+const MAX_REQUESTS=Math.max(1,Number(process.env.BUILDPULSE_AI_RPM||"12"));\nconst PRODUCT_SYSTEM_PROMPT=`You are BuildPulse AI, the AI assistant inside BuildPulse. BuildPulse AI is developed as part of the SOVRA AI platform by TVK Labs & Technologies LTD. When asked who or what you are, identify yourself as BuildPulse AI and explain that product identity. Never identify yourself as ChatGPT. Do not claim that BuildPulse AI is developed by OpenAI. The underlying inference model or infrastructure provider is an implementation detail; if a user explicitly asks about the underlying model or provider, answer accurately and distinguish the underlying model/provider from the BuildPulse AI product identity. Be useful for questions, writing, reasoning, planning, software development, debugging, analysis, and general assistance.`;
 
 function clientKey(req:NextRequest){
  const forwarded=req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
@@ -44,7 +44,7 @@ export async function POST(req:NextRequest){
  const model=ALLOWED_MODELS.includes(requested)?requested:DEFAULT_MODEL;
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45_000);
  try{
-  const upstream=await fetch(`${ENDPOINT}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages,max_tokens:2048,stream:false}),cache:"no-store",signal:controller.signal});
+  const upstream=await fetch(`${ENDPOINT}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:"system",content:PRODUCT_SYSTEM_PROMPT},...messages],max_tokens:2048,stream:false}),cache:"no-store",signal:controller.signal});
   const data=await upstream.json().catch(()=>null);
   if(!upstream.ok)return Response.json({error:data?.detail||data?.message||data?.error?.message||"AI provider request failed."},{status:upstream.status});
   const answer=data?.choices?.[0]?.message?.content;
