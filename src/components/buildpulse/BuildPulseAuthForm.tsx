@@ -1,5 +1,5 @@
 "use client";
-import {FormEvent,useMemo,useState} from "react";
+import {FormEvent,useState} from "react";
 import {createClient} from "@/utils/supabase/client";
 
 function safeNext(value:string){return value.startsWith("/")&&!value.startsWith("//")?value:"/workforce"}
@@ -11,7 +11,7 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
 
   async function submit(e:FormEvent<HTMLFormElement>){
     e.preventDefault();setBusy(true);setMessage("");
-    const fd=new FormData(e.currentTarget),email=String(fd.get("email")??"").trim(),password=String(fd.get("password")??"");
+    const supabase=createClient();\n    const fd=new FormData(e.currentTarget),email=String(fd.get("email")??"").trim(),password=String(fd.get("password")??"");
     const next=safeNext(nextPath);
     if(mode==="magic"){
       const redirectTo=new URL("/auth/callback",window.location.origin);redirectTo.searchParams.set("next",next);
