@@ -119,7 +119,7 @@
 - [x] Advertising catalog and Stripe links foundations.
 - [x] Resolve duplicate newsletter placement/product ambiguity — unused duplicate NEWSLETTER_SPONSOR was deactivated after confirming zero orders; NEWSLETTER_PRIMARY is the single active $750/day newsletter sponsor SKU.
 - [ ] Full advertiser self-service campaign workflow and review.
-- [ ] Clearly label Sponsored placements.
+- [x] Clearly label Sponsored placements — runtime ad slots use an explicit Advertisement label and rel=sponsored; newsletter/edition commercial blocks render ADVERTISEMENT, affiliate blocks render AFFILIATE DISCLOSURE, and first-party ecosystem promotions are visibly labeled Sponsored with separation disclosure.
 - [ ] Contextual/consent targeting only.
 - [ ] Affiliate account/referral code/attribution/commission/fraud/payout/tax/KYC system.
 - [ ] Activate only real approved affiliate destinations.
