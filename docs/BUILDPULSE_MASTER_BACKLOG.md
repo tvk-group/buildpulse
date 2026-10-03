@@ -40,7 +40,7 @@
 - [x] Implement source-grounded daily News of Day selection — homepage selects the highest-scored recent verified story; runtime requires verification timestamp, reviewer and canonical source provenance and fails empty rather than fabricating filler.
 - [x] Complete newsroom control-plane workflows, corrections, complaints and takedowns — public case intake, rate limiting, editorial review, corrected/withheld/restored publication controls and workforce audit logging are implemented.
 - [ ] Require sourced verification before factual publication; maintain provenance.
-- [ ] Complete daily/weekly automated editions with human approval where required. Daily plus Monday-weekly source-grounded draft generation is now implemented behind CRON_SECRET; composition sends revision-bound founder review and does not trigger delivery. Production scheduling/invocation verification remains open.
+- [ ] Complete daily/weekly automated editions with human approval where required. Supabase pg_cron now invokes the production edition scheduler daily at 05:15 UTC; the 2026-10-03 run completed and generated an eight-story draft, then correctly failed closed at the non-core-lead quality gate with no dispatch. Application selection now requires a core digital-intelligence lead. Monday-weekly generation, founder approval/revision binding and no-delivery-before-approval remain in force; a successful core-lead review draft and end-to-end approved delivery are still required before completion.
 
 ## P0 — Payments, subscriptions, invoicing and accounting
 - [x] Stripe Intelligence products/prices/payment links created.
