@@ -6,7 +6,7 @@ import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localiza
 
 const groups=[
  {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/archive?category=politics"],["Economy","/markets"]]},
- {label:"Intelligence",items:[["Build with AI","/build-with-ai"],["Subscriptions","/subscriptions"],["Markets","/markets"],["Methodology","/methodology"]]},
+ {label:"Intelligence",items:[["Markets","/markets"],["Methodology","/methodology"]]},
  {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"]]},
  {label:"Culture",items:[["Sports","/sports"],["Arts","/arts"],["Marketplace","/marketplace"]]},
  {label:"About",items:[["Account","/account"],["About BuildPulse","/about"],["Contribute","/contribute"],["Advertise","/advertise"]]},
@@ -17,7 +17,7 @@ export function BuildPulseSiteHeader(){
  const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN");
  useEffect(()=>setOpen(false),[p]);
  useEffect(()=>setLocale(getBuildPulseLocale().toUpperCase()),[]);
- const choose=(v:string)=>{setLocale(v);setBuildPulseLocale(v)};
+ const choose=(v:string)=>{setLocale(v);setBuildPulseLocale(v);window.location.reload()};
  const active=(href:string)=>p===href.split("?")[0]||(href!=="/"&&p.startsWith(href.split("?")[0]+"/"));
  return <header className="sticky top-0 z-50 border-b border-black/15 bg-[#fbfaf6]/95 backdrop-blur">
   <div className="mx-auto max-w-[1440px] px-4 md:px-5">
@@ -31,7 +31,7 @@ export function BuildPulseSiteHeader(){
       </div>
      </div>)}
     </nav>
-    <Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 md:block">Account</Link><label className="sr-only" htmlFor="bp-language">Language</label>
+    <Link href="/subscriptions" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">Subscriptions</Link><Link href="/build-with-ai" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">Build with AI</Link><Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 md:block">Account</Link><label className="sr-only" htmlFor="bp-language">Language</label>
     <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-black/20 bg-transparent px-2 py-2 text-xs font-bold sm:block" aria-label="Language">
      {langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}
     </select>
