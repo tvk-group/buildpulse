@@ -16,7 +16,8 @@
 - [x] Role-scoped /workforce portal and server authorization helper.
 - [x] Initial /workforce/control operations command center.
 - [x] Enforce Supabase AAL2 MFA assurance before sensitive workforce actions; passkey requirement remains policy metadata until provider/runtime enforcement is completed.
-- [ ] Add workforce invitation/onboarding, device/session management, access reviews and offboarding.
+- [ ] Add workforce device/session management and periodic access reviews.
+- [x] Add secure workforce invitation/onboarding and offboarding with hashed expiring invite tokens, scoped roles, contractor expiry, MFA redirect and audit logging.
 - [x] Add unified authenticated client portal at /account for subscriptions, accounting documents, Social identity, contributor/art activity and advertiser access; production deployment dpl_EXva3NG8kQSjsKeBFjji1HJdW39q READY.
 - [ ] Expand control plane: editorial, Social, ads, subscriptions, finance/tax, localization, moderation, infrastructure, incidents, analytics, approvals, audit explorer and notifications.
 
@@ -77,13 +78,14 @@
 - [ ] Contextual/consent-based Sponsored advertising; no hidden surveillance targeting.
 - [ ] Media upload/storage/transcoding, malware scanning and quotas.
 - [ ] Notifications/push.
-- [ ] Moderation, block/report/mute, abuse/rate controls and appeals.
+- [ ] Add abuse-rate controls and appeals.
+- [x] Add block/mute/report controls, per-reader feed filtering, report review state, moderator hide/dismiss/review actions and Control Plane moderation queue.
 - [ ] Cloud/storage subscriptions and premium names/features.
 - [ ] AI agents/robots visibly non-human with controller attribution and scoped permissions.
 
 ## P0 — Security/PQC
 - [x] PQC policy and crypto-agility/device-key schema.
-- [ ] Expand cryptographic inventory.
+- [x] Expand cryptographic inventory with evidence-based current/target/PQ state across Social messaging, TLS, database, auth, webhook MAC, secrets and backups; exposed in Control Plane.
 - [ ] Hybrid classical + ML-KEM key establishment where mature audited runtime supports it.
 - [ ] Hybrid classical + ML-DSA signatures where appropriate.
 - [ ] Verify TLS/CDN hybrid-PQ capability.
@@ -103,7 +105,7 @@
 - [ ] Localize Social/Blogs/Marketplace/Connections/Workforce surfaces.
 - [x] Compact masthead navigation into editorial dropdown groups while preserving BuildPulse design.
 - [x] Add Local news source geography model, localized-story storage, verified Local API and /local edition page.
-- [ ] Populate country/region/city source registry and automate localized-source ingestion at scale. Known source geography/language metadata is seeded and hourly localization drafts are scheduled; global city/source coverage remains incomplete.
+- [ ] Populate country/region/city source registry at global scale. Known source geography/language metadata is seeded; hourly budget-limited localization drafts and Control Plane translation review are implemented.
 - [ ] Keep billing/tax jurisdiction independent from browser language/time zone.
 
 ## P1 — Mobile/PWA
