@@ -1,9 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/buildpulse-agents",
-      "schedule": "7 * * * *"
-    }
-  ],
+  "crons": [],
   "framework": "nextjs"
 }
