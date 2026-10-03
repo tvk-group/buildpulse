@@ -54,7 +54,7 @@ async function settleCheckout(admin:any,event:any,session:any){
     .select("id,user_id,product_id,status,amount_usd,created_at").eq("id",orderId).maybeSingle();
   if(orderError||!order)return {ignored:"order_not_found"};
   const [{data:product},{data:profile}]=await Promise.all([
-    admin.from("buildpulse_ad_products").select("stripe_payment_link_id,price_usd").eq("id",order.product_id).maybeSingle(),
+    admin.from("buildpulse_ad_products").select("stripe_product_id,stripe_price_id,stripe_payment_link_id,price_usd").eq("id",order.product_id).maybeSingle(),
     admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email").eq("user_id",order.user_id).maybeSingle()
   ]);
   const sessionLink=typeof session.payment_link==="string"?session.payment_link:session.payment_link?.id;
@@ -63,9 +63,13 @@ async function settleCheckout(admin:any,event:any,session:any){
   const validLink=Boolean(product?.stripe_payment_link_id)&&sessionLink===product.stripe_payment_link_id;
   const validAmount=Number.isInteger(session.amount_total)&&session.amount_total===cents(order.amount_usd)&&session.amount_total===cents(product?.price_usd);
   const validCurrency=String(session.currency??"").toLowerCase()==="usd";
-  if(!validLink||!validAmount||!validCurrency){
+  const sessionPrice=typeof session?.line_items?.data?.[0]?.price==="string"?session.line_items.data[0].price:session?.line_items?.data?.[0]?.price?.id;
+  const sessionProduct=typeof session?.line_items?.data?.[0]?.price?.product==="string"?session.line_items.data[0].price.product:session?.line_items?.data?.[0]?.price?.product?.id;
+  const validPrice=!sessionPrice||sessionPrice===product?.stripe_price_id;
+  const validProduct=!sessionProduct||sessionProduct===product?.stripe_product_id;
+  if(!validLink||!validAmount||!validCurrency||!validPrice||!validProduct){
     await appendPaymentEvent(admin,event,order.id,"rejected",paymentIntent,amountUsd,{
-      checkout_session_id:session.id,payment_link:sessionLink,valid_link:validLink,valid_amount:validAmount,valid_currency:validCurrency
+      checkout_session_id:session.id,payment_link:sessionLink,valid_link:validLink,valid_amount:validAmount,valid_currency:validCurrency,valid_price:validPrice,valid_product:validProduct
     });
     return {rejected:"checkout_reconciliation_failed"};
   }
