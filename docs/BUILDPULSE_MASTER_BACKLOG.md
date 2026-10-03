@@ -17,7 +17,7 @@
 - [x] Initial /workforce/control operations command center.
 - [x] Enforce Supabase AAL2 MFA assurance before sensitive workforce actions; passkey requirement remains policy metadata until provider/runtime enforcement is completed.
 - [ ] Add workforce invitation/onboarding, device/session management, access reviews and offboarding.
-- [ ] Build client portal separately for subscribers/advertisers/contributors/creators/marketplace users.
+- [x] Add unified authenticated client portal at /account for subscriptions, accounting documents, Social identity, contributor/art activity and advertiser access; production deployment dpl_EXva3NG8kQSjsKeBFjji1HJdW39q READY.
 - [ ] Expand control plane: editorial, Social, ads, subscriptions, finance/tax, localization, moderation, infrastructure, incidents, analytics, approvals, audit explorer and notifications.
 
 ## P0 — AI/automation platform
@@ -26,7 +26,7 @@
 - [x] Implement provider-neutral AI gateway with OpenAI, NVIDIA NIM and local/self-hosted adapters.
 - [ ] Store provider secrets only in managed secrets/environment; never Git.
 - [ ] Add model routing by task/cost/latency/privacy, budgets, rate limits, retries, fallback and observability.
-- [x] Implement durable agent schedules, governed runtime, usage budgets/retries and authenticated execution API. Technology Editorial Agent now has idempotent generation and a secured cron endpoint; remaining agents still require scheduler coverage.
+- [x] Implement durable agent schedules, governed runtime, usage budgets/retries, authenticated execution API and hourly secured scheduler coverage with atomic schedule claiming.
 - [ ] Automate low-risk ingestion, dedupe, scoring, drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports.
 - [x] Add auditable human approval inbox/API for agent proposals; generic approval does not execute arbitrary AI text. Technology long-form drafting is now source-grounded and autonomous-to-review; remaining domains are incomplete.
 - [ ] Keep approval gates for unverified factual publication, tax/legal filing, money movement, destructive operations, permanent sanctions, role/security changes.
@@ -54,11 +54,11 @@
 - [ ] Automatic invoice PDF/email after verified purchase.
 - [x] Add concurrency-safe sequential accounting document numbering.
 - [ ] Automatic credit notes/refunds/disputes and journal entries.
-- [ ] Journal Stripe fees, deferred subscription revenue and revenue recognition after verified FX/reconciliation.
+- [ ] Journal Stripe fees, deferred subscription revenue and revenue recognition after verified FX/reconciliation. Paid base-currency invoices now post balanced cash/tax/revenue journals automatically; foreign-currency invoices remain fail-closed pending FX.
 - [ ] Add equivalent accounting/tax evidence for crypto/off-Stripe payments.
 - [ ] Monthly close package, VAT/GST/sales-tax reports, annual balance/P&L/trial balance and accountant export.
 - [ ] Complete subscription entitlement lifecycle before exposing all checkout buttons.
-- [x] Persist signed Stripe invoice paid/payment-failed events into accounting customer/document records; Edge Function v5 ACTIVE.
+- [x] Persist signed Stripe invoice paid/payment-failed events into accounting customer/document records; Stripe webhook Edge Function v6 ACTIVE and posts paid base-currency invoices to balanced journals.
 - [ ] Daily/weekly subscriber preferences, watchlists, delivery, unsubscribe and service-email controls.
 - [x] Refactor payment function to lazy per-rail environment loading — rail configuration now resolves lazily and fails closed when required server-side settings are absent.
 - [ ] Complete secure verifiers for SOL/BNB/POL/TRX/ADA/SUI/AVAX and verify USDT Base contract authoritatively.
@@ -103,7 +103,7 @@
 - [ ] Localize Social/Blogs/Marketplace/Connections/Workforce surfaces.
 - [x] Compact masthead navigation into editorial dropdown groups while preserving BuildPulse design.
 - [x] Add Local news source geography model, localized-story storage, verified Local API and /local edition page.
-- [ ] Populate country/region/city source registry and automate localized-source ingestion at scale.
+- [ ] Populate country/region/city source registry and automate localized-source ingestion at scale. Known source geography/language metadata is seeded and hourly localization drafts are scheduled; global city/source coverage remains incomplete.
 - [ ] Keep billing/tax jurisdiction independent from browser language/time zone.
 
 ## P1 — Mobile/PWA
