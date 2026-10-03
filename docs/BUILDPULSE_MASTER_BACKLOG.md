@@ -64,6 +64,7 @@
 - [x] Refactor payment function to lazy per-rail environment loading — rail configuration now resolves lazily and fails closed when required server-side settings are absent.
 - [ ] Complete secure verifiers for SOL/BNB/POL/TRX/ADA/SUI/AVAX and verify USDT Base contract authoritatively.
 - [x] Never accept tx hash alone as proof of payment — enabled crypto rails verify chain destination, amount/token transfer, quote window and required confirmations before atomic settlement.
+- [ ] Activate production crypto checkout across paid surfaces. Advertising has verified ETH (Ethereum/Base), BTC, USDC (Ethereum/Base), USDT (Ethereum) and XRP verifier paths and now reports missing rail configuration explicitly; production Edge destinations remain the activation gate. Contributor $149 is currently Stripe-only and needs equivalent submission-bound crypto quote/settlement. Intelligence subscriptions remain Stripe-recurring until an explicit crypto term/renewal/expiry entitlement model is implemented; do not emulate recurring billing with an untracked transfer.
 
 ## P0 — Social network
 - [x] Social profiles, follows, posts/blogs, reactions, conversations, ciphertext-only messages and safety schema.
