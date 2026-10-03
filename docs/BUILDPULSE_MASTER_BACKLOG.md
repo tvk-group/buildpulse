@@ -15,7 +15,7 @@
 - [x] Workforce profiles, expiry/revocation, MFA/passkey requirements and audit schema.
 - [x] Role-scoped /workforce portal and server authorization helper.
 - [x] Initial /workforce/control operations command center.
-- [ ] Enforce actual MFA/passkey authentication assurance before sensitive actions.
+- [x] Enforce Supabase AAL2 MFA assurance before sensitive workforce actions; passkey requirement remains policy metadata until provider/runtime enforcement is completed.
 - [ ] Add workforce invitation/onboarding, device/session management, access reviews and offboarding.
 - [ ] Build client portal separately for subscribers/advertisers/contributors/creators/marketplace users.
 - [ ] Expand control plane: editorial, Social, ads, subscriptions, finance/tax, localization, moderation, infrastructure, incidents, analytics, approvals, audit explorer and notifications.
@@ -26,8 +26,9 @@
 - [x] Implement provider-neutral AI gateway with OpenAI, NVIDIA NIM and local/self-hosted adapters.
 - [ ] Store provider secrets only in managed secrets/environment; never Git.
 - [ ] Add model routing by task/cost/latency/privacy, budgets, rate limits, retries, fallback and observability.
-- [ ] Implement agent scheduler/event triggers and idempotent execution. Technology Editorial Agent now has idempotent generation and a secured cron endpoint; remaining agents still require scheduler coverage.
-- [ ] Automate low-risk ingestion, dedupe, scoring, drafts, localization drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports. Technology long-form drafting is now source-grounded and autonomous-to-review; remaining domains are incomplete.
+- [x] Implement durable agent schedules, governed runtime, usage budgets/retries and authenticated execution API. Technology Editorial Agent now has idempotent generation and a secured cron endpoint; remaining agents still require scheduler coverage.
+- [ ] Automate low-risk ingestion, dedupe, scoring, drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports.
+- [x] Add auditable human approval inbox/API for agent proposals; generic approval does not execute arbitrary AI text. Technology long-form drafting is now source-grounded and autonomous-to-review; remaining domains are incomplete.
 - [ ] Keep approval gates for unverified factual publication, tax/legal filing, money movement, destructive operations, permanent sanctions, role/security changes.
 - [ ] Add prompt/version registry, evaluation datasets, hallucination/source-grounding checks and agent quality metrics.
 
@@ -50,12 +51,14 @@
 - [ ] Confirm/store real VAT registrations only; never invent VAT numbers.
 - [ ] Enable/configure Stripe Tax against actual registrations and verified product tax codes.
 - [ ] Capture billing address, customer B2B/B2C status, tax ID validation and location evidence.
-- [ ] Automatic sequential invoices/PDF/email after verified purchase.
+- [ ] Automatic invoice PDF/email after verified purchase.
+- [x] Add concurrency-safe sequential accounting document numbering.
 - [ ] Automatic credit notes/refunds/disputes and journal entries.
-- [ ] Journal Stripe fees, deferred subscription revenue and revenue recognition.
+- [ ] Journal Stripe fees, deferred subscription revenue and revenue recognition after verified FX/reconciliation.
 - [ ] Add equivalent accounting/tax evidence for crypto/off-Stripe payments.
 - [ ] Monthly close package, VAT/GST/sales-tax reports, annual balance/P&L/trial balance and accountant export.
 - [ ] Complete subscription entitlement lifecycle before exposing all checkout buttons.
+- [x] Persist signed Stripe invoice paid/payment-failed events into accounting customer/document records; Edge Function v5 ACTIVE.
 - [ ] Daily/weekly subscriber preferences, watchlists, delivery, unsubscribe and service-email controls.
 - [x] Refactor payment function to lazy per-rail environment loading — rail configuration now resolves lazily and fails closed when required server-side settings are absent.
 - [ ] Complete secure verifiers for SOL/BNB/POL/TRX/ADA/SUI/AVAX and verify USDT Base contract authoritatively.
@@ -94,6 +97,7 @@
 - [x] Capture subscriber locale/time zone.
 - [ ] Move every UI string into locale dictionaries.
 - [ ] Complete translations for all supported navigation languages; no fake translated UI.
+- [x] Add source-grounded AI story-localization draft pipeline and audited approve/reject workflow.
 - [ ] Localize SEO metadata, transactional email, notifications and legally appropriate invoice text.
 - [ ] Local currency/date/time/number formatting and time-zone aware scheduling.
 - [ ] Localize Social/Blogs/Marketplace/Connections/Workforce surfaces.
