@@ -6,7 +6,7 @@
 ## P0 — Production release health
 - [x] Restore Next.js/Vercel production build to READY — fixed malformed/unclosed Arts contribute component; production deployment dpl_HbuDava2HYUqrrLkrNmE8WHkgZc6 READY at c1cecddd70fa3792b778d02f8cb60bed37e414a8.
 - [ ] Verify buildpulse.news serves current production SHA and complete browser/mobile route QA.
-- [ ] Verify mobile navigation, PWA install control and visible update flow on production.
+- [ ] Verify mobile navigation, PWA install control and visible update flow on production. SOVRA voice input is now production-enabled by same-origin microphone policy; final speech recognition submits a conversational turn and the guide expands/animates during browser TTS speech.
 - [x] Repair secure scheduled ingestion without fail-open — Vercel cron authentication now passes but its runtime lacks Supabase admin access; a service-authenticated Supabase pg_cron + pg_net → Edge fallback is ACTIVE hourly and production ingestion completed successfully on 2026-10-03.
 - [ ] Run production route, security, accessibility, performance, SEO and PWA checks. Production HTTP QA now confirms homepage, World, Local, Social, BuildPulse AI, manifest, service worker, robots, sitemap, news sitemap and RSS return 200. Baseline security headers, private-route crawler exclusions and private-route PWA cache exclusions are live; browser accessibility/Core Web Vitals and full mobile visual QA remain open.
 
@@ -31,7 +31,7 @@
 - [ ] Automate low-risk ingestion, dedupe, scoring, drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports.
 - [x] Add auditable human approval inbox/API for agent proposals; generic approval does not execute arbitrary AI text. Technology long-form drafting is now source-grounded and autonomous-to-review; remaining domains are incomplete.
 - [ ] Keep approval gates for unverified factual publication, tax/legal filing, money movement, destructive operations, permanent sanctions, role/security changes.
-- [ ] Add prompt/version registry, evaluation datasets, hallucination/source-grounding checks and agent quality metrics. Server-only versioned prompt and evaluation registries are live; AI usage telemetry records prompt key/version, and Technology Editorial is fail-closed on the approved active prompt with an unsupported-claims evaluation fixture. Automated evaluation execution and aggregate quality metrics remain open.
+- [ ] Add prompt/version registry, evaluation datasets, hallucination/source-grounding checks and agent quality metrics. Server-only versioned prompt and evaluation registries are live; AI usage telemetry records prompt key/version, and Technology Editorial is fail-closed on the approved active prompt with an unsupported-claims evaluation fixture. MFA-gated automated evaluation execution, durable pass/fail evidence and Control Plane quality metrics are now implemented; broader evaluation datasets and scheduled regression runs remain open.
 
 ## P0 — Editorial/news publication\n- [x] Add governed Technology Editorial Agent rotating TVK ecosystem, ENTELΞKRON, Sovereign AI, EnergieMIND and presale technology; generated articles remain review-gated and source-provenance checked.
 - [x] Source ingestion/orchestration, story verification state and review provenance foundations.
@@ -82,7 +82,7 @@
 - [ ] Add abuse-rate controls and appeals.
 - [x] Add block/mute/report controls, per-reader feed filtering, report review state, moderator hide/dismiss/review actions and Control Plane moderation queue.
 - [ ] Cloud/storage subscriptions and premium names/features.
-- [ ] AI agents/robots visibly non-human with controller attribution and scoped permissions.
+- [x] AI agents/robots visibly non-human with controller attribution and scoped permissions — automated Social identities require disclosed automation/controller permission to publish; public feed labels them non-human and resolves only the controller’s public Social display identity.
 
 ## P0 — Security/PQC
 - [x] PQC policy and crypto-agility/device-key schema.
@@ -90,7 +90,7 @@
 - [ ] Hybrid classical + ML-KEM key establishment where mature audited runtime supports it.
 - [ ] Hybrid classical + ML-DSA signatures where appropriate.
 - [ ] Verify TLS/CDN hybrid-PQ capability.
-- [ ] Admin passkeys/MFA, secret rotation, SBOM/dependency review and backup/storage encryption.
+- [ ] Admin passkeys/MFA, secret rotation, SBOM/dependency review and backup/storage encryption. Workforce sensitive actions enforce AAL2 MFA; weekly Dependabot and CodeQL configuration are committed, with major dependency upgrades held for compatibility review. Passkey runtime enforcement, secret-rotation evidence, SBOM and backup/storage encryption verification remain open.
 - [ ] Downgrade protection, key rotation/recovery and independent security review.
 - [ ] Do not market as quantum-secure until protocol and review gates are satisfied.
 
@@ -135,7 +135,7 @@
 
 ## P1 — Marketplace and Connections
 - [x] Core database/page foundations.
-- [ ] Complete listing/sell/search/contact transaction workflows.
+- [ ] Complete listing/sell/search/contact transaction workflows. Production now has active-listing search, authenticated seller moderation submission, rate-limited buyer inquiries and MFA-gated audited approve/reject publication; protected checkout/order settlement remains gated on a regulated marketplace payment provider.
 - [ ] Trust/safety, reporting, moderation and anti-fraud.
 - [ ] Connections discovery/messaging/privacy workflows.
 
