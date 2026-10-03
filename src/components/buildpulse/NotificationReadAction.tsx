@@ -1,0 +1,2 @@
+"use client";import {useState} from "react";import {useRouter} from "next/navigation";
+export function NotificationReadAction({id,read}:{id:string;read:boolean}){const r=useRouter(),[busy,setBusy]=useState(false);if(read)return null;async function mark(){setBusy(true);const res=await fetch("/api/account/notifications",{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify({id})});setBusy(false);if(res.ok)r.refresh()}return <button disabled={busy} onClick={mark} className="font-black underline">{busy?"Saving…":"Mark read"}</button>}
