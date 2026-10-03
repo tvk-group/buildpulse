@@ -8,7 +8,7 @@
 - [ ] Verify buildpulse.news serves current production SHA and complete browser/mobile route QA.
 - [ ] Verify mobile navigation, PWA install control and visible update flow on production.
 - [x] Repair secure scheduled ingestion without fail-open — Vercel cron authentication now passes but its runtime lacks Supabase admin access; a service-authenticated Supabase pg_cron + pg_net → Edge fallback is ACTIVE hourly and production ingestion completed successfully on 2026-10-03.
-- [ ] Run production route, security, accessibility, performance, SEO and PWA checks.
+- [ ] Run production route, security, accessibility, performance, SEO and PWA checks. Production HTTP QA now confirms homepage, World, Local, Social, BuildPulse AI, manifest, service worker, robots, sitemap, news sitemap and RSS return 200. Baseline security headers, private-route crawler exclusions and private-route PWA cache exclusions are live; browser accessibility/Core Web Vitals and full mobile visual QA remain open.
 
 ## P0 — Identity, workforce and control plane
 - [x] Workforce RBAC schema: founder/admin/engineering/editorial/finance/advertising/moderation/support/analyst/contractor.
@@ -26,7 +26,7 @@
 - [x] Seed News Desk, Localization, Social Ops, Finance Reconciliation, Platform Ops and Moderation agents.
 - [x] Implement provider-neutral AI gateway with OpenAI, NVIDIA NIM and local/self-hosted adapters.
 - [ ] Store provider secrets only in managed secrets/environment; never Git.
-- [ ] Add model routing by task/cost/latency/privacy, budgets, rate limits, retries, fallback and observability.
+- [ ] Add model routing by task/cost/latency/privacy, budgets, rate limits, retries, fallback and observability. Provider ordering, bounded retries/timeouts, usage telemetry, explicit per-task daily request/token budgets and fail-closed missing-budget behavior are implemented; richer cost/latency/privacy policy routing and quality dashboards remain open.
 - [x] Implement durable agent schedules, governed runtime, usage budgets/retries, authenticated execution API and hourly secured scheduler coverage with atomic schedule claiming.
 - [ ] Automate low-risk ingestion, dedupe, scoring, drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports.
 - [x] Add auditable human approval inbox/API for agent proposals; generic approval does not execute arbitrary AI text. Technology long-form drafting is now source-grounded and autonomous-to-review; remaining domains are incomplete.
@@ -39,8 +39,8 @@
 - [x] Make World/current news dynamic; remove stale hard-coded stories — /world now renders only verified runtime stories with canonical source provenance.
 - [x] Implement source-grounded daily News of Day selection — homepage selects the highest-scored recent verified story; runtime requires verification timestamp, reviewer and canonical source provenance and fails empty rather than fabricating filler.
 - [x] Complete newsroom control-plane workflows, corrections, complaints and takedowns — public case intake, rate limiting, editorial review, corrected/withheld/restored publication controls and workforce audit logging are implemented.
-- [ ] Require sourced verification before factual publication; maintain provenance.
-- [ ] Complete daily/weekly automated editions with human approval where required. Supabase pg_cron now invokes the production edition scheduler daily at 05:15 UTC; the 2026-10-03 run completed and generated an eight-story draft, then correctly failed closed at the non-core-lead quality gate with no dispatch. Application selection now requires a core digital-intelligence lead. Monday-weekly generation, founder approval/revision binding and no-delivery-before-approval remain in force; a successful core-lead review draft and end-to-end approved delivery are still required before completion.
+- [x] Require sourced verification before factual publication; maintain provenance — PostgreSQL now rejects verified stories without verifier/timestamp/HTTPS canonical source and rejects active/corrected publication without that verified provenance; existing production inventory validated with zero violations.
+- [ ] Complete daily/weekly automated editions with human approval where required. Supabase pg_cron now invokes the production edition scheduler daily at 05:15 UTC; the 2026-10-03 run completed and generated an eight-story draft, then correctly failed closed at the non-core-lead quality gate with no dispatch. Application selection now requires a core digital-intelligence lead. Controlled same-day regeneration preserved the edition ID/audit trail, incremented revision 1→2, selected a core economy/defence-aerospace lead, reset approval, and returned the edition to review/pending with no campaign dispatch. Monday-weekly generation and end-to-end human-approved delivery remain required before completion.
 
 ## P0 — Payments, subscriptions, invoicing and accounting
 - [x] Stripe Intelligence products/prices/payment links created.
