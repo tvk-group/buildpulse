@@ -137,7 +137,7 @@
 - [x] Core database/page foundations.
 - [ ] Complete listing/sell/search/contact transaction workflows. Production now has active-listing search, authenticated seller moderation submission, rate-limited buyer inquiries and MFA-gated audited approve/reject publication; protected checkout/order settlement remains gated on a regulated marketplace payment provider.
 - [ ] Trust/safety, reporting, moderation and anti-fraud. Active listings now have authenticated rate-limited reporting with bounded reason codes, duplicate suppression, RLS-protected report records and an MFA/role-gated workforce review API; action decisions pause listings for review and are audit logged. Broader transaction anti-fraud remains incomplete.
-- [ ] Connections discovery/messaging/privacy workflows.
+- [ ] Connections discovery/messaging/privacy workflows. Authenticated account-bound profile editing and intent discovery are now implemented for friends, activities, travel, professional and adult-confirmed dating; discovery returns only members/public profiles, never asks for exact/live location, and user-initiated block/report controls are RLS-backed. Reciprocal block suppression, Connections-specific messaging handoff, moderation review integration and broader anti-abuse controls remain open.
 
 ## P1 — Markets/Intelligence
 - [x] Crypto and FX ticker foundations.
