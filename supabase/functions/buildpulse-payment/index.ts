@@ -91,7 +91,7 @@ async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?
   const rail=railFor(asset,network);
   const [{data:order,error:orderError},{data:profile,error:profileError}]=await Promise.all([
     admin.from("buildpulse_ad_orders").select("id,user_id,status,amount_usd,created_at").eq("id",orderId).eq("user_id",user.id).maybeSingle(),
-    admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,status").eq("user_id",user.id).maybeSingle()
+    admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,status,customer_type,billing_address_line1,billing_address_line2,billing_city,billing_region,billing_postal_code,billing_country_code,tax_id,tax_id_type,tax_id_validation_status").eq("user_id",user.id).maybeSingle()
   ]);
   if(orderError||!order)throw new Error("order_not_found");
   if(profileError||!profile||profile.status!=="active")throw new Error("active_advertiser_profile_required");
@@ -118,6 +118,9 @@ async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?
   const {data:invoice,error:invoiceError}=await admin.from("buildpulse_billing_invoices").upsert({
     order_id:order.id,user_id:user.id,invoice_number:invNo,issuer_name:ISSUER.name,issuer_company_number:ISSUER.companyNumber,
     issuer_registered_office:ISSUER.registeredOffice,billing_company:profile.company_name??null,billing_email:profile.billing_email??user.email??null,
+    customer_type:profile.customer_type??null,billing_address_line1:profile.billing_address_line1??null,billing_address_line2:profile.billing_address_line2??null,
+    billing_city:profile.billing_city??null,billing_region:profile.billing_region??null,billing_postal_code:profile.billing_postal_code??null,billing_country_code:profile.billing_country_code??null,
+    tax_id:profile.tax_id??null,tax_id_type:profile.tax_id_type??null,tax_id_validation_status:profile.tax_id_validation_status??"unverified",
     amount_usd:usd,currency:"USD",payment_method:asset,payment_reference:quote.id,status:"open",paid_at:null,updated_at:now.toISOString()
   },{onConflict:"order_id"}).select("invoice_number,status,amount_usd,currency,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,payment_method").single();
   if(invoiceError||!invoice)throw new Error("invoice_persistence_failed");
@@ -134,7 +137,7 @@ async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?
 async function prepareStripe(admin:any,user:any,orderId:string){
   const [{data:order,error:orderError},{data:profile,error:profileError}]=await Promise.all([
     admin.from("buildpulse_ad_orders").select("id,user_id,product_id,status,amount_usd,created_at").eq("id",orderId).eq("user_id",user.id).maybeSingle(),
-    admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,status").eq("user_id",user.id).maybeSingle()
+    admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,status,customer_type,billing_address_line1,billing_address_line2,billing_city,billing_region,billing_postal_code,billing_country_code,tax_id,tax_id_type,tax_id_validation_status").eq("user_id",user.id).maybeSingle()
   ]);
   if(orderError||!order)throw new Error("order_not_found");
   if(profileError||!profile||profile.status!=="active")throw new Error("active_advertiser_profile_required");
@@ -148,6 +151,9 @@ async function prepareStripe(admin:any,user:any,orderId:string){
   const {data:invoice,error:invoiceError}=await admin.from("buildpulse_billing_invoices").upsert({
     order_id:order.id,user_id:user.id,invoice_number:invNo,issuer_name:ISSUER.name,issuer_company_number:ISSUER.companyNumber,
     issuer_registered_office:ISSUER.registeredOffice,billing_company:profile.company_name??null,billing_email:profile.billing_email??user.email??null,
+    customer_type:profile.customer_type??null,billing_address_line1:profile.billing_address_line1??null,billing_address_line2:profile.billing_address_line2??null,
+    billing_city:profile.billing_city??null,billing_region:profile.billing_region??null,billing_postal_code:profile.billing_postal_code??null,billing_country_code:profile.billing_country_code??null,
+    tax_id:profile.tax_id??null,tax_id_type:profile.tax_id_type??null,tax_id_validation_status:profile.tax_id_validation_status??"unverified",
     amount_usd:order.amount_usd,currency:"USD",payment_method:"stripe",payment_reference:product.stripe_payment_link_id,status:"open",paid_at:null,updated_at:now
   },{onConflict:"order_id"}).select("invoice_number,status,amount_usd,currency,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,payment_method").single();
   if(invoiceError||!invoice)throw new Error("invoice_persistence_failed");
