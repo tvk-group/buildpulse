@@ -68,7 +68,7 @@
 - [x] Social profiles, follows, posts/blogs, reactions, conversations, ciphertext-only messages and safety schema.
 - [x] Agent/robot account permissions and advertising schema.
 - [ ] Complete auth/account onboarding with email/phone and unique handles. Authenticated unique-handle Social profile onboarding is now implemented; phone onboarding remains incomplete.
-- [ ] Complete production feed, profiles, follow/reaction/comment APIs. Public feed + authenticated profile/post/blog publishing APIs and interactive /social client are implemented; follow/reaction/comment UX remains incomplete.
+- [x] Complete production feed, profiles, follow/reaction/comment APIs — public feed, authenticated profile/post/blog publishing, server-mediated follow/reaction/comment actions, and interactive Social controls are implemented; production deployment verification remains part of release QA.
 - [ ] Blogs publishing workflow.
 - [ ] Direct chat, groups and channels.
 - [ ] Select and implement mature audited E2EE protocol; no custom crypto.
