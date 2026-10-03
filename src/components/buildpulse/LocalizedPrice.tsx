@@ -1,0 +1,2 @@
+"use client";import {formatLocalCurrency} from "@/lib/buildpulse/localization";
+export function LocalizedPrice({value,currency="USD",maximumFractionDigits=2}:{value:number|string;currency?:string;maximumFractionDigits?:number}){return <>{formatLocalCurrency(Number(value),currency,{maximumFractionDigits})}</>}
