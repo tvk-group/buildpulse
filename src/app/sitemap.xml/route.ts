@@ -1,4 +1,5 @@
-import {createAdminClient} from "@/lib/supabase/admin";\nimport {buildPulsePublicUrl} from "@/lib/buildpulse/public-origin";
+import {createAdminClient} from "@/lib/supabase/admin";
+import {buildPulsePublicUrl} from "@/lib/buildpulse/public-origin";
 import {listPublicEditions} from "@/lib/buildpulse/public-content";
 import {listTechnologyArticles} from "@/lib/buildpulse/technology-content";
 const esc=(s:string)=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
