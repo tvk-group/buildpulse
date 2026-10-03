@@ -30,14 +30,15 @@ async function consent(admin:any,input:{email:string;subscriberId?:string|null;a
  await admin.from("buildpulse_consent_events").insert({subscriber_id:input.subscriberId??null,email_hash:await sha256(input.email),action:input.action,surface:input.surface??null,product:input.product??null,path:input.path??null,metadata:input.metadata??{}});
 }
 function validEmail(v:string){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)&&v.length<=320}
+function validTimeZone(v:string){if(!v||v.length>64)return false;try{new Intl.DateTimeFormat("en-US",{timeZone:v}).format();return true}catch{return false}}
 function cleanTopics(v:unknown){return Array.isArray(v)?[...new Set(v.filter(x=>typeof x==="string"&&TOPICS.has(x)))].slice(0,6):[]}
 async function subscribe(admin:any,body:any){
  const email=String(body.email??"").trim().toLowerCase();if(!validEmail(email)||body.consent!==true)throw new Error("invalid_request");
- const cadence=["daily","weekly","both"].includes(body.cadence)?body.cadence:"weekly",topics=cleanTopics(body.topics);
- if(!topics.length)throw new Error("invalid_request");
+ const cadence=["daily","weekly","both"].includes(body.cadence)?body.cadence:"weekly",topics=cleanTopics(body.topics),deliveryTimezone=String(body.deliveryTimezone??"UTC");
+ if(!topics.length||!validTimeZone(deliveryTimezone))throw new Error("invalid_request");
  const {data:blocked}=await admin.from("email_marketing_unsubscribes").select("id").ilike("email",email).maybeSingle();if(blocked)throw new Error("suppressed");
  const now=new Date().toISOString(),patch={
-   email,locale:String(body.locale??"en").slice(0,10),cadence,topics,status:"active",consent_basis:"explicit",
+   email,locale:String(body.locale??"en").slice(0,10),cadence,topics,delivery_timezone:deliveryTimezone,status:"active",consent_basis:"explicit",
    consent_source:["buildpulse_web","ecosystem_prompt","account_preferences","transactional_email"].includes(body.consentSource)?body.consentSource:"buildpulse_web",
    consent_at:now,acquisition_surface:typeof body.surface==="string"?body.surface.slice(0,80):null,
    acquisition_product:typeof body.product==="string"?body.product.slice(0,80):"buildpulse",
@@ -55,16 +56,16 @@ async function subscribe(admin:any,body:any){
 }
 async function resolve(admin:any,token:string){
  const v=await verify(admin,token);if(!v)throw new Error("invalid_or_expired_token");
- const {data,error}=await admin.from("buildpulse_subscribers").select("locale,cadence,topics,status").ilike("email",v.email).maybeSingle();
+ const {data,error}=await admin.from("buildpulse_subscribers").select("locale,cadence,topics,delivery_timezone,status").ilike("email",v.email).maybeSingle();
  if(error||!data)throw new Error("not_found");return {ok:true,email:v.email,preferences:data};
 }
 async function updatePreferences(admin:any,body:any){
  const v=await verify(admin,String(body.token??""));if(!v)throw new Error("invalid_or_expired_token");
- const cadence=String(body.cadence??""),topics=cleanTopics(body.topics),locale=String(body.locale??"").slice(0,10);
- if(!["daily","weekly","both"].includes(cadence)||!topics.length||locale.length<2)throw new Error("invalid_request");
+ const cadence=String(body.cadence??""),topics=cleanTopics(body.topics),locale=String(body.locale??"").slice(0,10),deliveryTimezone=String(body.deliveryTimezone??"UTC");
+ if(!["daily","weekly","both"].includes(cadence)||!topics.length||locale.length<2||!validTimeZone(deliveryTimezone))throw new Error("invalid_request");
  const {data:s}=await admin.from("buildpulse_subscribers").select("id,status").ilike("email",v.email).maybeSingle();if(!s||s.status!=="active")throw new Error("not_found");
- const {error}=await admin.from("buildpulse_subscribers").update({locale,cadence,topics,updated_at:new Date().toISOString()}).eq("id",s.id);if(error)throw error;
- await consent(admin,{email:v.email,subscriberId:s.id,action:"preferences_changed",surface:"preference_center",product:"buildpulse",metadata:{locale,cadence,topics}});
+ const {error}=await admin.from("buildpulse_subscribers").update({locale,cadence,topics,delivery_timezone:deliveryTimezone,updated_at:new Date().toISOString()}).eq("id",s.id);if(error)throw error;
+ await consent(admin,{email:v.email,subscriberId:s.id,action:"preferences_changed",surface:"preference_center",product:"buildpulse",metadata:{locale,cadence,topics,deliveryTimezone}});
  return {ok:true};
 }
 async function unsubscribe(admin:any,body:any,req:Request){
