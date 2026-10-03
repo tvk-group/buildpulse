@@ -198,13 +198,25 @@ async function handleDispute(admin:any,event:any,dispute:any){
   if(event.type==="charge.dispute.closed"){
     const won=String(dispute.status)==="won"||String(dispute.status)==="warning_closed";
     await appendPaymentEvent(admin,event,orderId,won?"confirmed":"rejected",paymentIntent,Number(dispute.amount??0)/100,{kind:"dispute_closed",dispute_id:dispute.id,status:dispute.status});
+    let creditNoteNumber:string|null=null;
+    if(!won){
+      const disputeUsd=Number(dispute.amount??0)/100;
+      const {data:credit,error:creditError}=await admin.rpc("buildpulse_issue_ad_credit_note",{
+        p_order_id:orderId,p_amount_usd:disputeUsd,p_provider_reference:`stripe_dispute:${dispute.id}`,
+        p_reason:"dispute_lost",p_metadata:{stripe_event_id:event.id,stripe_dispute_id:dispute.id,payment_intent:paymentIntent,dispute_status:dispute.status}
+      });
+      if(creditError)throw creditError;
+      const creditRow=Array.isArray(credit)?credit[0]:credit;
+      creditNoteNumber=creditRow?.credit_note_number??null;
+      if(creditRow?.id){const {error:journalError}=await admin.rpc("buildpulse_post_credit_note_journal",{p_credit_note_id:creditRow.id});if(journalError)throw journalError;}
+    }
     await Promise.all([
       admin.from("buildpulse_billing_invoices").update({status:won?"paid":"refunded",updated_at:now,metadata:{stripe_dispute_id:dispute.id,stripe_payment_intent:paymentIntent,dispute_status:dispute.status}}).eq("order_id",orderId),
       won
         ?admin.from("buildpulse_ad_orders").update({status:"review",updated_at:now}).eq("id",orderId).in("status",["approved","scheduled","active"])
         :admin.from("buildpulse_ad_orders").update({status:"cancelled",updated_at:now}).eq("id",orderId).in("status",["review","approved","scheduled","active"])
     ]);
-    return {disputeClosed:true,won,orderId};
+    return {disputeClosed:true,won,orderId,creditNoteNumber};
   }
   return {ignored:"unsupported_dispute_event"};
 }
