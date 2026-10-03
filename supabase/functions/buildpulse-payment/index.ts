@@ -51,7 +51,16 @@ function railFor(asset:Asset,networkRaw?:string){
 const TRANSFER_TOPIC="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 
 function reply(body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:cors})}
-function invoiceNumber(orderId:string,createdAt:string){return `BP-${new Date(createdAt).getUTCFullYear()}-${orderId.replaceAll("-","").slice(0,12).toUpperCase()}`}
+async function invoiceNumber(admin:any,orderId:string,issuedAt:string){
+  const {data:existing,error:existingError}=await admin.from("buildpulse_billing_invoices").select("invoice_number").eq("order_id",orderId).maybeSingle();
+  if(existingError)throw new Error("invoice_lookup_failed");
+  if(existing?.invoice_number)return existing.invoice_number;
+  const {data:entity,error:entityError}=await admin.from("buildpulse_accounting_entities").select("id").eq("is_default",true).maybeSingle();
+  if(entityError||!entity)throw new Error("accounting_entity_missing");
+  const {data:number,error:numberError}=await admin.rpc("buildpulse_next_document_number",{p_entity_id:entity.id,p_document_type:"invoice",p_issued_at:issuedAt});
+  if(numberError||!number)throw new Error("invoice_number_allocation_failed");
+  return String(number);
+}
 function decimalToAtomic(value:string|number,decimals:number){
   const raw=String(value).trim();
   if(!/^\d+(?:\.\d+)?$/.test(raw))throw new Error("invalid_decimal_amount");
@@ -114,7 +123,7 @@ async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?
   }).select("id,asset,network,expected_amount,destination,memo,rate_usd,quoted_at,expires_at,required_confirmations,state").single();
   if(quoteError||!quote)throw new Error("quote_persistence_failed");
 
-  const invNo=invoiceNumber(order.id,order.created_at);
+  const invNo=await invoiceNumber(admin,order.id,now.toISOString());
   const {data:invoice,error:invoiceError}=await admin.from("buildpulse_billing_invoices").upsert({
     order_id:order.id,user_id:user.id,invoice_number:invNo,issuer_name:ISSUER.name,issuer_company_number:ISSUER.companyNumber,
     issuer_registered_office:ISSUER.registeredOffice,billing_company:profile.company_name??null,billing_email:profile.billing_email??user.email??null,
@@ -147,7 +156,7 @@ async function prepareStripe(admin:any,user:any,orderId:string){
   if(productError||!product?.stripe_payment_link_id||!product?.stripe_payment_link_url)throw new Error("stripe_payment_link_unavailable");
   if(Math.round(Number(product.price_usd)*100)!==Math.round(Number(order.amount_usd)*100))throw new Error("order_price_mismatch");
 
-  const now=new Date().toISOString(),invNo=invoiceNumber(order.id,order.created_at);
+  const now=new Date().toISOString(),invNo=await invoiceNumber(admin,order.id,new Date().toISOString());
   const {data:invoice,error:invoiceError}=await admin.from("buildpulse_billing_invoices").upsert({
     order_id:order.id,user_id:user.id,invoice_number:invNo,issuer_name:ISSUER.name,issuer_company_number:ISSUER.companyNumber,
     issuer_registered_office:ISSUER.registeredOffice,billing_company:profile.company_name??null,billing_email:profile.billing_email??user.email??null,
