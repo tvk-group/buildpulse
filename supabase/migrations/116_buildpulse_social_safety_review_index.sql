@@ -1,0 +1,1 @@
+create index if not exists idx_bp_social_safety_actions_reviewed_by on public.buildpulse_social_safety_actions(reviewed_by);
