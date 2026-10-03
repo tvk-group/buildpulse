@@ -36,7 +36,7 @@ Deno.serve(async(req:Request)=>{
       scheduledOrActiveAds:ads.count??0,stripePaymentLinks:stripeLinks.count??0
     };
     const sourceHealth=counts.enabledSources>0&&counts.enabledSources===counts.healthySources;
-    const ingestion=latest.ingest??null;
+    const ingestion=latest["ingest-supabase-fallback"]??latest.ingest??null;
     const ingestFresh=Boolean(ingestion?.status==="ok"&&Date.now()-Date.parse(ingestion.started_at)<2.5*3600000);
     const mailDomainStatus=mailSetting.data?.value??"not_configured";
     return reply({
@@ -58,7 +58,7 @@ Deno.serve(async(req:Request)=>{
       mail:{provider:"resend",domain:"buildpulse.news",domainStatus:mailDomainStatus,deliveryEnabled:mailDomainStatus==="verified"},
       scheduler:{ingestion,webPublication:"database-cron-every-5m",adActivation:"database-cron-every-5m"},
       architecture:{
-        ingestion:"vercel-hourly",
+        ingestion:latest["ingest-supabase-fallback"]?"supabase-pg-cron-edge-hourly-fallback":"vercel-hourly",
         editorialReview:"supabase-edge",
         editionGenerationApproval:"supabase-edge",
         webPublication:"postgres-cron",
