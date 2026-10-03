@@ -8,7 +8,9 @@ const starters=["Explain a technical concept","Draft a project plan","Help me de
 export function BuildPulseAIWorkspace(){
  const [expanded,setExpanded]=useState(false),[messages,setMessages]=useState<Message[]>([]),[input,setInput]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState("");
  const end=useRef<HTMLDivElement>(null);
- useEffect(()=>{try{const saved=localStorage.getItem("buildpulse-ai-chat");if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed))setMessages(parsed.slice(-16))}}catch{}},[]);\n useEffect(()=>{try{localStorage.setItem("buildpulse-ai-chat",JSON.stringify(messages.slice(-16)))}catch{}},[messages]);\n useEffect(()=>{if(expanded)document.body.style.overflow="hidden";else document.body.style.overflow="";return()=>{document.body.style.overflow=""}},[expanded]);
+ useEffect(()=>{try{const saved=localStorage.getItem("buildpulse-ai-chat");if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed))setMessages(parsed.slice(-16))}}catch{}},[]);
+ useEffect(()=>{try{localStorage.setItem("buildpulse-ai-chat",JSON.stringify(messages.slice(-16)))}catch{}},[messages]);
+ useEffect(()=>{if(expanded)document.body.style.overflow="hidden";else document.body.style.overflow="";return()=>{document.body.style.overflow=""}},[expanded]);
  useEffect(()=>end.current?.scrollIntoView({behavior:"smooth"}),[messages,busy]);
  async function send(e?:FormEvent){e?.preventDefault();const q=input.trim();if(!q||busy)return;const next=[...messages,{role:"user" as const,content:q}];setMessages(next);setInput("");setBusy(true);setError("");
   try{const r=await fetch("/api/ai/chat",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({messages:next})});const d=await r.json();if(!r.ok)throw new Error(d.error||"AI request failed.");setMessages(v=>[...v,{role:"assistant",content:d.content}]);}
