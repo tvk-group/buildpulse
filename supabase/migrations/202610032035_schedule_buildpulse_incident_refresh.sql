@@ -1,0 +1,4 @@
+create or replace function public.buildpulse_refresh_incidents()
+returns integer language plpgsql security definer set search_path=public as $$ begin return public.buildpulse_promote_job_anomalies_to_incidents(); end $$;
+revoke all on function public.buildpulse_refresh_incidents() from public,anon,authenticated;grant execute on function public.buildpulse_refresh_incidents() to service_role;
+do $$ declare jid bigint; begin select jobid into jid from cron.job where jobname='buildpulse-incident-refresh'; if jid is not null then perform cron.unschedule(jid); end if; perform cron.schedule('buildpulse-incident-refresh','*/10 * * * *','select public.buildpulse_refresh_incidents();'); end $$;
