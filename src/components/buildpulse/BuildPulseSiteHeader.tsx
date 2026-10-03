@@ -2,7 +2,7 @@
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {useEffect,useState} from "react";
-import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localization";
+import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localization";import {uiCopy} from "@/lib/buildpulse/ui-copy";
 
 const groups=[
  {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/archive?category=politics"],["Economy","/markets"]]},
@@ -14,7 +14,7 @@ const groups=[
 const langs=[["EN","English"],["DE","Deutsch"],["TR","Türkçe"],["FR","Français"],["ES","Español"],["IT","Italiano"],["PT","Português"],["NL","Nederlands"],["PL","Polski"],["RO","Română"],["EL","Ελληνικά"],["AR","العربية"],["ZH","中文"],["JA","日本語"],["KO","한국어"],["HI","हिन्दी"]];
 
 export function BuildPulseSiteHeader(){
- const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN");
+ const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN"); const t=uiCopy(locale.toLowerCase());
  useEffect(()=>setOpen(false),[p]);
  useEffect(()=>setLocale(getBuildPulseLocale().toUpperCase()),[]);
  const choose=(v:string)=>{setLocale(v);setBuildPulseLocale(v);window.location.reload()};
@@ -31,7 +31,7 @@ export function BuildPulseSiteHeader(){
       </div>
      </div>)}
     </nav>
-    <Link href="/subscriptions" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">Subscriptions</Link><Link href="/build-with-ai" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">Build with AI</Link><Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 md:block">Account</Link><label className="sr-only" htmlFor="bp-language">Language</label>
+    <Link href="/subscriptions" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">{t.subscriptions}</Link><Link href="/build-with-ai" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">{t.buildAi}</Link><Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 md:block">{t.account}</Link><label className="sr-only" htmlFor="bp-language">{t.language}</label>
     <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-black/20 bg-transparent px-2 py-2 text-xs font-bold sm:block" aria-label="Language">
      {langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}
     </select>
