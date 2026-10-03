@@ -252,7 +252,7 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
   if(!["awaiting_payment","payment_detected","review"].includes(order.status))throw new Error("order_not_verifiable");
 
   const {data:quote,error:quoteError}=await admin.from("buildpulse_ad_payment_quotes")
-    .select("id,asset,network,expected_amount,destination,memo,quoted_at,expires_at,required_confirmations,state")
+    .select("id,asset,network,expected_amount,destination,memo,usd_amount,rate_usd,quoted_at,expires_at,required_confirmations,state")
     .eq("order_id",order.id).in("state",["open","observed","confirmed"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
   if(quoteError||!quote)throw new Error("payment_quote_not_found");
   const asset=String(quote.asset).toUpperCase() as Asset;
@@ -298,6 +298,8 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
     if(eventError.code==="23505")throw new Error("transaction_already_used");
     throw eventError;
   }
+  const {data:invoice,error:invoiceLookupError}=await admin.from("buildpulse_billing_invoices").select("id,user_id,amount_usd").eq("order_id",order.id).maybeSingle();
+  if(invoiceLookupError||!invoice)throw new Error("invoice_not_found");
   await Promise.all([
     admin.from("buildpulse_ad_payment_quotes").update({state:"confirmed"}).eq("id",quote.id),
     admin.from("buildpulse_ad_orders").update({
@@ -306,7 +308,14 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
     admin.from("buildpulse_billing_invoices").update({
       status:"paid",paid_at:now,payment_method:asset,payment_reference:quote.id,updated_at:now,
       metadata:{tx_hash:txHash,asset,network:rail.network,amount:actualAmount,onchain_verified:true}
-    }).eq("order_id",order.id)
+    }).eq("order_id",order.id),
+    admin.from("buildpulse_crypto_accounting_evidence").insert({
+      order_id:order.id,invoice_id:invoice.id,user_id:invoice.user_id,quote_id:quote.id,asset,network:rail.network,tx_hash:txHash,
+      destination:quote.destination,expected_crypto_amount:quote.expected_amount,observed_crypto_amount:actualAmount,
+      quote_rate_usd:quote.rate_usd,gross_amount_usd:invoice.amount_usd,confirmations:verified.confirmations,
+      verifier:"buildpulse_supabase_onchain_verifier",tax_status:"pending_determination",
+      evidence:{quoted_at:quote.quoted_at,expires_at:quote.expires_at,required_confirmations:rail.requiredConfirmations,onchain_verified:true}
+    })
   ]);
   return {state:"confirmed",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,actualAmount};
 }
