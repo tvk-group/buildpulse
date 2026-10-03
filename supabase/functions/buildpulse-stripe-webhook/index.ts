@@ -8,7 +8,16 @@ const ISSUER={
 };
 const headers={"Content-Type":"application/json"};
 function reply(body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers})}
-function invoiceNumber(orderId:string,createdAt:string){return `BP-${new Date(createdAt).getUTCFullYear()}-${orderId.replaceAll("-","").slice(0,12).toUpperCase()}`}
+async function invoiceNumber(admin:any,orderId:string,issuedAt:string){
+  const {data:existing,error:existingError}=await admin.from("buildpulse_billing_invoices").select("invoice_number").eq("order_id",orderId).maybeSingle();
+  if(existingError)throw new Error("invoice_lookup_failed");
+  if(existing?.invoice_number)return existing.invoice_number;
+  const {data:entity,error:entityError}=await admin.from("buildpulse_accounting_entities").select("id").eq("is_default",true).maybeSingle();
+  if(entityError||!entity)throw new Error("accounting_entity_missing");
+  const {data:number,error:numberError}=await admin.rpc("buildpulse_next_document_number",{p_entity_id:entity.id,p_document_type:"invoice",p_issued_at:issuedAt});
+  if(numberError||!number)throw new Error("invoice_number_allocation_failed");
+  return String(number);
+}
 function cents(value:unknown){const n=Number(value);return Number.isFinite(n)?Math.round(n*100):NaN}
 function hex(bytes:ArrayBuffer){return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,"0")).join("")}
 function constantEqual(a:string,b:string){if(a.length!==b.length)return false;let diff=0;for(let i=0;i<a.length;i++)diff|=a.charCodeAt(i)^b.charCodeAt(i);return diff===0}
@@ -27,7 +36,7 @@ async function verifyStripeSignature(raw:string,header:string,secret:string){
 async function ensureInvoice(admin:any,order:any,profile:any,method:string,reference:string){
   const now=new Date().toISOString();
   const {data,error}=await admin.from("buildpulse_billing_invoices").upsert({
-    order_id:order.id,user_id:order.user_id,invoice_number:invoiceNumber(order.id,order.created_at),
+    order_id:order.id,user_id:order.user_id,invoice_number:await invoiceNumber(admin,order.id,now),
     issuer_name:ISSUER.name,issuer_company_number:ISSUER.companyNumber,issuer_registered_office:ISSUER.registeredOffice,
     billing_company:profile?.company_name??null,billing_email:profile?.billing_email??null,
     customer_type:profile?.customer_type??null,billing_address_line1:profile?.billing_address_line1??null,billing_address_line2:profile?.billing_address_line2??null,
