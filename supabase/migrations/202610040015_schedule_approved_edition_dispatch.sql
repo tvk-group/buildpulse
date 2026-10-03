@@ -1,4 +1,5 @@
 -- Conditional approved-edition dispatch. The cron is active, but no HTTP request is made until the dedicated BuildPulse mail domain is verified.
+select cron.unschedule(jobid) from cron.job where jobname='buildpulse-approved-edition-dispatch-db';
 select cron.schedule('buildpulse-approved-edition-dispatch-db','*/5 * * * *',$$
 select net.http_post(
  url := 'https://jdgddwutqypxxvfvkypw.supabase.co/functions/v1/buildpulse-approved-editions',
