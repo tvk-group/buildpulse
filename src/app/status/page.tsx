@@ -8,6 +8,7 @@ type StatusData={
   counts:{enabledSources:number;healthySources:number;stories:number;verifiedStories:number;pendingStories:number;activeSubscribers:number;editions:number;publishedEditions:number;sentEditions:number;scheduledOrActiveAds:number;stripePaymentLinks:number};
   checks:{database:boolean;sourceHealth:boolean;ingestionFresh:boolean;editorialControl:boolean;editionControl:boolean;webPublication:boolean;advertisingControl:boolean;stripeInventory:boolean;mailDomainVerified:boolean;editorialInventory:boolean;audienceInventory:boolean};
   mail:{provider:string;domain:string;domainStatus:string;deliveryEnabled:boolean};
+  cryptoRails?:Array<{asset:string;network:string}>;
   scheduler:{ingestion?:{status:string;started_at:string;finished_at:string|null;error:string|null}|null;webPublication:string;adActivation:string};
 };
 
@@ -20,7 +21,8 @@ export default async function Status(){
   const checks=data?.checks??{} as StatusData["checks"];
   const webReady=Boolean(checks.database&&checks.sourceHealth&&checks.ingestionFresh&&checks.editorialControl&&checks.editionControl&&checks.webPublication);
   const emailReady=Boolean(checks.mailDomainVerified&&checks.audienceInventory);
-  const adReady=Boolean(checks.stripeInventory&&checks.advertisingControl);
+  const cryptoRails=data?.cryptoRails??[];const cryptoAssets=[...new Set(cryptoRails.map(x=>x.asset))];const cryptoReady=["ETH","BTC","USDC","USDT","XRP"].every(x=>cryptoAssets.includes(x));
+  const adReady=Boolean(checks.stripeInventory&&checks.advertisingControl&&cryptoReady);
   const ingest=data?.scheduler?.ingestion;
   const stages:[string,string][]=[
     ["Database & public runtime",checks.database?"Ready":"Unavailable"],
@@ -34,6 +36,7 @@ export default async function Status(){
     ["Published web editions",String(c.publishedEditions)],
     ["Web publication pipeline",webReady?"Ready":"Gated"],
     ["Stripe advertising inventory",String(c.stripePaymentLinks)+"/7 live links"],
+    ["Crypto settlement rails",cryptoReady?cryptoRails.map(x=>x.asset+" · "+x.network).join(", "):"Gated · configured: "+(cryptoAssets.join(", ")||"none")],
     ["Advertising / payment control",adReady?"Ready":"Gated"],
     ["Active subscribers",String(c.activeSubscribers)],
     ["Email sending domain",data?.mail?data.mail.domain+" · "+data.mail.domainStatus:"Unavailable"],
@@ -43,7 +46,7 @@ export default async function Status(){
     <div className="flex flex-wrap items-center justify-between gap-4"><Link href="/" className="text-sm font-bold text-slate-300">← BuildPulse</Link><div className="flex flex-wrap gap-4 text-sm font-bold"><Link href="/admin/stories" className="underline">Story review</Link><Link href="/admin/editions" className="underline">Edition control</Link><Link href="/admin/advertising" className="underline">Advertising control</Link></div></div>
     <p className="mt-12 text-xs font-black tracking-[.2em] text-slate-400">BUILD PULSE // LAUNCH CONTROL</p>
     <h1 className="mt-4 text-5xl font-black">Publication progress</h1>
-    <p className="mt-5 max-w-3xl leading-7 text-slate-300">Live system state from the production database and Edge control plane. Web publication, advertising and email delivery are tracked separately so external mail verification cannot mask healthy platform components.</p>
+    <p className="mt-5 max-w-3xl leading-7 text-slate-300">Live system state from the production database and Edge control plane. Web publication, card payments, crypto settlement and email delivery are tracked separately so external mail verification cannot mask healthy platform components.</p>
     <div className="mt-10 grid gap-4 md:grid-cols-2">{stages.map(([name,value])=><div key={name} className="rounded-2xl border border-slate-700 bg-slate-900 p-6"><p className="text-xs font-bold uppercase tracking-widest text-slate-400">{name}</p><p className="mt-2 text-2xl font-black">{value}</p></div>)}</div>
     <section className="mt-10 rounded-2xl border border-slate-700 bg-slate-900 p-6"><p className="text-xs font-black uppercase tracking-widest text-slate-400">Schedulers</p><div className="mt-5 grid gap-3">
       <div className="flex flex-col justify-between gap-2 border-b border-slate-800 pb-3 md:flex-row"><span className="font-bold">Ingestion</span><span className={ingest?.status==="ok"?"text-emerald-300":"text-slate-400"}>{ingest?(ingest.status+" · "+new Date(ingest.started_at).toLocaleString("en-GB",{timeZone:"UTC"})+" UTC"):"Awaiting recorded run"}</span></div>
