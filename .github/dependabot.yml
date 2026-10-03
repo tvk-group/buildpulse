@@ -11,3 +11,38 @@ updates:
     labels:
       - dependencies
       - security
+    groups:
+      next-react-runtime:
+        patterns:
+          - next
+          - react
+          - react-dom
+          - eslint-config-next
+        update-types:
+          - minor
+          - patch
+      test-tooling:
+        patterns:
+          - vitest
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+      - dependency-name: eslint
+        update-types:
+          - version-update:semver-major
+      - dependency-name: vitest
+        update-types:
+          - version-update:semver-major
+      - dependency-name: next
+        update-types:
+          - version-update:semver-major
+      - dependency-name: react
+        update-types:
+          - version-update:semver-major
+      - dependency-name: react-dom
+        update-types:
+          - version-update:semver-major
