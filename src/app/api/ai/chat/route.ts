@@ -36,16 +36,19 @@ export async function POST(req:NextRequest){
  const apiKey=process.env.NVIDIA_API_KEY;
  if(!apiKey)return Response.json({error:"BuildPulse AI is not activated yet. NVIDIA_API_KEY is missing."},{status:503});
  if(limited(clientKey(req)))return Response.json({error:"Free AI limit reached for this minute. Please wait briefly and try again."},{status:429,headers:{"Retry-After":"60"}});
- let body:{messages?:unknown;model?:unknown};
+ let body:{messages?:unknown;model?:unknown;maxTokens?:unknown};
  try{body=await req.json()}catch{return Response.json({error:"Invalid request."},{status:400})}
  const messages=cleanMessages(body.messages);
  if(!messages.length)return Response.json({error:"Enter a message first."},{status:400});
  const requested=typeof body.model==="string"?body.model:DEFAULT_MODEL;
  const model=ALLOWED_MODELS.includes(requested)?requested:DEFAULT_MODEL;
- const systemPrompt=PRODUCT_SYSTEM_PROMPT;
+ const latestUser=[...messages].reverse().find(m=>m.role==="user")?.content??"";
+ const knowledge=[ecosystemContext(latestUser),repositoryContext(latestUser)].filter(Boolean).join("\n\n");
+ const systemPrompt=knowledge?`${PRODUCT_SYSTEM_PROMPT}\n\n${knowledge}\n\nFor TVK ecosystem questions, use this canonical context. Correct obvious speech-to-text/name variants such as Entelechrome or Entelechron to ENTELΞKRON when context indicates it. Repository inventory is evidence of repository existence only, not launch, audit, partnership, security or production status. If a requested fact is not established, say so.`:PRODUCT_SYSTEM_PROMPT;
+ const maxTokens=Math.max(64,Math.min(2048,typeof body.maxTokens==="number"&&Number.isFinite(body.maxTokens)?Math.floor(body.maxTokens):2048));
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45_000);
  try{
-  const upstream=await fetch(`${ENDPOINT}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:"system",content:systemPrompt},...messages],max_tokens:2048,stream:false}),cache:"no-store",signal:controller.signal});
+  const upstream=await fetch(`${ENDPOINT}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:"system",content:systemPrompt},...messages],max_tokens:maxTokens,stream:false}),cache:"no-store",signal:controller.signal});
   const data=await upstream.json().catch(()=>null);
   if(!upstream.ok)return Response.json({error:data?.detail||data?.message||data?.error?.message||"AI provider request failed."},{status:upstream.status});
   const answer=data?.choices?.[0]?.message?.content;
