@@ -4,8 +4,8 @@
 **Rule:** This file is the durable execution ledger. Update status and evidence with every implementation batch. Never mark DONE without deployed/verified evidence where deployment is required.
 
 ## P0 — Production release health
-- [ ] Restore Next.js/Vercel production build to READY; isolate regression after last known-green b99c57a8.
-- [ ] Verify buildpulse.news serves current main SHA.
+- [x] Restore Next.js/Vercel production build to READY — fixed malformed/unclosed Arts contribute component; production deployment dpl_HbuDava2HYUqrrLkrNmE8WHkgZc6 READY at c1cecddd70fa3792b778d02f8cb60bed37e414a8.
+- [ ] Verify buildpulse.news serves current production SHA and complete browser/mobile route QA.
 - [ ] Verify mobile navigation, PWA install control and visible update flow on production.
 - [ ] Repair secure cron authentication for /api/cron/buildpulse-ingest; never fail-open.
 - [ ] Run production route, security, accessibility, performance, SEO and PWA checks.
