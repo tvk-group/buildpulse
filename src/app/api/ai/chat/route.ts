@@ -1,4 +1,5 @@
-import {NextRequest} from "next/server";\nimport {ecosystemContext} from "@/lib/buildpulse/ecosystem-knowledge";
+import {NextRequest} from "next/server";
+import {ecosystemContext} from "@/lib/buildpulse/ecosystem-knowledge";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -11,7 +12,8 @@ const DEFAULT_MODEL=process.env.NVIDIA_AI_MODEL||"openai/gpt-oss-20b";
 const ALLOWED_MODELS=(process.env.NVIDIA_AI_MODELS||DEFAULT_MODEL).split(",").map(x=>x.trim()).filter(Boolean);
 const buckets=new Map<string,Bucket>();
 const WINDOW_MS=60_000;
-const MAX_REQUESTS=Math.max(1,Number(process.env.BUILDPULSE_AI_RPM||"12"));\nconst PRODUCT_SYSTEM_PROMPT=`You are BuildPulse AI, the AI assistant inside BuildPulse. BuildPulse AI is developed as part of the SOVRA AI platform by TVK Labs & Technologies LTD. When asked who or what you are, identify yourself as BuildPulse AI and explain that product identity. Never identify yourself as ChatGPT. Do not claim that BuildPulse AI is developed by OpenAI. The underlying inference model or infrastructure provider is an implementation detail; if a user explicitly asks about the underlying model or provider, answer accurately and distinguish the underlying model/provider from the BuildPulse AI product identity. Be useful for questions, writing, reasoning, planning, software development, debugging, analysis, and general assistance.`;
+const MAX_REQUESTS=Math.max(1,Number(process.env.BUILDPULSE_AI_RPM||"12"));
+const PRODUCT_SYSTEM_PROMPT=`You are BuildPulse AI, the AI assistant inside BuildPulse. BuildPulse AI is developed as part of the SOVRA AI platform by TVK Labs & Technologies LTD. When asked who or what you are, identify yourself as BuildPulse AI and explain that product identity. Never identify yourself as ChatGPT. Do not claim that BuildPulse AI is developed by OpenAI. The underlying inference model or infrastructure provider is an implementation detail; if a user explicitly asks about the underlying model or provider, answer accurately and distinguish the underlying model/provider from the BuildPulse AI product identity. Be useful for questions, writing, reasoning, planning, software development, debugging, analysis, and general assistance.`;
 
 function clientKey(req:NextRequest){
  const forwarded=req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
@@ -42,7 +44,10 @@ export async function POST(req:NextRequest){
  if(!messages.length)return Response.json({error:"Enter a message first."},{status:400});
  const requested=typeof body.model==="string"?body.model:DEFAULT_MODEL;
  const model=ALLOWED_MODELS.includes(requested)?requested:DEFAULT_MODEL;
- const latestUser=[...messages].reverse().find(m=>m.role==="user")?.content??"";\n const knowledge=ecosystemContext(latestUser);\n const systemPrompt=knowledge?`${PRODUCT_SYSTEM_PROMPT}\\n\\n${knowledge}\\n\\nFor questions about this ecosystem, answer from the canonical knowledge above. Correct obvious speech-to-text/name variants such as Entelechrome or Entelechron to ENTELΞKRON when context indicates the TVK ecosystem. When useful, include the relevant official URL. If the supplied canonical knowledge does not establish a requested fact, say that rather than guessing.`:PRODUCT_SYSTEM_PROMPT;\n const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45_000);
+ const latestUser=[...messages].reverse().find(m=>m.role==="user")?.content??"";
+ const knowledge=ecosystemContext(latestUser);
+ const systemPrompt=knowledge?`${PRODUCT_SYSTEM_PROMPT}\\n\\n${knowledge}\\n\\nFor questions about this ecosystem, answer from the canonical knowledge above. Correct obvious speech-to-text/name variants such as Entelechrome or Entelechron to ENTELΞKRON when context indicates the TVK ecosystem. When useful, include the relevant official URL. If the supplied canonical knowledge does not establish a requested fact, say that rather than guessing.`:PRODUCT_SYSTEM_PROMPT;
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45_000);
  try{
   const upstream=await fetch(`${ENDPOINT}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:"system",content:systemPrompt},...messages],max_tokens:2048,stream:false}),cache:"no-store",signal:controller.signal});
   const data=await upstream.json().catch(()=>null);
