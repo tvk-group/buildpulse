@@ -16,7 +16,14 @@ const ISSUER={
 
 type Asset="ETH"|"BTC"|"USDC"|"USDT"|"XRP";
 type Rail={asset:Asset;network:string;destination:string;memo?:string;decimals:number;requiredConfirmations:number};
-function requiredEnv(name:string){const v=Deno.env.get(name)?.trim();if(!v)throw new Error(`missing_payment_config:${name}`);return v}\nfunction rails():Record<Asset,Rail>{return {\n  ETH:{asset:"ETH",network:"Ethereum",destination:requiredEnv("BUILDPULSE_ETH_ADDRESS"),decimals:18,requiredConfirmations:12},\n  BTC:{asset:"BTC",network:"Bitcoin",destination:requiredEnv("BUILDPULSE_BTC_ADDRESS"),decimals:8,requiredConfirmations:3},\n  USDC:{asset:"USDC",network:Deno.env.get("BUILDPULSE_USDC_NETWORK")?.trim()||"Base",destination:requiredEnv("BUILDPULSE_USDC_ADDRESS"),decimals:6,requiredConfirmations:20},\n  USDT:{asset:"USDT",network:Deno.env.get("BUILDPULSE_USDT_NETWORK")?.trim()||"Ethereum",destination:requiredEnv("BUILDPULSE_USDT_ADDRESS"),decimals:6,requiredConfirmations:12},\n  XRP:{asset:"XRP",network:"XRPL",destination:requiredEnv("BUILDPULSE_XRP_ADDRESS"),memo:Deno.env.get("BUILDPULSE_XRP_DESTINATION_TAG")?.trim()||undefined,decimals:6,requiredConfirmations:1}\n}}
+function requiredEnv(name:string){const v=Deno.env.get(name)?.trim();if(!v)throw new Error(`missing_payment_config:${name}`);return v}
+function rails():Record<Asset,Rail>{return {
+  ETH:{asset:"ETH",network:"Ethereum",destination:requiredEnv("BUILDPULSE_ETH_ADDRESS"),decimals:18,requiredConfirmations:12},
+  BTC:{asset:"BTC",network:"Bitcoin",destination:requiredEnv("BUILDPULSE_BTC_ADDRESS"),decimals:8,requiredConfirmations:3},
+  USDC:{asset:"USDC",network:Deno.env.get("BUILDPULSE_USDC_NETWORK")?.trim()||"Base",destination:requiredEnv("BUILDPULSE_USDC_ADDRESS"),decimals:6,requiredConfirmations:20},
+  USDT:{asset:"USDT",network:Deno.env.get("BUILDPULSE_USDT_NETWORK")?.trim()||"Ethereum",destination:requiredEnv("BUILDPULSE_USDT_ADDRESS"),decimals:6,requiredConfirmations:12},
+  XRP:{asset:"XRP",network:"XRPL",destination:requiredEnv("BUILDPULSE_XRP_ADDRESS"),memo:Deno.env.get("BUILDPULSE_XRP_DESTINATION_TAG")?.trim()||undefined,decimals:6,requiredConfirmations:1}
+}}
 const ERC20:Partial<Record<Asset,string>>={
   USDC:"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   USDT:"0xdAC17F958D2ee523a2206206994597C13D831ec7"
