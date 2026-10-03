@@ -75,7 +75,7 @@
 - [ ] Select and implement mature audited E2EE protocol; no custom crypto.
 - [ ] Device/session/key recovery, export/deletion and metadata minimization.
 - [ ] Creator tools and monetization.
-- [ ] Contextual/consent-based Sponsored advertising; no hidden surveillance targeting.
+- [x] Contextual/consent-based Sponsored advertising; no hidden surveillance targeting — runtime selection is placement-context only (homepage/archive/edition/newsletter) and records only coarse anti-fraud event fingerprints; it does not profile users or use hidden behavioral targeting.
 - [ ] Media upload/storage/transcoding, malware scanning and quotas.
 - [ ] Notifications/push.
 - [ ] Add abuse-rate controls and appeals.
@@ -120,7 +120,7 @@
 - [x] Resolve duplicate newsletter placement/product ambiguity — unused duplicate NEWSLETTER_SPONSOR was deactivated after confirming zero orders; NEWSLETTER_PRIMARY is the single active $750/day newsletter sponsor SKU.
 - [x] Full advertiser self-service campaign workflow and review — advertiser portal supports account/profile, live inventory, server-priced campaign drafts, creative upload, Stripe/crypto payment initiation and verification, invoices and campaign metrics; paid campaigns remain gated by the role-protected advertising review/scheduling queue.
 - [x] Clearly label Sponsored placements — runtime ad slots use an explicit Advertisement label and rel=sponsored; newsletter/edition commercial blocks render ADVERTISEMENT, affiliate blocks render AFFILIATE DISCLOSURE, and first-party ecosystem promotions are visibly labeled Sponsored with separation disclosure.
-- [ ] Contextual/consent targeting only.
+- [x] Contextual/consent targeting only — active-ad lookup is based on the requested page placement and campaign schedule, not reader identity or behavioral profile; optional analytics/marketing storage remains consent-gated separately.
 - [ ] Affiliate account/referral code/attribution/commission/fraud/payout/tax/KYC system.
 - [ ] Activate only real approved affiliate destinations.
 - [ ] Sports/betting/casino advertising only with age/jurisdiction controls, disclosures and responsible-gambling safeguards.
