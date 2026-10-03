@@ -54,6 +54,16 @@ async function appendPaymentEvent(admin:any,event:any,orderId:string,state:"conf
   });
   if(error&&error.code!=="23505")throw error;
 }
+async function bindAffiliateAdConversion(admin:any,userId:string,orderId:string,amount:number){
+  const now=new Date().toISOString();
+  const {data:a}=await admin.from("buildpulse_affiliate_attributions").select("id,affiliate_account_id").eq("attributed_user_id",userId).is("converted_at",null).gt("expires_at",now).order("landing_at",{ascending:false}).limit(1).maybeSingle();
+  if(!a)return {bound:false};
+  const {data:acct}=await admin.from("buildpulse_affiliate_accounts").select("status,commission_bps,user_id").eq("id",a.affiliate_account_id).maybeSingle();
+  if(!acct||acct.status!=="active"||acct.user_id===userId||Number(acct.commission_bps)<=0)return {bound:false};
+  const commission=Math.round(amount*Number(acct.commission_bps))/10000;
+  const {data:updated,error}=await admin.from("buildpulse_affiliate_attributions").update({converted_at:now,conversion_reference:"ad:"+orderId,commission_amount:commission,currency:"USD",metadata:{kind:"advertising_order",commission_state:"accrued_unpayable"}}).eq("id",a.id).is("converted_at",null).select("id").maybeSingle();
+  if(error)throw error;return {bound:Boolean(updated),commission:updated?commission:0};
+}
 async function settleCheckout(admin:any,event:any,session:any){
   const orderId=String(session.client_reference_id||session?.metadata?.buildpulse_order_id||"");
   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return {ignored:"missing_order_reference"};
@@ -100,7 +110,8 @@ async function settleCheckout(admin:any,event:any,session:any){
       metadata:{stripe_checkout_session_id:session.id,stripe_payment_intent:paymentIntent,stripe_payment_link:sessionLink}
     }).eq("order_id",order.id)
   ]);
-  return {settled:true,orderId};
+  const affiliate=await bindAffiliateAdConversion(admin,order.user_id,order.id,amountUsd);
+  return {settled:true,orderId,affiliate};
 }
 async function paymentOrderByIntent(admin:any,paymentIntent:string){
   const {data:event}=await admin.from("buildpulse_ad_payment_events").select("order_id")
