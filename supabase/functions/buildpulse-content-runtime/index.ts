@@ -27,6 +27,36 @@ Deno.serve(async(req:Request)=>{
     return reply({ok:true,editions:data??[]});
   }
 
+  if(action==="stories"){
+    const limit=safeLimit(url.searchParams.get("limit"),50);
+    const category=(url.searchParams.get("category")??"").trim().slice(0,80);
+    const sinceHours=Math.max(0,Math.min(24*30,Number(url.searchParams.get("sinceHours")??0)||0));
+    let query=admin.from("buildpulse_stories")
+      .select("id,title,summary,canonical_source_url,published_at,category,editorial_score,verified_at,verified_by,source_id")
+      .eq("verification_state","verified")
+      .not("verified_at","is",null)
+      .not("verified_by","is",null)
+      .not("canonical_source_url","is",null)
+      .order("editorial_score",{ascending:false,nullsFirst:false})
+      .order("published_at",{ascending:false})
+      .limit(limit);
+    if(category)query=query.eq("category",category);
+    if(sinceHours>0)query=query.gte("published_at",new Date(Date.now()-sinceHours*3600000).toISOString());
+    const {data,error}=await query;
+    if(error)throw error;
+    const sourceIds=[...new Set((data??[]).map((x:any)=>x.source_id).filter(Boolean))];
+    const {data:sources,error:sourceError}=sourceIds.length
+      ?await admin.from("buildpulse_sources").select("id,name").in("id",sourceIds)
+      :{data:[],error:null};
+    if(sourceError)throw sourceError;
+    const sourceMap=new Map((sources??[]).map((x:any)=>[x.id,x.name]));
+    return reply({ok:true,stories:(data??[]).map((x:any)=>({
+      id:x.id,title:x.title,summary:x.summary,canonicalSourceUrl:x.canonical_source_url,
+      publishedAt:x.published_at,category:x.category,editorialScore:x.editorial_score,
+      verifiedAt:x.verified_at,sourceName:sourceMap.get(x.source_id)??"Source"
+    }))});
+  }
+
   if(action==="get"){
     const slug=(url.searchParams.get("slug")??"").trim();
     if(!slug||slug.length>180)return reply({ok:false,error:"invalid_slug"},400);
