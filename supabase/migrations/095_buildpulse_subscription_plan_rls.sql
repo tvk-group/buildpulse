@@ -1,0 +1,1 @@
+alter table public.buildpulse_subscription_plans enable row level security;drop policy if exists "public reads active subscription plans" on public.buildpulse_subscription_plans;create policy "public reads active subscription plans" on public.buildpulse_subscription_plans for select to anon,authenticated using(active=true);
