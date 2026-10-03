@@ -19,7 +19,14 @@ const topicTerms:Record<(typeof topics)[number],string[]>={
  "digital-economy":["digital economy","payments","fintech","platform","commerce","regulation","digital assets","tokenization"]
 };
 function relevant(topic:(typeof topics)[number],s:any){const hay=`${s.title??""} ${s.summary??""} ${s.category??""}`.toLowerCase();return topicTerms[topic].some(term=>hay.includes(term))}
-function parse(text:string){const title=text.match(/^TITLE:\s*(.+)$/mi)?.[1]?.trim();const dek=text.match(/^DEK:\s*(.+)$/mi)?.[1]?.trim();const body=text.split(/^BODY:\s*$/mi)[1]?.trim();if(!title||!body)throw new Error("Technology agent returned invalid article format");return{title,dek:dek||null,body}}
+function parse(text:string){
+ const clean=text.replace(/\r/g,"");
+ const title=clean.match(/^\s*(?:\*\*)?TITLE:(?:\*\*)?\s*(.+?)\s*$/mi)?.[1]?.replace(/^\*\*|\*\*$/g,"").trim();
+ const dek=clean.match(/^\s*(?:\*\*)?DEK:(?:\*\*)?\s*(.+?)\s*$/mi)?.[1]?.replace(/^\*\*|\*\*$/g,"").trim();
+ const bodyMatch=clean.match(/^\s*(?:\*\*)?BODY:(?:\*\*)?\s*$([\s\S]*)/mi),body=bodyMatch?.[1]?.trim();
+ if(!title||!body||title.length<12||title.length>180||/^(title|dek|body):?$/i.test(title)||body.length<1200)throw new Error("Technology agent returned invalid article format");
+ return{title,dek:dek&&dek.length<=320?dek:null,body}
+}
 export async function runTechnologyEditorialAgent(){
  const db=createAdminClient();if(!db)throw new Error("Supabase admin unavailable");
  const {data:agent,error:ae}=await db.from("buildpulse_agents").select("id,enabled").eq("code","technology-editorial").maybeSingle();
