@@ -1,0 +1,31 @@
+create table if not exists public.buildpulse_account_deletion_audit(id uuid primary key default gen_random_uuid(),request_id uuid not null references public.buildpulse_account_deletion_requests(id) on delete cascade,user_id uuid not null,phase text not null,details jsonb not null default '{}'::jsonb,created_at timestamptz not null default now());
+alter table public.buildpulse_account_deletion_audit enable row level security;
+create or replace function private.buildpulse_process_due_account_deletions(p_limit int default 10) returns jsonb language plpgsql security definer set search_path=public,private as $$
+declare r record; processed int:=0; failed int:=0;
+begin
+ for r in select * from public.buildpulse_account_deletion_requests where status='pending' and eligible_at<=now() order by eligible_at for update skip locked limit greatest(1,least(p_limit,50)) loop
+  begin
+   update public.buildpulse_account_deletion_requests set status='processing',updated_at=now(),last_error=null where id=r.id;
+   insert into public.buildpulse_account_deletion_audit(request_id,user_id,phase,details) values(r.id,r.user_id,'started',jsonb_build_object('eligible_at',r.eligible_at));
+   delete from public.buildpulse_social_reactions where user_id=r.user_id; delete from public.buildpulse_social_follows where follower_id=r.user_id or following_id=r.user_id;
+   delete from public.buildpulse_social_agent_permissions where controller_user_id=r.user_id; delete from public.buildpulse_social_crypto_devices where user_id=r.user_id; delete from public.buildpulse_social_members where user_id=r.user_id;
+   update public.buildpulse_social_messages set sender_id=null,ciphertext='[deleted account]',nonce='deleted',key_version=0 where sender_id=r.user_id;
+   update public.buildpulse_social_comments set body='[deleted account]',status='hidden',updated_at=now() where author_id=r.user_id;
+   update public.buildpulse_social_posts set title=null,body='[deleted account]',media_paths='{}',visibility='private',status='deleted',comments_enabled=false,updated_at=now() where author_id=r.user_id;
+   delete from public.buildpulse_social_profiles where user_id=r.user_id; delete from public.buildpulse_connections_profiles where user_id=r.user_id;
+   update public.buildpulse_marketplace_listings set title='Deleted account listing',description='[deleted account]',media_urls='{}',country_code=null,region=null,city=null,status='archived',updated_at=now() where seller_id=r.user_id;
+   update public.buildpulse_marketplace_inquiries set message='[deleted account]',status='closed',updated_at=now() where buyer_id=r.user_id or seller_id=r.user_id;
+   update public.buildpulse_intelligence_subscriptions set topics='{}',watchlist='{}',marketing_consent=false,service_email_consent=false,status=case when status in('active','trialing','past_due','paused') then 'cancelled' else status end,cancelled_at=coalesce(cancelled_at,now()),updated_at=now() where user_id=r.user_id;
+   update public.buildpulse_advertiser_profiles set website_url=null,status='closed',updated_at=now() where user_id=r.user_id;
+   update public.buildpulse_contributor_submissions set author_name='Deleted account',author_email='deleted+'||left(r.user_id::text,8)||'@invalid.local',disclosure=null,updated_at=now() where user_id=r.user_id and payment_status not in('paid','refunded','disputed');
+   update public.buildpulse_art_submissions set creator_name='Deleted account',creator_email='deleted+'||left(r.user_id::text,8)||'@invalid.local',portfolio_url=null,commercial_relationships=null,ai_assistance_disclosure=null,updated_at=now() where user_id=r.user_id and status not in('published','approved');
+   update public.buildpulse_accounting_customers set user_id=null,updated_at=now() where user_id=r.user_id;
+   update auth.users set banned_until='infinity',email_change=null,phone_change=null,raw_user_meta_data='{}'::jsonb,raw_app_meta_data=coalesce(raw_app_meta_data,'{}'::jsonb)||jsonb_build_object('buildpulse_deleted',true,'buildpulse_deleted_at',now()) where id=r.user_id;
+   delete from auth.sessions where user_id=r.user_id; delete from auth.refresh_tokens where user_id::text=r.user_id::text;
+   update public.buildpulse_account_deletion_requests set status='completed',completed_at=now(),updated_at=now() where id=r.id;
+   insert into public.buildpulse_account_deletion_audit(request_id,user_id,phase,details) values(r.id,r.user_id,'completed',jsonb_build_object('auth_banned',true,'sessions_revoked',true,'retained_financial_evidence',true)); processed:=processed+1;
+  exception when others then update public.buildpulse_account_deletion_requests set status='failed',last_error=left(sqlerrm,500),updated_at=now() where id=r.id; insert into public.buildpulse_account_deletion_audit(request_id,user_id,phase,details) values(r.id,r.user_id,'failed',jsonb_build_object('error',left(sqlerrm,500))); failed:=failed+1;
+  end;
+ end loop; return jsonb_build_object('processed',processed,'failed',failed);
+end$$;
+revoke all on function private.buildpulse_process_due_account_deletions(int) from public,anon,authenticated; grant execute on function private.buildpulse_process_due_account_deletions(int) to service_role;
