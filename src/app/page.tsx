@@ -1,5 +1,5 @@
 import Link from "next/link";import {BuildPulseHouseCampaigns} from "@/components/buildpulse/BuildPulseHouseCampaigns";import {BuildPulseAdSlot} from "@/components/buildpulse/BuildPulseAdSlot";import {BuildPulseSubscribe} from "@/components/buildpulse/BuildPulseSubscribe";import {latestPublicEditions} from "@/lib/buildpulse/public-content";
-export const dynamic="force-dynamic";export const metadata={title:"BuildPulse | Global Technology & Digital Intelligence",description:"Source-led intelligence across AI, blockchain, digital assets, cybersecurity and emerging technology."};
+export const dynamic="force-dynamic";export const metadata={title:{absolute:"BuildPulse | Global Technology & Digital Intelligence"},description:"Source-led intelligence across AI, blockchain, digital assets, cybersecurity and emerging technology.",alternates:{canonical:"/"},openGraph:{url:"/"}};
 const desks=["AI & Agents","Digital Assets","Blockchain","Cybersecurity","Digital Economy","Research"];
 export default async function Page(){const latest=await latestPublicEditions(7);const lead=latest[0],rest=latest.slice(1);return <main className="min-h-screen bg-[#fbfaf6] text-[#17202a]">
 
