@@ -24,15 +24,7 @@ export function configuredCryptoRails():Rail[]{
     env.BUILDPULSE_USDC_ETH_ADDRESS?{asset:"USDC",network:"Ethereum",destination:env.BUILDPULSE_USDC_ETH_ADDRESS,decimals:6,requiredConfirmations:12}:null,
     env.BUILDPULSE_USDC_BASE_ADDRESS?{asset:"USDC",network:"Base",destination:env.BUILDPULSE_USDC_BASE_ADDRESS,decimals:6,requiredConfirmations:20}:null,
     env.BUILDPULSE_USDT_ETH_ADDRESS?{asset:"USDT",network:"Ethereum",destination:env.BUILDPULSE_USDT_ETH_ADDRESS,decimals:6,requiredConfirmations:12}:null,
-    env.BUILDPULSE_USDT_BASE_ADDRESS?{asset:"USDT",network:"Base",destination:env.BUILDPULSE_USDT_BASE_ADDRESS,decimals:6,requiredConfirmations:20}:null,
     env.BUILDPULSE_XRP_ADDRESS?{asset:"XRP",network:"XRPL",destination:env.BUILDPULSE_XRP_ADDRESS,memo:env.BUILDPULSE_XRP_DESTINATION_TAG,decimals:6,requiredConfirmations:1}:null,
-    env.BUILDPULSE_SOL_ADDRESS?{asset:"SOL",network:"Solana",destination:env.BUILDPULSE_SOL_ADDRESS,decimals:9,requiredConfirmations:1}:null,
-    env.BUILDPULSE_BNB_ADDRESS?{asset:"BNB",network:"BNB Chain",destination:env.BUILDPULSE_BNB_ADDRESS,decimals:18,requiredConfirmations:15}:null,
-    env.BUILDPULSE_POL_ADDRESS?{asset:"POL",network:"Polygon",destination:env.BUILDPULSE_POL_ADDRESS,decimals:18,requiredConfirmations:64}:null,
-    env.BUILDPULSE_TRX_ADDRESS?{asset:"TRX",network:"TRON",destination:env.BUILDPULSE_TRX_ADDRESS,decimals:6,requiredConfirmations:20}:null,
-    env.BUILDPULSE_ADA_ADDRESS?{asset:"ADA",network:"Cardano",destination:env.BUILDPULSE_ADA_ADDRESS,decimals:6,requiredConfirmations:15}:null,
-    env.BUILDPULSE_SUI_ADDRESS?{asset:"SUI",network:"Sui",destination:env.BUILDPULSE_SUI_ADDRESS,decimals:9,requiredConfirmations:1}:null,
-    env.BUILDPULSE_AVAX_ADDRESS?{asset:"AVAX",network:"Avalanche C-Chain",destination:env.BUILDPULSE_AVAX_ADDRESS,decimals:18,requiredConfirmations:12}:null,
   ];
   return candidates.filter((rail):rail is Rail=>rail!==null);
 }
