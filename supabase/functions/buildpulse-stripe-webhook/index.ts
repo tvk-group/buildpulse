@@ -115,9 +115,26 @@ async function handleRefund(admin:any,event:any,charge:any){
   if(!orderId)return {ignored:"payment_intent_not_mapped"};
   const full=Number(charge.amount_refunded??0)>=Number(charge.amount??0)&&Number(charge.amount??0)>0;
   const refundedUsd=Number(charge.amount_refunded??0)/100;
+  const {data:priorRefundEvents}=await admin.from("buildpulse_ad_payment_events").select("observed_amount,metadata")
+    .eq("order_id",orderId).eq("crypto_network","stripe").eq("state","rejected");
+  const priorCumulative=Math.max(0,...(priorRefundEvents??[])
+    .filter((row:any)=>row?.metadata?.kind==="full_refund"||row?.metadata?.kind==="partial_refund")
+    .map((row:any)=>Number(row.observed_amount)||0));
+  const incrementalRefund=Math.max(0,Math.round((refundedUsd-priorCumulative)*100)/100);
   await appendPaymentEvent(admin,event,orderId,"rejected",paymentIntent,refundedUsd,{
-    kind:full?"full_refund":"partial_refund",charge_id:charge.id,amount_refunded:charge.amount_refunded,amount:charge.amount
+    kind:full?"full_refund":"partial_refund",charge_id:charge.id,amount_refunded:charge.amount_refunded,amount:charge.amount,
+    cumulative_refund_usd:refundedUsd,incremental_refund_usd:incrementalRefund
   });
+  let creditNoteNumber:string|null=null;
+  if(incrementalRefund>0){
+    const {data:credit,error:creditError}=await admin.rpc("buildpulse_issue_ad_credit_note",{
+      p_order_id:orderId,p_amount_usd:incrementalRefund,p_provider_reference:`stripe:${event.id}`,
+      p_reason:full?"full_refund":"partial_refund",
+      p_metadata:{stripe_event_id:event.id,charge_id:charge.id,payment_intent:paymentIntent,cumulative_refund_usd:refundedUsd}
+    });
+    if(creditError)throw creditError;
+    creditNoteNumber=Array.isArray(credit)?credit[0]?.credit_note_number??null:credit?.credit_note_number??null;
+  }
   const now=new Date().toISOString();
   await Promise.all([
     admin.from("buildpulse_billing_invoices").update({
@@ -128,7 +145,7 @@ async function handleRefund(admin:any,event:any,charge:any){
       ?admin.from("buildpulse_ad_orders").update({status:"cancelled",updated_at:now}).eq("id",orderId).in("status",["review","approved","scheduled","active"])
       :admin.from("buildpulse_ad_orders").update({status:"review",updated_at:now}).eq("id",orderId).in("status",["approved","scheduled","active"])
   ]);
-  return {refund:true,full,orderId};
+  return {refund:true,full,orderId,incrementalRefund,creditNoteNumber};
 }
 async function handleDispute(admin:any,event:any,dispute:any){
   const paymentIntent=typeof dispute.payment_intent==="string"?dispute.payment_intent:dispute.payment_intent?.id;
