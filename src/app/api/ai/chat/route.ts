@@ -1,5 +1,6 @@
 import {NextRequest} from "next/server";
 import {ecosystemContext} from "@/lib/buildpulse/ecosystem-knowledge";
+import {repositoryContext} from "@/lib/buildpulse/ecosystem-repositories";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -45,7 +46,7 @@ export async function POST(req:NextRequest){
  const requested=typeof body.model==="string"?body.model:DEFAULT_MODEL;
  const model=ALLOWED_MODELS.includes(requested)?requested:DEFAULT_MODEL;
  const latestUser=[...messages].reverse().find(m=>m.role==="user")?.content??"";
- const knowledge=ecosystemContext(latestUser);
+ const knowledge=[ecosystemContext(latestUser),repositoryContext(latestUser)].filter(Boolean).join("\\n\\n");
  const systemPrompt=knowledge?`${PRODUCT_SYSTEM_PROMPT}\\n\\n${knowledge}\\n\\nFor questions about this ecosystem, answer from the canonical knowledge above. Correct obvious speech-to-text/name variants such as Entelechrome or Entelechron to ENTELΞKRON when context indicates the TVK ecosystem. When useful, include the relevant official URL. If the supplied canonical knowledge does not establish a requested fact, say that rather than guessing.`:PRODUCT_SYSTEM_PROMPT;
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45_000);
  try{
