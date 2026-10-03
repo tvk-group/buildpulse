@@ -31,7 +31,7 @@ VALUES(
  ARRAY['select_verified_sources','draft_article','deduplicate','prepare_seo','request_review'],
  ARRAY['invent_fact','claim_unverified_audit','claim_unverified_partnership','publish_unverified','change_presale_terms'],
  'every 6 hours',
- '{"topics":["tvk-ecosystem","entelekron","sovereign-ai","energiemind","presale-technology"]}'::jsonb
+ '{"topics":["ai","cybersecurity","developer-infrastructure","blockchain-infrastructure","digital-economy"],"minimum_verified_external_sources":2,"standalone_editorial":true}'::jsonb
 )
 ON CONFLICT(code) DO UPDATE SET
  name=excluded.name,domain=excluded.domain,autonomy_level=excluded.autonomy_level,description=excluded.description,
