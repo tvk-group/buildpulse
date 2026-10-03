@@ -12,7 +12,7 @@ export default async function InvoicePage({params}:{params:Promise<{invoiceNumbe
   if(!user)redirect("/advertiser");
   const {invoiceNumber}=await params;
   const {data:invoice,error}=await supabase.from("buildpulse_billing_invoices")
-    .select("invoice_number,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,amount_usd,currency,payment_method,payment_reference,status,issued_at,paid_at,order_id")
+    .select("invoice_number,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,customer_type,billing_address_line1,billing_address_line2,billing_city,billing_region,billing_postal_code,billing_country_code,tax_id,tax_id_type,tax_id_validation_status,amount_usd,currency,payment_method,payment_reference,status,issued_at,paid_at,order_id")
     .eq("invoice_number",decodeURIComponent(invoiceNumber))
     .eq("user_id",user.id)
     .maybeSingle();
@@ -30,7 +30,7 @@ export default async function InvoicePage({params}:{params:Promise<{invoiceNumbe
         <div className="text-right text-sm"><p className="font-black">{invoice.issuer_name}</p><p>Company No. {invoice.issuer_company_number}</p><p className="mt-1 max-w-xs text-slate-600">{invoice.issuer_registered_office}</p></div>
       </header>
       <section className="grid gap-6 border-b py-7 md:grid-cols-2">
-        <div><p className="text-xs font-black uppercase tracking-wider text-slate-500">Bill to</p><p className="mt-2 font-bold">{invoice.billing_company||"Advertiser"}</p><p className="text-sm text-slate-600">{invoice.billing_email||user.email}</p></div>
+        <div><p className="text-xs font-black uppercase tracking-wider text-slate-500">Bill to</p><p className="mt-2 font-bold">{invoice.billing_company||"Advertiser"}</p><p className="text-sm text-slate-600">{invoice.billing_email||user.email}</p>{invoice.billing_address_line1&&<p className="mt-2 text-sm text-slate-600">{invoice.billing_address_line1}</p>}{invoice.billing_address_line2&&<p className="text-sm text-slate-600">{invoice.billing_address_line2}</p>}{(invoice.billing_city||invoice.billing_region||invoice.billing_postal_code)&&<p className="text-sm text-slate-600">{[invoice.billing_city,invoice.billing_region,invoice.billing_postal_code].filter(Boolean).join(", ")}</p>}{invoice.billing_country_code&&<p className="text-sm text-slate-600">{invoice.billing_country_code}</p>}{invoice.tax_id&&<p className="mt-2 text-xs text-slate-500">{invoice.tax_id_type||"Tax ID"}: {invoice.tax_id} · {invoice.tax_id_validation_status||"unverified"}</p>}</div>
         <div className="md:text-right"><p className="text-xs font-black uppercase tracking-wider text-slate-500">Status</p><p className="mt-2 text-xl font-black uppercase">{invoice.status}</p><p className="mt-1 text-sm text-slate-600">Issued {new Date(invoice.issued_at).toLocaleString("en-GB",{timeZone:"Europe/London"})} UK time</p>{invoice.paid_at&&<p className="text-sm text-slate-600">Paid {new Date(invoice.paid_at).toLocaleString("en-GB",{timeZone:"Europe/London"})} UK time</p>}</div>
       </section>
       <section className="border-b py-7">
