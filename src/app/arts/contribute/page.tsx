@@ -1,4 +1,5 @@
 import { ArtsSubnav } from "@/components/buildpulse/ArtsSubnav";
+import { ArtsSubmissionPortal } from "@/components/buildpulse/ArtsSubmissionPortal";
 
 export default function Page() {
   return (
@@ -36,11 +37,12 @@ export default function Page() {
         <section className="mt-8 rounded-2xl border border-black/10 p-7">
           <h2 className="text-2xl font-black">Review process</h2>
           <p className="mt-3 text-sm leading-7 text-[#53606b]">
-            SOVRA AI pre-check may flag text, metadata, rights inconsistencies, deceptive promotion
+            BuildPulse automated pre-checks may flag text, metadata, rights inconsistencies, deceptive promotion
             and other review risks. Human editorial review remains mandatory. Accepted work is
             labeled with its creator and publication context; paid promotion is separately labeled.
           </p>
         </section>
+        <div className="mt-8"><ArtsSubmissionPortal/></div>
       </section>
     </main>
   );
