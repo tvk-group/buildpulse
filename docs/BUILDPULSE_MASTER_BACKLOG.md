@@ -127,8 +127,8 @@
 
 ## P1 — Contributor and Arts
 - [x] Contributor and art submission database foundations/pages.
-- [ ] Authenticated submission forms and uploads.
-- [ ] Tie contributor fee to submission ID and verified webhook.
+- [ ] Authenticated submission forms and uploads. Authenticated contributor and Arts submission forms are implemented and account-bound; file uploads remain disabled until scanned media storage is available.
+- [x] Tie contributor fee to submission ID and verified webhook — Stripe Checkout binds submission/user IDs in metadata and the signed webhook validates USD 149, ownership, state and idempotency before marking the submission paid.
 - [ ] Human review/publishing, labels, corrections, complaints/takedowns.
 - [ ] Arts showcase, rights evidence and admin review.
 
