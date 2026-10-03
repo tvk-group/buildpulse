@@ -130,7 +130,7 @@
 - [x] Contributor and art submission database foundations/pages.
 - [ ] Authenticated submission forms and uploads. Authenticated contributor and Arts submission forms are implemented and account-bound; file uploads remain disabled until scanned media storage is available.
 - [x] Tie contributor fee to submission ID and verified webhook — Stripe Checkout binds submission/user IDs in metadata and the signed webhook validates USD 149, ownership, state and idempotency before marking the submission paid.
-- [ ] Human review/publishing, labels, corrections, complaints/takedowns. Founder/admin review now supports approve/reject and contributor publication; publishing is fail-closed on human approval, verified paid status and contributor rights/accuracy/responsibility confirmations, with a public contributor article route and workforce audit event. Submission-specific correction/complaint linkage remains open.
+- [x] Human review/publishing, labels, corrections, complaints/takedowns — founder/admin review supports approve/reject and contributor publication; publishing is fail-closed on human approval, verified paid status and contributor rights/accuracy/responsibility confirmations. Published contributor articles are explicitly labeled and link directly into the auditable newsroom corrections/complaints/takedown workflow with their exact BuildPulse URL prefilled.
 - [x] Arts showcase, rights evidence and admin review — rights/original-work/release declarations and portfolio evidence are captured; founder/admin human review records approve/reject decisions; /arts/showcase renders only human-approved/published work and preserves AI-assistance disclosure.
 
 ## P1 — Marketplace and Connections
