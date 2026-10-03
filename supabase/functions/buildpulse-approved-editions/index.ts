@@ -9,6 +9,8 @@ Deno.serve(async(req)=>{
  const db=createClient(Deno.env.get("SUPABASE_URL")!,Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,{auth:{persistSession:false}});
  const {data:setting}=await db.from("buildpulse_private_settings").select("value").eq("key","edition_scheduler_secret").maybeSingle();
  if(!setting?.value||req.headers.get("x-buildpulse-scheduler-secret")!==setting.value)return json({ok:false,error:"unauthorized"},401);
+ const {data:mailSetting}=await db.from("buildpulse_private_settings").select("value").eq("key","resend_domain_status").maybeSingle();
+ if(mailSetting?.value!=="verified")return json({ok:false,error:"mail_domain_not_verified"},503);
  const apiKey=clean(Deno.env.get("BREVO_API_KEY")),fromEmail=clean(Deno.env.get("BREVO_FROM_EMAIL")),fromName=clean(Deno.env.get("BREVO_FROM_NAME"))||"TVK BuildPulse",listId=Number(clean(Deno.env.get("BREVO_MARKETING_LIST_ID")));
  if(!apiKey||!fromEmail||!Number.isInteger(listId)||listId<=0)return json({ok:false,error:"delivery_provider_not_configured"},503);
  const startedAt=new Date(),{data:due,error}=await db.from("buildpulse_editions").select("id,revision_number,edition_type,slug,subject,body_html,scheduled_at,founder_review_status,founder_approved_revision,brevo_campaign_id").eq("status","scheduled").eq("founder_review_status","approved").not("founder_approved_revision","is",null).is("brevo_campaign_id",null).lte("scheduled_at",startedAt.toISOString()).order("scheduled_at",{ascending:true}).limit(5);
