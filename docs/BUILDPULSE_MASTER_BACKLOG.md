@@ -25,7 +25,7 @@
 - [x] Governed agent registry, run ledger and approval queue.
 - [x] Seed News Desk, Localization, Social Ops, Finance Reconciliation, Platform Ops and Moderation agents.
 - [x] Implement provider-neutral AI gateway with OpenAI, NVIDIA NIM and local/self-hosted adapters.
-- [ ] Store provider secrets only in managed secrets/environment; never Git.
+- [x] Store provider secrets only in managed secrets/environment; never Git — repository scan found no committed concrete Stripe/OpenAI/NVIDIA/Resend/Supabase service secrets; `.env.example` contains placeholders only and `.gitignore` excludes real `.env*` files. Missing production credentials remain fail-closed rather than substituted.
 - [ ] Add model routing by task/cost/latency/privacy, budgets, rate limits, retries, fallback and observability. Provider ordering, bounded retries/timeouts, usage telemetry, explicit per-task daily request/token budgets and fail-closed missing-budget behavior are implemented; richer cost/latency/privacy policy routing and quality dashboards remain open.
 - [x] Implement durable agent schedules, governed runtime, usage budgets/retries, authenticated execution API and hourly secured scheduler coverage with atomic schedule claiming.
 - [ ] Automate low-risk ingestion, dedupe, scoring, drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports.
