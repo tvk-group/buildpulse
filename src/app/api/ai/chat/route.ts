@@ -1,4 +1,6 @@
 import {NextRequest} from "next/server";
+import {ecosystemContext} from "@/lib/buildpulse/ecosystem-knowledge";
+import {repositoryContext} from "@/lib/buildpulse/ecosystem-repositories";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 
