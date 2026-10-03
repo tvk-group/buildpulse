@@ -217,7 +217,8 @@ async function syncAccountingInvoice(admin:any,event:any,invoice:any){
   const snapshot={stripe_event_id:event.id,stripe_invoice_id:stripeInvoiceId,automatic_tax:invoice?.automatic_tax??null,total_taxes:invoice?.total_taxes??null,customer_tax_ids:invoice?.customer_tax_ids??null,billing_reason:invoice?.billing_reason??null,hosted_invoice_url:invoice?.hosted_invoice_url??null,base_currency:entity.base_currency,fx_posting_required:currency!==String(entity.base_currency).toUpperCase()};
   const row={entity_id:entity.id,customer_id:customerId,document_type:"invoice",document_number:documentNumber,currency,net_amount:net,tax_amount:tax,gross_amount:gross,tax_jurisdiction:invoice?.customer_address?.country??null,tax_treatment:null,tax_rate:net>0?tax/net:null,reverse_charge:false,stripe_invoice_id:stripeInvoiceId,stripe_payment_intent_id:paymentIntent,stripe_subscription_id:subscriptionId,provider_pdf_url:invoice?.invoice_pdf??null,status,issued_at:issuedAt,due_at:invoice?.due_date?new Date(Number(invoice.due_date)*1000).toISOString():null,paid_at:paidAt,immutable_snapshot:snapshot};
   const {data:doc,error:docErr}=await admin.from("buildpulse_accounting_documents").upsert(row,{onConflict:"stripe_invoice_id"}).select("id,document_number").single();if(docErr)throw docErr;
-  return {accountingInvoiceSynced:true,documentId:doc.id,documentNumber:doc.document_number,status,fxPostingRequired:snapshot.fx_posting_required};
+  let journalId=null;if(status==="paid"&&!snapshot.fx_posting_required){const {data:j,error:jErr}=await admin.rpc("buildpulse_post_paid_invoice_journal",{p_document_id:doc.id});if(jErr)throw jErr;journalId=j}
+  return {accountingInvoiceSynced:true,documentId:doc.id,documentNumber:doc.document_number,status,fxPostingRequired:snapshot.fx_posting_required,journalId};
 }
 
 Deno.serve(async(req:Request)=>{
