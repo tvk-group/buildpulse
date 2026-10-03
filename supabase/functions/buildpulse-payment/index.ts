@@ -15,26 +15,32 @@ const ISSUER={
 };
 
 type Asset="ETH"|"BTC"|"USDC"|"USDT"|"XRP"|"SOL"|"BNB"|"POL"|"TRX"|"ADA"|"SUI"|"AVAX";
-type Rail={asset:Asset;network:string;destination:string;memo?:string;decimals:number;requiredConfirmations:number};
+type Rail={id:string;asset:Asset;network:string;destination:string;memo?:string;decimals:number;requiredConfirmations:number;tokenContract?:string};
 function requiredEnv(name:string){const v=Deno.env.get(name)?.trim();if(!v)throw new Error(`missing_payment_config:${name}`);return v}
-function rails():Record<Asset,Rail>{return {
-  ETH:{asset:"ETH",network:"Ethereum",destination:requiredEnv("BUILDPULSE_ETH_ADDRESS"),decimals:18,requiredConfirmations:12},
-  BTC:{asset:"BTC",network:"Bitcoin",destination:requiredEnv("BUILDPULSE_BTC_ADDRESS"),decimals:8,requiredConfirmations:3},
-  USDC:{asset:"USDC",network:Deno.env.get("BUILDPULSE_USDC_NETWORK")?.trim()||"Base",destination:requiredEnv("BUILDPULSE_USDC_ADDRESS"),decimals:6,requiredConfirmations:20},
-  USDT:{asset:"USDT",network:Deno.env.get("BUILDPULSE_USDT_NETWORK")?.trim()||"Ethereum",destination:requiredEnv("BUILDPULSE_USDT_ADDRESS"),decimals:6,requiredConfirmations:12},
-  XRP:{asset:"XRP",network:"XRPL",destination:requiredEnv("BUILDPULSE_XRP_ADDRESS"),memo:Deno.env.get("BUILDPULSE_XRP_DESTINATION_TAG")?.trim()||undefined,decimals:6,requiredConfirmations:1},
-  SOL:{asset:"SOL",network:"Solana",destination:requiredEnv("BUILDPULSE_SOL_ADDRESS"),decimals:9,requiredConfirmations:1},
-  BNB:{asset:"BNB",network:"BNB Chain",destination:requiredEnv("BUILDPULSE_BNB_ADDRESS"),decimals:18,requiredConfirmations:15},
-  POL:{asset:"POL",network:"Polygon",destination:requiredEnv("BUILDPULSE_POL_ADDRESS"),decimals:18,requiredConfirmations:64},
-  TRX:{asset:"TRX",network:"TRON",destination:requiredEnv("BUILDPULSE_TRX_ADDRESS"),decimals:6,requiredConfirmations:20},
-  ADA:{asset:"ADA",network:"Cardano",destination:requiredEnv("BUILDPULSE_ADA_ADDRESS"),decimals:6,requiredConfirmations:15},
-  SUI:{asset:"SUI",network:"Sui",destination:requiredEnv("BUILDPULSE_SUI_ADDRESS"),decimals:9,requiredConfirmations:1},
-  AVAX:{asset:"AVAX",network:"Avalanche C-Chain",destination:requiredEnv("BUILDPULSE_AVAX_ADDRESS"),decimals:18,requiredConfirmations:12}
+function rails():Record<string,Rail>{return {
+  "ETH:ETHEREUM":{id:"ETH:ETHEREUM",asset:"ETH",network:"Ethereum",destination:requiredEnv("BUILDPULSE_ETH_ADDRESS"),decimals:18,requiredConfirmations:12},
+  "ETH:BASE":{id:"ETH:BASE",asset:"ETH",network:"Base",destination:requiredEnv("BUILDPULSE_ETH_BASE_ADDRESS"),decimals:18,requiredConfirmations:20},
+  "BTC:BITCOIN":{id:"BTC:BITCOIN",asset:"BTC",network:"Bitcoin",destination:requiredEnv("BUILDPULSE_BTC_ADDRESS"),decimals:8,requiredConfirmations:3},
+  "USDC:ETHEREUM":{id:"USDC:ETHEREUM",asset:"USDC",network:"Ethereum",destination:requiredEnv("BUILDPULSE_USDC_ETH_ADDRESS"),decimals:6,requiredConfirmations:12,tokenContract:"0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"},
+  "USDC:BASE":{id:"USDC:BASE",asset:"USDC",network:"Base",destination:requiredEnv("BUILDPULSE_USDC_BASE_ADDRESS"),decimals:6,requiredConfirmations:20,tokenContract:"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"},
+  "USDT:ETHEREUM":{id:"USDT:ETHEREUM",asset:"USDT",network:"Ethereum",destination:requiredEnv("BUILDPULSE_USDT_ETH_ADDRESS"),decimals:6,requiredConfirmations:12,tokenContract:"0xdAC17F958D2ee523a2206206994597C13D831ec7"},
+  "USDT:BASE":{id:"USDT:BASE",asset:"USDT",network:"Base",destination:requiredEnv("BUILDPULSE_USDT_BASE_ADDRESS"),decimals:6,requiredConfirmations:20,tokenContract:"0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"},
+  "XRP:XRPL":{id:"XRP:XRPL",asset:"XRP",network:"XRPL",destination:requiredEnv("BUILDPULSE_XRP_ADDRESS"),memo:Deno.env.get("BUILDPULSE_XRP_DESTINATION_TAG")?.trim()||undefined,decimals:6,requiredConfirmations:1},
+  "SOL:SOLANA":{id:"SOL:SOLANA",asset:"SOL",network:"Solana",destination:requiredEnv("BUILDPULSE_SOL_ADDRESS"),decimals:9,requiredConfirmations:1},
+  "BNB:BNB CHAIN":{id:"BNB:BNB CHAIN",asset:"BNB",network:"BNB Chain",destination:requiredEnv("BUILDPULSE_BNB_ADDRESS"),decimals:18,requiredConfirmations:15},
+  "POL:POLYGON":{id:"POL:POLYGON",asset:"POL",network:"Polygon",destination:requiredEnv("BUILDPULSE_POL_ADDRESS"),decimals:18,requiredConfirmations:64},
+  "TRX:TRON":{id:"TRX:TRON",asset:"TRX",network:"TRON",destination:requiredEnv("BUILDPULSE_TRX_ADDRESS"),decimals:6,requiredConfirmations:20},
+  "ADA:CARDANO":{id:"ADA:CARDANO",asset:"ADA",network:"Cardano",destination:requiredEnv("BUILDPULSE_ADA_ADDRESS"),decimals:6,requiredConfirmations:15},
+  "SUI:SUI":{id:"SUI:SUI",asset:"SUI",network:"Sui",destination:requiredEnv("BUILDPULSE_SUI_ADDRESS"),decimals:9,requiredConfirmations:1},
+  "AVAX:AVALANCHE C-CHAIN":{id:"AVAX:AVALANCHE C-CHAIN",asset:"AVAX",network:"Avalanche C-Chain",destination:requiredEnv("BUILDPULSE_AVAX_ADDRESS"),decimals:18,requiredConfirmations:12}
 }}
-const ERC20:Partial<Record<Asset,string>>={
-  USDC:"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-  USDT:"0xdAC17F958D2ee523a2206206994597C13D831ec7"
-};
+function railFor(asset:Asset,networkRaw?:string){
+  const all=rails(),network=String(networkRaw||"").trim().toUpperCase();
+  if(network){const exact=all[`${asset}:${network}`];if(exact)return exact;throw new Error("unsupported_network")}
+  const matches=Object.values(all).filter(r=>r.asset===asset);
+  if(matches.length===1)return matches[0];
+  throw new Error("network_required");
+}
 const TRANSFER_TOPIC="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 
 function reply(body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:cors})}
@@ -74,8 +80,8 @@ async function evmRpc(url:string,method:string,params:unknown[]){
 function topicForAddress(address:string){return "0x"+address.toLowerCase().replace(/^0x/,"").padStart(64,"0")}
 function normalizeAddress(address:string|null|undefined){return (address||"").toLowerCase()}
 
-async function issueQuote(admin:any,user:any,orderId:string,asset:Asset){
-  const rail=rails()[asset];
+async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?:string){
+  const rail=railFor(asset,network);
   const [{data:order,error:orderError},{data:profile,error:profileError}]=await Promise.all([
     admin.from("buildpulse_ad_orders").select("id,user_id,status,amount_usd,created_at").eq("id",orderId).eq("user_id",user.id).maybeSingle(),
     admin.from("buildpulse_advertiser_profiles").select("company_name,billing_email,status").eq("user_id",user.id).maybeSingle()
@@ -173,7 +179,7 @@ async function verifyEvm(asset:Asset,rail:Rail,quote:any,txHash:string){
     if(normalizeAddress(tx.to)!==normalizeAddress(rail.destination))throw new Error("destination_mismatch");
     actual=BigInt(tx.value||"0x0");
   }else{
-    const contract=ERC20[asset];
+    const contract=rail.tokenContract;
     if(!contract)throw new Error("unsupported_token");
     const wantedTopic=topicForAddress(rail.destination);
     for(const log of receipt.logs??[]){
@@ -228,8 +234,7 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
     .eq("order_id",order.id).in("state",["open","observed","confirmed"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
   if(quoteError||!quote)throw new Error("payment_quote_not_found");
   const asset=String(quote.asset).toUpperCase() as Asset;
-  const rail=rails()[asset];
-  if(!rail||rail.network.toLowerCase()!==String(quote.network).toLowerCase())throw new Error("payment_rail_mismatch");
+  const rail=railFor(asset,String(quote.network));
   if(normalizeAddress(rail.destination)!==normalizeAddress(String(quote.destination)))throw new Error("payment_destination_mismatch");
 
   if(asset==="ETH"||asset==="USDC"||asset==="USDT"){
@@ -309,10 +314,9 @@ Deno.serve(async(req:Request)=>{
     }
     if(action==="quote"){
       const asset=String(body.asset??"").toUpperCase() as Asset;
-      const rail=rails()[asset];
-      if(!rail)return reply({ok:false,error:"unsupported_asset"},400);
+      let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){const m=e instanceof Error?e.message:"unsupported_network";return reply({ok:false,error:m},400)}
       if(!["ETH","BTC","USDC","USDT","XRP"].includes(asset))return reply({ok:false,error:"verification_not_enabled_for_asset"},503);
-      const result=await issueQuote(admin,user,orderId,asset);
+      const result=await issueQuote(admin,user,orderId,asset,rail.network);
       return reply({ok:true,method:asset,...result});
     }
     if(action==="verify"){
@@ -326,7 +330,7 @@ Deno.serve(async(req:Request)=>{
     const status=["order_not_found","payment_quote_not_found"].includes(message)?404:
       ["active_advertiser_profile_required"].includes(message)?403:
       ["order_not_payable","order_not_verifiable","transaction_already_used","order_price_mismatch"].includes(message)?409:
-      ["invalid_transaction_hash","payment_underpaid","transaction_outside_quote_window","destination_mismatch","destination_tag_mismatch","not_xrp_payment","non_xrp_amount","payment_rail_mismatch","payment_destination_mismatch","transaction_failed"].includes(message)?400:500;
+      ["network_required","unsupported_network","invalid_transaction_hash","payment_underpaid","transaction_outside_quote_window","destination_mismatch","destination_tag_mismatch","not_xrp_payment","non_xrp_amount","payment_rail_mismatch","payment_destination_mismatch","transaction_failed"].includes(message)?400:500;
     return reply({ok:false,error:message},status);
   }
 });
