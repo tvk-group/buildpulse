@@ -238,6 +238,10 @@ async function syncAccountingInvoice(admin:any,event:any,invoice:any){
   let documentNumber=existingDoc?.document_number??null;
   if(!documentNumber){const {data:num,error:numErr}=await admin.rpc("buildpulse_next_document_number",{p_entity_id:entity.id,p_document_type:"invoice",p_issued_at:issuedAt});if(numErr||!num)throw new Error("document_number_allocation_failed");documentNumber=num}
   const subscriptionId=typeof invoice.subscription==="string"?invoice.subscription:invoice.subscription?.id??null;
+  if(subscriptionId){
+    const entitlementStatus=event.type==="invoice.paid"?"active":"past_due";
+    await admin.from("buildpulse_intelligence_subscriptions").update({status:entitlementStatus,updated_at:new Date().toISOString()}).eq("stripe_subscription_id",subscriptionId);
+  }
   const paymentIntent=typeof invoice.payment_intent==="string"?invoice.payment_intent:invoice.payment_intent?.id??null;
   const status=event.type==="invoice.paid"?"paid":String(invoice?.status||"open");
   const snapshot={stripe_event_id:event.id,stripe_invoice_id:stripeInvoiceId,automatic_tax:invoice?.automatic_tax??null,total_taxes:invoice?.total_taxes??null,customer_tax_ids:invoice?.customer_tax_ids??null,billing_reason:invoice?.billing_reason??null,hosted_invoice_url:invoice?.hosted_invoice_url??null,base_currency:entity.base_currency,fx_posting_required:currency!==String(entity.base_currency).toUpperCase()};
