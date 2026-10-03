@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {createClient as createSupabaseClient} from "@supabase/supabase-js";
 import {getSupabasePublicConfig} from "@/lib/supabase/env";
+import {LocalizedPrice} from "@/components/buildpulse/LocalizedPrice";
 
 export const dynamic="force-dynamic";
 export const metadata={title:"Advertise",description:"Self-service advertising inventory for BuildPulse Global Technology & Digital Intelligence.",alternates:{canonical:"/advertise"},openGraph:{url:"/advertise"}};
@@ -16,7 +17,7 @@ export default async function Advertise(){
       <p className="text-xs font-bold uppercase tracking-widest text-slate-400">{x.placement.replaceAll("_"," ")}</p>
       <h2 className="mt-2 text-2xl font-black">{x.name}</h2>
       <p className="mt-3 text-sm text-slate-300">{x.width_px&&x.height_px?`${x.width_px} × ${x.height_px}px · `:""}up to {x.max_copy_chars} characters · {x.duration_days} day{x.duration_days===1?"":"s"}</p>
-      <p className="mt-5 text-3xl font-black">USD {Number(x.price_usd).toLocaleString("en-US")}</p>
+      <p className="mt-5 text-3xl font-black"><LocalizedPrice value={x.price_usd} maximumFractionDigits={0}/></p>
       <Link href={`/advertiser?product=${x.code}`} className="mt-5 inline-block rounded-xl bg-white px-5 py-3 font-bold text-slate-950">Create campaign →</Link>
     </article>)}</div>
     <p className="mt-10 max-w-3xl text-sm text-slate-400">Payment does not bypass content controls. Campaigns remain subject to automated safety checks and publication policy before activation. Pricing shown here is the configured launch inventory and can be revised centrally.</p>
