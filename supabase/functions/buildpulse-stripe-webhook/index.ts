@@ -175,6 +175,27 @@ async function handleDispute(admin:any,event:any,dispute:any){
   return {ignored:"unsupported_dispute_event"};
 }
 
+async function settleContributorCheckout(admin:any,session:any){
+  if(String(session?.metadata?.buildpulse_kind||"")!=="contributor_submission")return {ignored:"not_contributor_submission"};
+  const submissionId=String(session?.metadata?.buildpulse_submission_id||session?.client_reference_id||"");
+  const userId=String(session?.metadata?.buildpulse_user_id||"");
+  if(!/^[0-9a-f-]{36}$/i.test(submissionId)||!/^[0-9a-f-]{36}$/i.test(userId))return {ignored:"contributor_reference_invalid"};
+  if(session.payment_status!=="paid")return {ignored:"contributor_checkout_not_paid"};
+  if(String(session.currency||"").toLowerCase()!=="usd"||Number(session.amount_total)!==14900)return {ignored:"contributor_amount_mismatch"};
+  const {data:sub,error}=await admin.from("buildpulse_contributor_submissions").select("id,user_id,status,payment_status,fee_usd,stripe_checkout_session_id").eq("id",submissionId).eq("user_id",userId).maybeSingle();
+  if(error||!sub)return {ignored:"contributor_submission_not_found"};
+  if(Math.round(Number(sub.fee_usd)*100)!==14900)return {ignored:"contributor_fee_mismatch"};
+  if(sub.payment_status==="paid"&&sub.stripe_checkout_session_id===session.id)return {idempotent:true,contributor:true};
+  if(!["draft","payment_pending"].includes(sub.status)||!["unpaid","pending"].includes(sub.payment_status))return {ignored:"contributor_state_invalid"};
+  const paymentIntent=typeof session.payment_intent==="string"?session.payment_intent:session.payment_intent?.id??null;
+  const now=new Date().toISOString();
+  const {error:updateError}=await admin.from("buildpulse_contributor_submissions").update({
+    status:"submitted",payment_status:"paid",stripe_checkout_session_id:session.id,stripe_payment_intent_id:paymentIntent,paid_at:now,updated_at:now
+  }).eq("id",submissionId).eq("user_id",userId).in("status",["draft","payment_pending"]);
+  if(updateError)throw updateError;
+  return {contributorSettled:true,submissionId};
+}
+
 async function settleSubscriptionCheckout(admin:any,session:any){
   const planTag=String(session?.metadata?.buildpulse_subscription_plan||"");
   if(!planTag)return {ignored:"not_buildpulse_subscription"};
@@ -266,6 +287,7 @@ Deno.serve(async(req:Request)=>{
     const type=String(event?.type??""),object=event?.data?.object??{};
     let result:any={ignored:"unsupported_event"};
     if((type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")&&object?.mode==="subscription")result=await settleSubscriptionCheckout(admin,object);
+    else if((type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")&&String(object?.metadata?.buildpulse_kind||"")==="contributor_submission")result=await settleContributorCheckout(admin,object);
     else if(type==="checkout.session.completed"||type==="checkout.session.async_payment_succeeded")result=await settleCheckout(admin,event,object);
     else if(type==="checkout.session.async_payment_failed"||type==="checkout.session.expired")result={ignored:type};
     else if(type==="charge.refunded")result=await handleRefund(admin,event,object);
