@@ -22,7 +22,7 @@ export function BuildPulseSiteHeader(){
  return <header className="sticky top-0 z-50 border-b border-black/15 bg-[#fbfaf6]/95 backdrop-blur">
   <div className="mx-auto max-w-[1440px] px-4 md:px-5">
    <div className="flex min-h-16 items-center gap-3">
-    <Link href="/" className="mr-auto text-2xl font-black tracking-[-.06em] text-[#0b6b63]">BUILD<span className="font-light">PULSE</span></Link>
+    <Link href="/" aria-label="BuildPulse home" prefetch={false} onClick={(e)=>{if(p==="/"){e.preventDefault();window.location.assign("/")}}} className="mr-auto text-2xl font-black tracking-[-.06em] text-[#0b6b63]">BUILD<span className="font-light">PULSE</span></Link>
     <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
      {groups.map(g=><div key={g.label} className="group relative">
       <button className="rounded-lg px-3 py-2 text-[11px] font-black uppercase tracking-wide hover:bg-black/5 group-focus-within:bg-black/5" aria-haspopup="menu">{g.label} <span aria-hidden="true">⌄</span></button>
