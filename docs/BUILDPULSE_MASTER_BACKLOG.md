@@ -31,7 +31,7 @@
 - [ ] Automate low-risk ingestion, dedupe, scoring, drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports.
 - [x] Add auditable human approval inbox/API for agent proposals; generic approval does not execute arbitrary AI text. Technology long-form drafting is now source-grounded and autonomous-to-review; remaining domains are incomplete.
 - [ ] Keep approval gates for unverified factual publication, tax/legal filing, money movement, destructive operations, permanent sanctions, role/security changes.
-- [ ] Add prompt/version registry, evaluation datasets, hallucination/source-grounding checks and agent quality metrics.
+- [ ] Add prompt/version registry, evaluation datasets, hallucination/source-grounding checks and agent quality metrics. Server-only versioned prompt and evaluation registries are live; AI usage telemetry records prompt key/version, and Technology Editorial is fail-closed on the approved active prompt with an unsupported-claims evaluation fixture. Automated evaluation execution and aggregate quality metrics remain open.
 
 ## P0 — Editorial/news publication\n- [x] Add governed Technology Editorial Agent rotating TVK ecosystem, ENTELΞKRON, Sovereign AI, EnergieMIND and presale technology; generated articles remain review-gated and source-provenance checked.
 - [x] Source ingestion/orchestration, story verification state and review provenance foundations.
