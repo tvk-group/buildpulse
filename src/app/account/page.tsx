@@ -29,7 +29,7 @@ export default async function AccountPage(){
  ]);
  const {data:sessions,error:sessionsError}=await supabase.rpc("buildpulse_list_own_sessions");
  const {data:affiliate}=await db.from("buildpulse_affiliate_accounts").select("id,code,status,commission_bps,payout_status").eq("user_id",user.id).maybeSingle();
- const affiliateConversions=affiliate?(await db.from("buildpulse_affiliate_attributions").select("commission_amount,currency,converted_at").eq("affiliate_account_id",affiliate.id).not("converted_at","is",null).limit(500)).data??[]:[];
+ const affiliateConversions=affiliate?(await db.from("buildpulse_affiliate_attributions").select("commission_amount,currency,converted_at,fraud_state").eq("affiliate_account_id",affiliate.id).eq("fraud_state","clear").not("converted_at","is",null).limit(500)).data??[]:[];
  const affiliateAccrued=affiliateConversions.filter((x:any)=>x.currency==="USD").reduce((n:number,x:any)=>n+Number(x.commission_amount??0),0);
  const docs=customer?.id?(await db.from("buildpulse_accounting_documents").select("id,document_number,document_type,currency,gross_amount,status,issued_at,paid_at,provider_pdf_url").eq("customer_id",customer.id).order("created_at",{ascending:false}).limit(20)).data??[]:[];
  const active=(subs??[]).find((s:any)=>["active","trialing"].includes(s.status));const cryptoActive=(cryptoTerms??[]).find((p:any)=>p.state==="confirmed"&&p.entitlement_end&&new Date(p.entitlement_end)>new Date());const isStripe=Boolean(active?.stripe_subscription_id);
