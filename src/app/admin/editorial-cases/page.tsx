@@ -15,10 +15,10 @@ async function decide(formData:FormData){
  const db=createAdminClient();if(!db)throw new Error("Editorial case service unavailable");
  const now=new Date().toISOString();
  const patch:any={status,resolution:resolution||null,updated_at:now};
- if(["resolved","rejected"].includes(status)){patch.resolved_at=now}
+ if(["resolved","rejected"].includes(status)){patch.resolved_at=now;patch.resolved_by=auth.userId}
  const {error}=await db.from("buildpulse_editorial_cases").update(patch).eq("id",id);
  if(error)throw error;
- await db.from("buildpulse_workforce_audit_log").insert({action:"editorial_case_decision",resource_type:"editorial_case",resource_id:id,metadata:{status,resolution:resolution.slice(0,1000),reviewer:auth.email}});
+ await db.from("buildpulse_workforce_audit_log").insert({actor_user_id:auth.userId,action:"editorial_case_decision",resource_type:"editorial_case",resource_id:id,metadata:{status,resolution:resolution.slice(0,1000),reviewer:auth.email}});
  revalidatePath("/admin/editorial-cases");
 }
 
