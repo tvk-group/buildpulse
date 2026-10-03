@@ -5,3 +5,6 @@ for insert to authenticated with check(
  and exists(select 1 from public.buildpulse_marketplace_listings l where l.id=listing_id and l.status='active' and l.seller_id=seller_id)
 );
 grant insert on public.buildpulse_marketplace_inquiries to authenticated;
+
+create policy bp_market_authenticated_active on public.buildpulse_marketplace_listings
+for select to authenticated using(status='active');
