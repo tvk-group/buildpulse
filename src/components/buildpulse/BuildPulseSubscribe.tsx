@@ -1,8 +1,9 @@
 "use client";
 import {FormEvent,useState} from "react";
+import {getBuildPulseLocale,getDeviceTimeZone} from "@/lib/buildpulse/localization";
 export function BuildPulseSubscribe(){
  const [state,setState]=useState<"idle"|"sending"|"ok"|"error">("idle");
- async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setState("sending");const fd=new FormData(e.currentTarget);try{const r=await fetch("/api/buildpulse/subscribe",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email:fd.get("email"),locale:"en",cadence:fd.get("cadence"),topics:["ai","blockchain","crypto","security","digital-economy","entelekron"],consent:fd.get("consent")==="yes"})});setState(r.ok?"ok":"error")}catch{setState("error")}}
+ async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setState("sending");const fd=new FormData(e.currentTarget);try{const r=await fetch("/api/buildpulse/subscribe",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email:fd.get("email"),locale:getBuildPulseLocale(),timeZone:getDeviceTimeZone(),cadence:fd.get("cadence"),topics:["ai","blockchain","crypto","security","digital-economy","entelekron"],consent:fd.get("consent")==="yes"})});setState(r.ok?"ok":"error")}catch{setState("error")}}
  return <form onSubmit={submit} className="mt-8 w-full rounded-xl border border-white/30 bg-white p-5 text-[#17202a] shadow-sm">
   <p className="mb-4 text-sm leading-5 text-[#53606b]">Get BuildPulse intelligence in your inbox. Enter your email, choose delivery frequency and confirm consent below.</p>
   <div className="grid gap-3">
