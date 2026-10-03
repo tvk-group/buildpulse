@@ -78,7 +78,7 @@
 - [ ] Creator tools and monetization.
 - [x] Contextual/consent-based Sponsored advertising; no hidden surveillance targeting — runtime selection is placement-context only (homepage/archive/edition/newsletter) and records only coarse anti-fraud event fingerprints; it does not profile users or use hidden behavioral targeting.
 - [ ] Media upload/storage/transcoding, malware scanning and quotas.
-- [ ] Notifications/push.
+- [ ] Notifications/push. Secure in-app notification foundation now exists with per-user RLS, service-only creation, authenticated account feed and own-notification read-state API. Push subscription, VAPID/service-worker delivery, consent/preferences and event producers remain open.
 - [x] Add abuse-rate controls and appeals — posts, messages, conversations, interactions, reports and appeals are bounded; rate-check database failures now fail closed, duplicate appeals/reports are suppressed, and profile mutations are throttled.
 - [x] Add block/mute/report controls, per-reader feed filtering, report review state, moderator hide/dismiss/review actions and Control Plane moderation queue.
 - [ ] Cloud/storage subscriptions and premium names/features.
