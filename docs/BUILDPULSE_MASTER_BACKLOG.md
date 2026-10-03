@@ -23,15 +23,15 @@
 ## P0 — AI/automation platform
 - [x] Governed agent registry, run ledger and approval queue.
 - [x] Seed News Desk, Localization, Social Ops, Finance Reconciliation, Platform Ops and Moderation agents.
-- [ ] Implement provider-neutral AI gateway with OpenAI, NVIDIA NIM and local/self-hosted adapters.
+- [x] Implement provider-neutral AI gateway with OpenAI, NVIDIA NIM and local/self-hosted adapters.
 - [ ] Store provider secrets only in managed secrets/environment; never Git.
 - [ ] Add model routing by task/cost/latency/privacy, budgets, rate limits, retries, fallback and observability.
-- [ ] Implement agent scheduler/event triggers and idempotent execution.
-- [ ] Automate low-risk ingestion, dedupe, scoring, drafts, localization drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports.
+- [ ] Implement agent scheduler/event triggers and idempotent execution. Technology Editorial Agent now has idempotent generation and a secured cron endpoint; remaining agents still require scheduler coverage.
+- [ ] Automate low-risk ingestion, dedupe, scoring, drafts, localization drafts, SEO, approved-content scheduling, reconciliation, anomaly detection and reports. Technology long-form drafting is now source-grounded and autonomous-to-review; remaining domains are incomplete.
 - [ ] Keep approval gates for unverified factual publication, tax/legal filing, money movement, destructive operations, permanent sanctions, role/security changes.
 - [ ] Add prompt/version registry, evaluation datasets, hallucination/source-grounding checks and agent quality metrics.
 
-## P0 — Editorial/news publication
+## P0 — Editorial/news publication\n- [x] Add governed Technology Editorial Agent rotating TVK ecosystem, ENTELΞKRON, Sovereign AI, EnergieMIND and presale technology; generated articles remain review-gated and source-provenance checked.
 - [x] Source ingestion/orchestration, story verification state and review provenance foundations.
 - [x] Edition generation/review/scheduling/delivery foundations and immutable sent artifacts.
 - [ ] Make World/current news dynamic; remove stale hard-coded stories.
