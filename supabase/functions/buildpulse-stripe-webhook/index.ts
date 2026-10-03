@@ -56,7 +56,7 @@ async function appendPaymentEvent(admin:any,event:any,orderId:string,state:"conf
 }
 async function bindAffiliateAdConversion(admin:any,userId:string,orderId:string,amount:number){
   const now=new Date().toISOString();
-  const {data:a}=await admin.from("buildpulse_affiliate_attributions").select("id,affiliate_account_id").eq("attributed_user_id",userId).is("converted_at",null).gt("expires_at",now).order("landing_at",{ascending:false}).limit(1).maybeSingle();
+  const {data:a}=await admin.from("buildpulse_affiliate_attributions").select("id,affiliate_account_id").eq("attributed_user_id",userId).eq("fraud_state","clear").is("converted_at",null).gt("expires_at",now).order("landing_at",{ascending:false}).limit(1).maybeSingle();
   if(!a)return {bound:false};
   const {data:acct}=await admin.from("buildpulse_affiliate_accounts").select("status,commission_bps,user_id").eq("id",a.affiliate_account_id).maybeSingle();
   if(!acct||acct.status!=="active"||acct.user_id===userId||Number(acct.commission_bps)<=0)return {bound:false};
