@@ -5,6 +5,5 @@
       "schedule": "17 * * * *"
     }
   ],
-  "framework": "nextjs",
-  "outputDirectory": ".next"
+  "framework": "nextjs"
 }
