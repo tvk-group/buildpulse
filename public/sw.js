@@ -1,6 +1,6 @@
-const CACHE="buildpulse-shell-v5";
+const CACHE="buildpulse-shell-v6";
 const SHELL=["/","/archive","/local","/world","/technology","/markets","/people","/sports","/arts","/social","/blog","/marketplace","/subscriptions","/about","/methodology"];
-const PRIVATE=["/api/","/account","/admin","/advertiser","/auth","/contribute","/preferences","/review","/workforce"];
+const PRIVATE=["/api/","/account","/admin","/advertiser","/auth","/contribute","/preferences","/review","/workforce","/marketplace/sell"];
 
 self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
@@ -29,7 +29,7 @@ self.addEventListener("fetch",event=>{
   if(!cacheable)return;
   event.respondWith(
     fetch(event.request).then(response=>{
-      if(response.ok&&response.type==="basic"){
+      const cc=response.headers.get("cache-control")||"";if(response.ok&&response.type==="basic"&&!/no-store|private/i.test(cc)&&!response.headers.has("set-cookie")){
         const copy=response.clone();
         event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));
       }
