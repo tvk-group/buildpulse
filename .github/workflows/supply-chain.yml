@@ -24,7 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+      - name: Verify dependency lockfile
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f package-lock.json || { echo "package-lock.json is required for reproducible supply-chain evidence" >&2; exit 1; }
 
       - name: Install locked dependencies
         run: npm ci --ignore-scripts
