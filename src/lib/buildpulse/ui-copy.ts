@@ -27,7 +27,14 @@ const C={
     "marketplace": "Marketplace",
     "aboutBp": "About BuildPulse",
     "contribute": "Contribute",
-    "advertise": "Advertise"
+    "advertise": "Advertise",
+    "home": "Home",
+    "archive": "Archive",
+    "aiEditorial": "AI Editorial System",
+    "disclosure": "Disclosure",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "status": "Status"
   },
   "de": {
     "news": "Nachrichten",
@@ -56,7 +63,14 @@ const C={
     "marketplace": "Marktplatz",
     "aboutBp": "Über BuildPulse",
     "contribute": "Beitragen",
-    "advertise": "Werben"
+    "advertise": "Werben",
+    "home": "Startseite",
+    "archive": "Archiv",
+    "aiEditorial": "KI-Redaktionssystem",
+    "disclosure": "Offenlegung",
+    "privacy": "Datenschutz",
+    "terms": "Bedingungen",
+    "status": "Status"
   },
   "fr": {
     "news": "Actualités",
@@ -85,7 +99,14 @@ const C={
     "marketplace": "Marché",
     "aboutBp": "À propos de BuildPulse",
     "contribute": "Contribuer",
-    "advertise": "Faire de la publicité"
+    "advertise": "Faire de la publicité",
+    "home": "Accueil",
+    "archive": "Archives",
+    "aiEditorial": "Système éditorial IA",
+    "disclosure": "Divulgation",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "status": "Statut"
   },
   "tr": {
     "news": "Haberler",
@@ -114,7 +135,14 @@ const C={
     "marketplace": "Pazar",
     "aboutBp": "BuildPulse Hakkında",
     "contribute": "Katkıda Bulun",
-    "advertise": "Reklam Ver"
+    "advertise": "Reklam Ver",
+    "home": "Ana Sayfa",
+    "archive": "Arşiv",
+    "aiEditorial": "AI Editoryal Sistemi",
+    "disclosure": "Açıklamalar",
+    "privacy": "Gizlilik",
+    "terms": "Koşullar",
+    "status": "Durum"
   },
   "es": {
     "news": "Noticias",
@@ -143,7 +171,14 @@ const C={
     "marketplace": "Mercado",
     "aboutBp": "Acerca de BuildPulse",
     "contribute": "Contribuir",
-    "advertise": "Anunciar"
+    "advertise": "Anunciar",
+    "home": "Inicio",
+    "archive": "Archivo",
+    "aiEditorial": "Sistema editorial de IA",
+    "disclosure": "Divulgación",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "status": "Estado"
   },
   "it": {
     "news": "Notizie",
@@ -172,7 +207,14 @@ const C={
     "marketplace": "Mercato",
     "aboutBp": "Informazioni su BuildPulse",
     "contribute": "Contribuisci",
-    "advertise": "Pubblicità"
+    "advertise": "Pubblicità",
+    "home": "Home",
+    "archive": "Archivio",
+    "aiEditorial": "Sistema editoriale IA",
+    "disclosure": "Informativa",
+    "privacy": "Privacy",
+    "terms": "Termini",
+    "status": "Stato"
   },
   "pt": {
     "news": "Notícias",
@@ -201,7 +243,14 @@ const C={
     "marketplace": "Mercado",
     "aboutBp": "Sobre o BuildPulse",
     "contribute": "Contribuir",
-    "advertise": "Anunciar"
+    "advertise": "Anunciar",
+    "home": "Início",
+    "archive": "Arquivo",
+    "aiEditorial": "Sistema editorial de IA",
+    "disclosure": "Divulgação",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "status": "Estado"
   },
   "ru": {
     "news": "Новости",
@@ -230,7 +279,14 @@ const C={
     "marketplace": "Маркетплейс",
     "aboutBp": "О BuildPulse",
     "contribute": "Стать автором",
-    "advertise": "Реклама"
+    "advertise": "Реклама",
+    "home": "Главная",
+    "archive": "Архив",
+    "aiEditorial": "Редакционная система ИИ",
+    "disclosure": "Раскрытие информации",
+    "privacy": "Конфиденциальность",
+    "terms": "Условия",
+    "status": "Статус"
   },
   "pl": {
     "news": "Wiadomości",
@@ -259,7 +315,14 @@ const C={
     "marketplace": "Rynek",
     "aboutBp": "O BuildPulse",
     "contribute": "Współtwórz",
-    "advertise": "Reklama"
+    "advertise": "Reklama",
+    "home": "Strona główna",
+    "archive": "Archiwum",
+    "aiEditorial": "System redakcyjny AI",
+    "disclosure": "Ujawnienia",
+    "privacy": "Prywatność",
+    "terms": "Warunki",
+    "status": "Status"
   },
   "nl": {
     "news": "Nieuws",
@@ -288,7 +351,14 @@ const C={
     "marketplace": "Marktplaats",
     "aboutBp": "Over BuildPulse",
     "contribute": "Bijdragen",
-    "advertise": "Adverteren"
+    "advertise": "Adverteren",
+    "home": "Home",
+    "archive": "Archief",
+    "aiEditorial": "AI-redactiesysteem",
+    "disclosure": "Openbaarmaking",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden",
+    "status": "Status"
   },
   "sv": {
     "news": "Nyheter",
@@ -317,7 +387,14 @@ const C={
     "marketplace": "Marknadsplats",
     "aboutBp": "Om BuildPulse",
     "contribute": "Bidra",
-    "advertise": "Annonsera"
+    "advertise": "Annonsera",
+    "home": "Hem",
+    "archive": "Arkiv",
+    "aiEditorial": "AI-redaktionssystem",
+    "disclosure": "Upplysningar",
+    "privacy": "Integritet",
+    "terms": "Villkor",
+    "status": "Status"
   },
   "no": {
     "news": "Nyheter",
@@ -346,7 +423,14 @@ const C={
     "marketplace": "Markedsplass",
     "aboutBp": "Om BuildPulse",
     "contribute": "Bidra",
-    "advertise": "Annonser"
+    "advertise": "Annonser",
+    "home": "Hjem",
+    "archive": "Arkiv",
+    "aiEditorial": "KI-redaksjonssystem",
+    "disclosure": "Opplysninger",
+    "privacy": "Personvern",
+    "terms": "Vilkår",
+    "status": "Status"
   },
   "fi": {
     "news": "Uutiset",
@@ -375,7 +459,14 @@ const C={
     "marketplace": "Markkinapaikka",
     "aboutBp": "Tietoa BuildPulsesta",
     "contribute": "Osallistu",
-    "advertise": "Mainosta"
+    "advertise": "Mainosta",
+    "home": "Etusivu",
+    "archive": "Arkisto",
+    "aiEditorial": "Tekoälytoimitusjärjestelmä",
+    "disclosure": "Tiedot",
+    "privacy": "Tietosuoja",
+    "terms": "Ehdot",
+    "status": "Tila"
   },
   "da": {
     "news": "Nyheder",
@@ -404,7 +495,14 @@ const C={
     "marketplace": "Markedsplads",
     "aboutBp": "Om BuildPulse",
     "contribute": "Bidrag",
-    "advertise": "Annoncér"
+    "advertise": "Annoncér",
+    "home": "Hjem",
+    "archive": "Arkiv",
+    "aiEditorial": "AI-redaktionssystem",
+    "disclosure": "Oplysninger",
+    "privacy": "Privatliv",
+    "terms": "Vilkår",
+    "status": "Status"
   },
   "ro": {
     "news": "Știri",
@@ -433,7 +531,14 @@ const C={
     "marketplace": "Piață",
     "aboutBp": "Despre BuildPulse",
     "contribute": "Contribuie",
-    "advertise": "Publicitate"
+    "advertise": "Publicitate",
+    "home": "Acasă",
+    "archive": "Arhivă",
+    "aiEditorial": "Sistem editorial AI",
+    "disclosure": "Dezvăluiri",
+    "privacy": "Confidențialitate",
+    "terms": "Termeni",
+    "status": "Stare"
   },
   "hu": {
     "news": "Hírek",
@@ -462,7 +567,14 @@ const C={
     "marketplace": "Piactér",
     "aboutBp": "A BuildPulse-ról",
     "contribute": "Közreműködés",
-    "advertise": "Hirdetés"
+    "advertise": "Hirdetés",
+    "home": "Kezdőlap",
+    "archive": "Archívum",
+    "aiEditorial": "MI szerkesztőségi rendszer",
+    "disclosure": "Közzététel",
+    "privacy": "Adatvédelem",
+    "terms": "Feltételek",
+    "status": "Állapot"
   },
   "cs": {
     "news": "Zprávy",
@@ -491,7 +603,14 @@ const C={
     "marketplace": "Tržiště",
     "aboutBp": "O BuildPulse",
     "contribute": "Přispět",
-    "advertise": "Inzerovat"
+    "advertise": "Inzerovat",
+    "home": "Domů",
+    "archive": "Archiv",
+    "aiEditorial": "Redakční systém AI",
+    "disclosure": "Zveřejnění",
+    "privacy": "Soukromí",
+    "terms": "Podmínky",
+    "status": "Stav"
   },
   "el": {
     "news": "Ειδήσεις",
@@ -520,7 +639,14 @@ const C={
     "marketplace": "Αγορά",
     "aboutBp": "Σχετικά με το BuildPulse",
     "contribute": "Συνεισφορά",
-    "advertise": "Διαφήμιση"
+    "advertise": "Διαφήμιση",
+    "home": "Αρχική",
+    "archive": "Αρχείο",
+    "aiEditorial": "Σύστημα σύνταξης AI",
+    "disclosure": "Γνωστοποιήσεις",
+    "privacy": "Απόρρητο",
+    "terms": "Όροι",
+    "status": "Κατάσταση"
   },
   "bg": {
     "news": "Новини",
@@ -549,7 +675,14 @@ const C={
     "marketplace": "Пазар",
     "aboutBp": "За BuildPulse",
     "contribute": "Допринасяй",
-    "advertise": "Реклама"
+    "advertise": "Реклама",
+    "home": "Начало",
+    "archive": "Архив",
+    "aiEditorial": "AI редакционна система",
+    "disclosure": "Оповестяване",
+    "privacy": "Поверителност",
+    "terms": "Условия",
+    "status": "Статус"
   },
   "uk": {
     "news": "Новини",
@@ -578,7 +711,14 @@ const C={
     "marketplace": "Маркетплейс",
     "aboutBp": "Про BuildPulse",
     "contribute": "Долучитися",
-    "advertise": "Реклама"
+    "advertise": "Реклама",
+    "home": "Головна",
+    "archive": "Архів",
+    "aiEditorial": "Редакційна система ШІ",
+    "disclosure": "Розкриття інформації",
+    "privacy": "Конфіденційність",
+    "terms": "Умови",
+    "status": "Статус"
   },
   "zh": {
     "news": "新闻",
@@ -607,7 +747,14 @@ const C={
     "marketplace": "市场",
     "aboutBp": "关于 BuildPulse",
     "contribute": "投稿",
-    "advertise": "广告"
+    "advertise": "广告",
+    "home": "首页",
+    "archive": "归档",
+    "aiEditorial": "AI 编辑系统",
+    "disclosure": "披露",
+    "privacy": "隐私",
+    "terms": "条款",
+    "status": "状态"
   },
   "ja": {
     "news": "ニュース",
@@ -636,7 +783,14 @@ const C={
     "marketplace": "マーケット",
     "aboutBp": "BuildPulseについて",
     "contribute": "投稿",
-    "advertise": "広告"
+    "advertise": "広告",
+    "home": "ホーム",
+    "archive": "アーカイブ",
+    "aiEditorial": "AI編集システム",
+    "disclosure": "開示",
+    "privacy": "プライバシー",
+    "terms": "利用規約",
+    "status": "ステータス"
   },
   "ko": {
     "news": "뉴스",
@@ -665,7 +819,14 @@ const C={
     "marketplace": "마켓플레이스",
     "aboutBp": "BuildPulse 소개",
     "contribute": "기고",
-    "advertise": "광고"
+    "advertise": "광고",
+    "home": "홈",
+    "archive": "아카이브",
+    "aiEditorial": "AI 편집 시스템",
+    "disclosure": "공개",
+    "privacy": "개인정보 보호",
+    "terms": "약관",
+    "status": "상태"
   },
   "ar": {
     "news": "الأخبار",
@@ -694,7 +855,14 @@ const C={
     "marketplace": "السوق",
     "aboutBp": "حول BuildPulse",
     "contribute": "ساهم",
-    "advertise": "أعلن"
+    "advertise": "أعلن",
+    "home": "الرئيسية",
+    "archive": "الأرشيف",
+    "aiEditorial": "نظام التحرير بالذكاء الاصطناعي",
+    "disclosure": "الإفصاح",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "status": "الحالة"
   },
   "hi": {
     "news": "समाचार",
@@ -723,7 +891,14 @@ const C={
     "marketplace": "मार्केटप्लेस",
     "aboutBp": "BuildPulse के बारे में",
     "contribute": "योगदान दें",
-    "advertise": "विज्ञापन"
+    "advertise": "विज्ञापन",
+    "home": "होम",
+    "archive": "अभिलेख",
+    "aiEditorial": "AI संपादकीय प्रणाली",
+    "disclosure": "प्रकटीकरण",
+    "privacy": "गोपनीयता",
+    "terms": "शर्तें",
+    "status": "स्थिति"
   }
 } as const;
 export function uiCopy(locale:string){return C[(locale in C?locale:"en") as UiLocale]}
