@@ -17,6 +17,8 @@ export default async function FinancePage(){
  const periods:any[]=periodsResult.data??[];
  const registrationsResult=await db.from("buildpulse_tax_registrations").select("id,jurisdiction,tax_type,status").order("jurisdiction");
  const registrations:any[]=registrationsResult.data??[];
+ const foreignPaidResult=entity?.base_currency?await db.from("buildpulse_accounting_documents").select("id",{count:"exact",head:true}).eq("status","paid").neq("currency",entity.base_currency):({count:null,error:new Error("base_currency_unavailable")} as const);
+ const unresolvedTaxResult=await db.from("buildpulse_accounting_documents").select("id",{count:"exact",head:true}).eq("status","paid").or("immutable_snapshot->automatic_tax->>enabled.is.null,immutable_snapshot->automatic_tax->>enabled.neq.true");
  const cryptoResult=await db.from("buildpulse_crypto_accounting_evidence").select("id",{count:"exact",head:true}).eq("tax_status","pending_determination");
  const reconciliationResult=await db.from("buildpulse_finance_reconciliation_queue").select("document_id,document_number,currency,gross_amount,reconciliation_state,item_type,reference_number",{count:"exact"}).neq("reconciliation_state","ok").limit(500);
  const cryptoTaxPendingCount=cryptoResult.count??0;
@@ -24,16 +26,17 @@ export default async function FinancePage(){
  const reconciliation:any[]=reconciliationResult.data??[];
  const reconciliationUnavailable=Boolean(reconciliationResult.error);
  const reconciliationExceptionCount=reconciliationResult.count??0;
- const foreignPaid=docs.filter(d=>d.status==="paid"&&entity?.base_currency&&d.currency!==entity.base_currency);
- const unresolvedTax=docs.filter(d=>d.status==="paid"&&!d.immutable_snapshot?.automatic_tax?.enabled);
- const closeReady=!reconciliationUnavailable&&!cryptoTaxUnavailable&&foreignPaid.length===0&&unresolvedTax.length===0&&cryptoTaxPendingCount===0&&reconciliationExceptionCount===0;
+ const foreignPaidCount=foreignPaidResult.count??0;
+ const unresolvedTaxCount=unresolvedTaxResult.count??0;
+ const financeEvidenceUnavailable=Boolean(foreignPaidResult.error||unresolvedTaxResult.error);
+ const closeReady=!financeEvidenceUnavailable&&!reconciliationUnavailable&&!cryptoTaxUnavailable&&foreignPaidCount===0&&unresolvedTaxCount===0&&cryptoTaxPendingCount===0&&reconciliationExceptionCount===0;
  return <main className="min-h-screen bg-[#f3f5f4] text-slate-950"><div className="mx-auto max-w-[1400px] px-5 py-8">
   <header className="flex flex-wrap items-end justify-between gap-4 border-b border-slate-300 pb-6"><div><p className="text-xs font-black uppercase tracking-[.22em] text-[#0b6b63]">BuildPulse Finance</p><h1 className="mt-2 text-4xl font-black">Accounting & close control</h1><p className="mt-2 text-sm text-slate-500">{entity?.legal_name||"Accounting entity"} · {entity?.company_number||"—"} · {entity?.base_currency||"—"}</p></div><div className="flex flex-wrap gap-2"><a href="/api/workforce/finance/export?from=2026-01-01&to=2026-12-31" className="rounded-full border bg-white px-5 py-3 text-sm font-bold">Export 2026 journal CSV</a><Link href="/workforce/control" className="rounded-full border bg-white px-5 py-3 text-sm font-bold">Control Plane</Link></div></header>
   <section className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5">{[
-   {label:"Paid FX pending",value:foreignPaid.length},
-   {label:"Tax evidence pending",value:unresolvedTax.length},
+   {label:"Paid FX pending",value:foreignPaidResult.error?"Unavailable":foreignPaidCount},
+   {label:"Tax evidence pending",value:unresolvedTaxResult.error?"Unavailable":unresolvedTaxCount},
    {label:"Crypto tax pending",value:cryptoTaxUnavailable?"Unavailable":cryptoTaxPendingCount},
-   {label:"Reconciliation exceptions",value:reconciliationUnavailable?"Unavailable":reconciliation.length},
+   {label:"Reconciliation exceptions",value:reconciliationUnavailable?"Unavailable":reconciliationExceptionCount},
    {label:"Close gate",value:closeReady?"Ready":"Blocked"}
   ].map(card=><div key={card.label} className="rounded-2xl border bg-white p-5"><p className="text-xs font-black uppercase text-slate-500">{card.label}</p><p className="mt-2 text-2xl font-black">{card.value}</p></div>)}</section>
   {!closeReady&&<div className="mt-6 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-sm leading-6"><b>Close remains fail-closed.</b> Foreign-currency, tax, crypto-tax or reconciliation evidence must be resolved before closing a period. If reconciliation or crypto-tax evidence cannot be queried, closing is blocked. BuildPulse does not infer registrations or FX rates.</div>}
