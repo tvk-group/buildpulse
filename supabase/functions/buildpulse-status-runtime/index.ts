@@ -11,7 +11,7 @@ Deno.serve(async(req:Request)=>{
     if(!url||!service)return reply({ok:false,error:"service_not_configured"},503);
     const admin=createClient(url,service,{auth:{persistSession:false,autoRefreshToken:false}});
     const [
-      sources,healthy,stories,verified,pending,subscribers,editions,published,sent,ads,stripeLinks,jobs,mailSetting
+      sources,healthy,stories,verified,pending,subscribers,editions,published,sent,ads,stripeLinks,jobs,mailSetting,dueApproved,reconcileDispatch
     ]=await Promise.all([
       admin.from("buildpulse_sources").select("id",{head:true,count:"exact"}).eq("enabled",true),
       admin.from("buildpulse_sources").select("id",{head:true,count:"exact"}).eq("enabled",true).eq("last_fetch_status","ok"),
@@ -25,7 +25,9 @@ Deno.serve(async(req:Request)=>{
       admin.from("buildpulse_ad_orders").select("id",{head:true,count:"exact"}).in("status",["scheduled","active"]),
       admin.from("buildpulse_ad_products").select("id",{head:true,count:"exact"}).eq("active",true).not("stripe_payment_link_id","is",null).not("stripe_payment_link_url","is",null),
       admin.from("buildpulse_job_runs").select("job_name,status,started_at,finished_at,error,metrics").order("started_at",{ascending:false}).limit(60),
-      admin.from("buildpulse_private_settings").select("value").eq("key","resend_domain_status").maybeSingle()
+      admin.from("buildpulse_private_settings").select("value").eq("key","resend_domain_status").maybeSingle(),
+      admin.from("buildpulse_editions").select("id",{head:true,count:"exact"}).eq("status","scheduled").eq("founder_review_status","approved").not("founder_approved_revision","is",null).is("brevo_campaign_id",null).lte("scheduled_at",new Date().toISOString()),
+      admin.from("buildpulse_editions").select("id",{head:true,count:"exact"}).eq("brevo_dispatch_state","reconciliation_required")
     ]);
     const latest:any={};
     for(const job of jobs.data??[])if(!latest[job.job_name])latest[job.job_name]=job;
@@ -33,12 +35,14 @@ Deno.serve(async(req:Request)=>{
       enabledSources:sources.count??0,healthySources:healthy.count??0,stories:stories.count??0,
       verifiedStories:verified.count??0,pendingStories:pending.count??0,activeSubscribers:subscribers.count??0,
       editions:editions.count??0,publishedEditions:published.count??0,sentEditions:sent.count??0,
-      scheduledOrActiveAds:ads.count??0,stripePaymentLinks:stripeLinks.count??0
+      scheduledOrActiveAds:ads.count??0,stripePaymentLinks:stripeLinks.count??0,dueApprovedEditions:dueApproved.count??0,dispatchReconciliationRequired:reconcileDispatch.count??0
     };
     const sourceHealth=counts.enabledSources>0&&counts.enabledSources===counts.healthySources;
     const ingestion=latest["ingest-supabase-fallback"]??latest.ingest??null;
     const ingestFresh=Boolean(ingestion?.status==="ok"&&Date.now()-Date.parse(ingestion.started_at)<2.5*3600000);
     const mailDomainStatus=mailSetting.data?.value??"not_configured";
+    const approvedDispatch=latest["approved-edition-dispatch-supabase"]??null;
+    const technologyEditorial=latest["technology-editorial-supabase"]??null;
     const cryptoRails=[
       Deno.env.get("BUILDPULSE_ETH_ADDRESS")?.trim()?{asset:"ETH",network:"Ethereum"}:null,
       Deno.env.get("BUILDPULSE_ETH_BASE_ADDRESS")?.trim()?{asset:"ETH",network:"Base"}:null,
@@ -63,10 +67,13 @@ Deno.serve(async(req:Request)=>{
         stripeInventory:counts.stripePaymentLinks>=7,
         mailDomainVerified:mailDomainStatus==="verified",
         editorialInventory:counts.verifiedStories>0,
-        audienceInventory:counts.activeSubscribers>0
+        audienceInventory:counts.activeSubscribers>0,
+        approvedEditionDispatchSafe:counts.dispatchReconciliationRequired===0,
+        technologyEditorialSourceGate:Boolean(technologyEditorial?.status==="ok")
       },
-      mail:{provider:"resend",domain:"buildpulse.news",domainStatus:mailDomainStatus,deliveryEnabled:mailDomainStatus==="verified"},
-      scheduler:{ingestion,webPublication:"database-cron-every-5m",adActivation:"database-cron-every-5m"},
+      mail:{domain:"buildpulse.news",domainStatus:mailDomainStatus,deliveryEnabled:mailDomainStatus==="verified",transactionalProvider:"resend",campaignProvider:"brevo",campaignDispatchEnabled:mailDomainStatus==="verified"},
+      editionDispatch:{latest:approvedDispatch,dueApproved:counts.dueApprovedEditions,reconciliationRequired:counts.dispatchReconciliationRequired,failClosed:mailDomainStatus!=="verified"},
+      scheduler:{ingestion,approvedEditionDispatch:approvedDispatch,technologyEditorial,webPublication:"database-cron-every-5m",adActivation:"database-cron-every-5m"},
       architecture:{
         ingestion:latest["ingest-supabase-fallback"]?"supabase-pg-cron-edge-hourly-fallback":"vercel-hourly",
         editorialReview:"supabase-edge",
@@ -75,7 +82,7 @@ Deno.serve(async(req:Request)=>{
         publicContent:"supabase-edge",
         advertisingPayments:"stripe-payment-links-plus-supabase-edge",
         advertisingActivation:"postgres-cron",
-        emailDelivery:"gated-by-dedicated-domain-verification"
+        emailDelivery:"resend-transactional-plus-brevo-campaigns-gated-by-dedicated-domain-verification"
       }
     });
   }catch(error){
