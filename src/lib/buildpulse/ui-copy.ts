@@ -976,4 +976,4 @@ const C={
     "closeNav": "नेविगेशन बंद करें"
   }
 } as const;
-export function uiCopy(locale:string){return C[(locale in C?locale:"en") as UiLocale]}
+export const UI_LOCALES=Object.freeze(Object.keys(C) as UiLocale[]);\nexport function uiCopy(locale:string){return C[(locale in C?locale:"en") as UiLocale]}
