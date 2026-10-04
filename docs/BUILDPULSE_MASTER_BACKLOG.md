@@ -205,3 +205,8 @@
 - [ ] /workforce/accept metadata hardening committed (dedicated noindex layout); production verification pending READY head.
 - [ ] Founder review routes and advertiser invoice privacy hardening committed; production verification pending READY head.
 - [ ] Dynamic content route production smoke remains blocked by absence of real published edition, contributor and technology records; do not fabricate IDs or mark these content routes healthy without a published fixture/record.
+
+- [x] Canonical scheduler verified: Supabase pg_cron job buildpulse-agents-db invokes buildpulse-agents-scheduled every 15 minutes with a private scheduler secret; Page Completion schedule is enabled and last completed successfully. Duplicate Vercel agent cron was removed to prevent competing schedulers.
+- [x] Canonical Supabase agent worker upgraded to Edge Function v6: Page Completion Agent atomically claims one route work item, uses only bounded finding evidence, creates an approval-gated proposal, and records completion/failure through the route-work lifecycle. No auto-deploy or privileged mutation.
+- [x] Safe readiness observability committed: readiness endpoint reports booleans for server admin, cron, NVIDIA and combined privileged automation readiness without exposing credential values.
+- [x] Protected-route production pass: workforce invitation, founder review/approval and advertiser invoice surfaces verified noindex; invoice unauthenticated access resolves to Secure Sign In. Nested protected page title duplication corrected and awaiting latest deployment verification.
