@@ -32,7 +32,7 @@ export function BuildPulseSiteHeader(){
      </div>)}
     </nav>
     <Link href="/subscriptions" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">{t.subscriptions}</Link><Link href="/build-with-ai" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">{t.buildAi}</Link><Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 md:block">{t.account}</Link><label className="sr-only" htmlFor="bp-language">{t.language}</label>
-    <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-black/20 bg-transparent px-2 py-2 text-xs font-bold sm:block" aria-label="Language">
+    <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-black/20 bg-transparent px-2 py-2 text-xs font-bold sm:block" aria-label={t.language}>
      {langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}
     </select>
     <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full border border-black/20 lg:hidden" aria-expanded={open} aria-controls="bp-mobile-nav" aria-label={open?"Close navigation":"Open navigation"} onClick={()=>setOpen(v=>!v)}><span aria-hidden="true" className="text-xl leading-none">{open?"×":"☰"}</span></button>
@@ -44,7 +44,7 @@ export function BuildPulseSiteHeader(){
       <div className="grid grid-cols-2 gap-1 border-t border-black/10 p-2 sm:grid-cols-3">{g.items.map(([n,h])=><Link key={h} href={h} className={`rounded-lg px-3 py-3 text-sm font-bold ${active(h)?"bg-[#0b6b63] text-white":"hover:bg-black/5"}`}>{n}</Link>)}</div>
      </details>)}
     </nav>
-    <div className="mt-3 sm:hidden"><label className="mb-1 block text-[10px] font-black uppercase tracking-widest" htmlFor="bp-language-mobile">Language</label><select id="bp-language-mobile" value={locale} onChange={e=>choose(e.target.value)} className="w-full rounded border border-black/20 bg-transparent px-3 py-3 text-sm font-bold">{langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}</select></div>
+    <div className="mt-3 sm:hidden"><label className="mb-1 block text-[10px] font-black uppercase tracking-widest" htmlFor="bp-language-mobile">{t.language}</label><select id="bp-language-mobile" value={locale} onChange={e=>choose(e.target.value)} className="w-full rounded border border-black/20 bg-transparent px-3 py-3 text-sm font-bold">{langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}</select></div>
    </div>}
   </div>
  </header>
