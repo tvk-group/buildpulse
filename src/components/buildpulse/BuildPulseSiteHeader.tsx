@@ -35,7 +35,7 @@ export function BuildPulseSiteHeader(){
     <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-black/20 bg-transparent px-2 py-2 text-xs font-bold sm:block" aria-label={t.language}>
      {langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}
     </select>
-    <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full border border-black/20 lg:hidden" aria-expanded={open} aria-controls="bp-mobile-nav" aria-label={open?"Close navigation":"Open navigation"} onClick={()=>setOpen(v=>!v)}><span aria-hidden="true" className="text-xl leading-none">{open?"×":"☰"}</span></button>
+    <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full border border-black/20 lg:hidden" aria-expanded={open} aria-controls="bp-mobile-nav" aria-label={open?t.closeNav:t.openNav} onClick={()=>setOpen(v=>!v)}><span aria-hidden="true" className="text-xl leading-none">{open?"×":"☰"}</span></button>
    </div>
    {open&&<div id="bp-mobile-nav" className="border-t border-black/10 pb-5 pt-3 lg:hidden">
     <nav className="space-y-2" aria-label="Mobile">
