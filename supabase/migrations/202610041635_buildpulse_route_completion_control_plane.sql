@@ -72,10 +72,9 @@ on conflict(agent_id,name) do nothing;
 
 
 create or replace function public.buildpulse_queue_incomplete_routes(p_limit integer default 50)
-returns integer language plpgsql security definer set search_path=public as $$
+returns integer language plpgsql security invoker set search_path=public as $
 declare queued_count integer;
 begin
- if coalesce(auth.role(),'') <> 'service_role' then raise exception 'service_role required'; end if;
  with candidates as (
    select id,
      case when surface in ('auth','account','admin','workforce','advertiser','review') then 'auth' else 'qa' end as kind,
