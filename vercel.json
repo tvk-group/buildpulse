@@ -3,10 +3,6 @@
     {
       "path": "/api/cron/sovra-market-learning",
       "schedule": "12,42 * * * *"
-    },
-    {
-      "path": "/api/cron/buildpulse-agents",
-      "schedule": "7 * * * *"
     }
   ],
   "framework": "nextjs"
