@@ -39,7 +39,8 @@ Deno.serve(async(req:Request)=>{
     };
     const sourceHealth=counts.enabledSources>0&&counts.enabledSources===counts.healthySources;
     const ingestion=latest["ingest-supabase-fallback"]??latest.ingest??null;
-    const ingestFresh=Boolean(ingestion?.status==="ok"&&Date.now()-Date.parse(ingestion.started_at)<2.5*3600000);\n    const ingestMetrics=ingestion?.metrics??{};const ingestionMode=ingestFresh&&Number(ingestMetrics.accepted||0)===0&&Number(ingestMetrics.rejected||0)>0?"healthy_deduplicated":ingestFresh?"healthy":"stale_or_failed";
+    const ingestFresh=Boolean(ingestion?.status==="ok"&&Date.now()-Date.parse(ingestion.started_at)<2.5*3600000);
+    const ingestMetrics=ingestion?.metrics??{};const ingestionMode=ingestFresh&&Number(ingestMetrics.accepted||0)===0&&Number(ingestMetrics.rejected||0)>0?"healthy_deduplicated":ingestFresh?"healthy":"stale_or_failed";
     const mailDomainStatus=mailSetting.data?.value??"not_configured";
     const approvedDispatch=latest["approved-edition-dispatch-supabase"]??null;
     const technologyEditorial=latest["technology-editorial-supabase"]??null;
