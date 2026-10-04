@@ -17,8 +17,26 @@ export async function GET(req:NextRequest){
  const startedAt=Date.now();
  for(const s of claimed??[]){
   let status:"completed"|"failed"="completed",detail:any;
-  try{detail=await executeBuildPulseAgent(s.agent_code,s.input_template,"schedule");}
-  catch(e){status="failed";detail={error:e instanceof Error?e.message:"agent_failed"}}
+  let routeWork:any=null;
+  try{
+   let agentInput=s.input_template;
+   if(s.agent_code==="page-completion"){
+    const {data:work,error:workErr}=await (db.rpc as any)("buildpulse_claim_route_work",{p_limit:1});
+    if(workErr)throw workErr;
+    routeWork=Array.isArray(work)?work[0]:null;
+    if(!routeWork){detail={status:"idle",message:"No queued route work"};}
+    else agentInput={...s.input_template,routeWork:{id:routeWork.id,kind:routeWork.kind,priority:routeWork.priority,finding:routeWork.finding},instruction:"Audit this bounded route work item. Produce a concrete remediation proposal and verification plan. Do not deploy, publish, move money, change roles, expose secrets, weaken security, or delete data."};
+   }
+   if(!detail)detail=await executeBuildPulseAgent(s.agent_code,agentInput,"schedule");
+   if(routeWork){
+    const next=detail?.status==="failed"?"failed":"awaiting_approval";
+    await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:next,p_error:detail?.error??null});
+   }
+  }
+  catch(e){
+   status="failed";detail={error:e instanceof Error?e.message:"agent_failed"};
+   if(routeWork?.id&&routeWork?.claim_token)await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:"failed",p_error:detail.error});
+  }
   await (db.rpc as any)("buildpulse_finish_agent_schedule",{p_schedule_id:s.schedule_id,p_claim_token:s.claim_token,p_status:status});
   results.push({scheduleId:s.schedule_id,agent:s.agent_code,status,...detail});
  }
