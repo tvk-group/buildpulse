@@ -98,8 +98,8 @@
 - [x] Detect supported browser/device locale and IANA time zone.
 - [x] Persist explicit language override and set document language/direction.
 - [x] Capture subscriber locale/time zone.
-- [ ] Move every UI string into locale dictionaries.
-- [ ] Complete translations for all supported navigation languages; no fake translated UI.
+- [ ] Move every UI string into locale dictionaries. The shared site header/footer navigation, language controls and footer tagline now use one 25-language dictionary; remaining page/body/workflow strings are still being migrated.
+- [ ] Complete translations for all supported navigation languages; no fake translated UI. Core desktop/mobile header and footer navigation now has explicit copy for all 25 supported languages rather than silently falling back to English; broader surfaces remain incomplete.
 - [x] Add source-grounded AI story-localization draft pipeline and audited approve/reject workflow.
 - [ ] Localize SEO metadata, transactional email, notifications and legally appropriate invoice text.
 - [ ] Local currency/date/time/number formatting and time-zone aware scheduling. Locale-aware date, number and currency primitives now respect the persisted BuildPulse locale and IANA time zone; the authenticated account portal and advertiser campaign/payment portal use them for customer-facing dates, monetary values and metrics. Broader surface coverage and recipient-time-zone-aware outbound scheduling remain open.
