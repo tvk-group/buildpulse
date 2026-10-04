@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {getSupabasePublicConfig} from "@/lib/supabase/env";
+import {LocalizedDate} from "@/components/buildpulse/LocalizedValue";
 
 export const dynamic="force-dynamic";
 export const metadata={title:"System Status",description:"BuildPulse production system status.",robots:{index:false,follow:false},alternates:{canonical:"/status"}};
@@ -49,7 +50,7 @@ export default async function Status(){
     <p className="mt-5 max-w-3xl leading-7 text-slate-300">Live system state from the production database and Edge control plane. Web publication, card payments, crypto settlement and email delivery are tracked separately so external mail verification cannot mask healthy platform components.</p>
     <div className="mt-10 grid gap-4 md:grid-cols-2">{stages.map(([name,value])=><div key={name} className="rounded-2xl border border-slate-700 bg-slate-900 p-6"><p className="text-xs font-bold uppercase tracking-widest text-slate-400">{name}</p><p className="mt-2 text-2xl font-black">{value}</p></div>)}</div>
     <section className="mt-10 rounded-2xl border border-slate-700 bg-slate-900 p-6"><p className="text-xs font-black uppercase tracking-widest text-slate-400">Schedulers</p><div className="mt-5 grid gap-3">
-      <div className="flex flex-col justify-between gap-2 border-b border-slate-800 pb-3 md:flex-row"><span className="font-bold">Ingestion</span><span className={ingest?.status==="ok"?"text-emerald-300":"text-slate-400"}>{ingest?(ingest.status+" · "+new Date(ingest.started_at).toLocaleString("en-GB",{timeZone:"UTC"})+" UTC"):"Awaiting recorded run"}</span></div>
+      <div className="flex flex-col justify-between gap-2 border-b border-slate-800 pb-3 md:flex-row"><span className="font-bold">Ingestion</span><span className={ingest?.status==="ok"?"text-emerald-300":"text-slate-400"}>{ingest?<>{ingest.status+" · "}<LocalizedDate value={ingest.started_at}/></>:"Awaiting recorded run"}</span></div>
       <div className="flex flex-col justify-between gap-2 border-b border-slate-800 pb-3 md:flex-row"><span className="font-bold">Web publication</span><span className="text-emerald-300">{data?.scheduler?.webPublication??"database cron"}</span></div>
       <div className="flex flex-col justify-between gap-2 md:flex-row"><span className="font-bold">Ad activation</span><span className="text-emerald-300">{data?.scheduler?.adActivation??"database cron"}</span></div>
     </div></section>
