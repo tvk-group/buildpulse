@@ -27,7 +27,6 @@ export default async function FinancePage(){
  const reconciliation:any[]=reconciliationResult.data??[];
  const reconciliationUnavailable=Boolean(reconciliationResult.error);
  const reconciliationExceptionCount=reconciliationResult.count??0;
- const reconciliationExceptionCount=reconciliationResult.count??0;
  const foreignPaidCount=foreignPaidResult.count??0;
  const unresolvedTaxCount=unresolvedTaxResult.count??0;
  const financeEvidenceUnavailable=Boolean(foreignPaidResult.error||unresolvedTaxResult.error);
