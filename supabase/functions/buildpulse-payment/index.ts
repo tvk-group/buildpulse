@@ -167,8 +167,8 @@ async function verifyContributorClaim(admin:any,user:any,submissionId:string,txH
   if(qe||!quote)throw new Error("payment_quote_not_found");
   const asset=String(quote.asset).toUpperCase() as Asset,rail=railFor(asset,String(quote.network));
   if(normalizeAddress(rail.destination)!==normalizeAddress(String(quote.destination)))throw new Error("payment_destination_mismatch");
-  if(asset==="ETH"||asset==="USDC"||asset==="USDT"){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
-  let verified;if(asset==="ETH"||asset==="USDC"||asset==="USDT")verified=await verifyEvm(asset,rail,quote,txHash);else if(asset==="BTC")verified=await verifyBitcoin(rail,txHash);else verified=await verifyXrp(rail,txHash);
+  if(asset==="ETH"||asset==="USDC"||asset==="USDT"||asset==="BNB"||asset==="POL"||asset==="AVAX"){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
+  let verified;if(asset==="ETH"||asset==="USDC"||asset==="USDT"||asset==="BNB"||asset==="POL"||asset==="AVAX")verified=await verifyEvm(asset,rail,quote,txHash);else if(asset==="BTC")verified=await verifyBitcoin(rail,txHash);else verified=await verifyXrp(rail,txHash);
   if(verified.actual<decimalToAtomic(quote.expected_amount,rail.decimals))throw new Error("payment_underpaid");
   if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,quote.quoted_at,quote.expires_at))throw new Error("transaction_outside_quote_window");
   if(verified.state!=="confirmed"){await admin.from("buildpulse_contributor_payment_quotes").update({state:"observed"}).eq("id",quote.id).eq("state","open");return {state:"confirming",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
@@ -198,8 +198,8 @@ async function verifySubscriptionClaim(admin:any,user:any,paymentId:string,txHas
   if(error||!payment)throw new Error("payment_not_found");if(!["open","observed","confirmed"].includes(payment.state))throw new Error("payment_not_verifiable");
   const asset=String(payment.asset).toUpperCase() as Asset,rail=railFor(asset,String(payment.network));
   if(normalizeAddress(rail.destination)!==normalizeAddress(String(payment.destination)))throw new Error("payment_destination_mismatch");
-  if(asset==="ETH"||asset==="USDC"||asset==="USDT"){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
-  let verified;if(asset==="ETH"||asset==="USDC"||asset==="USDT")verified=await verifyEvm(asset,rail,payment,txHash);else if(asset==="BTC")verified=await verifyBitcoin(rail,txHash);else verified=await verifyXrp(rail,txHash);
+  if(asset==="ETH"||asset==="USDC"||asset==="USDT"||asset==="BNB"||asset==="POL"||asset==="AVAX"){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
+  let verified;if(asset==="ETH"||asset==="USDC"||asset==="USDT"||asset==="BNB"||asset==="POL"||asset==="AVAX")verified=await verifyEvm(asset,rail,payment,txHash);else if(asset==="BTC")verified=await verifyBitcoin(rail,txHash);else verified=await verifyXrp(rail,txHash);
   if(verified.actual<decimalToAtomic(payment.expected_amount,rail.decimals))throw new Error("payment_underpaid");
   if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,payment.quoted_at,payment.expires_at))throw new Error("transaction_outside_quote_window");
   if(verified.state!=="confirmed"){await admin.from("buildpulse_subscription_crypto_payments").update({state:"observed",tx_hash:txHash}).eq("id",payment.id).eq("state","open");return {state:"confirming",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
@@ -245,9 +245,13 @@ async function prepareStripe(admin:any,user:any,orderId:string){
 }
 
 async function verifyEvm(asset:Asset,rail:Rail,quote:any,txHash:string){
-  const isBase=rail.network==="Base";
-  const rpc=(isBase?optionalEnv("BUILDPULSE_BASE_RPC_URL"):optionalEnv("BUILDPULSE_ETH_RPC_URL"))
-    ??(isBase?"https://base-rpc.publicnode.com":"https://ethereum-rpc.publicnode.com");
+  const rpc=rail.network==="Base"?(optionalEnv("BUILDPULSE_BASE_RPC_URL")??"https://base-rpc.publicnode.com")
+    :rail.network==="Ethereum"?(optionalEnv("BUILDPULSE_ETH_RPC_URL")??"https://ethereum-rpc.publicnode.com")
+    :rail.network==="BNB Chain"?optionalEnv("BUILDPULSE_BNB_RPC_URL")
+    :rail.network==="Polygon"?optionalEnv("BUILDPULSE_POL_RPC_URL")
+    :rail.network==="Avalanche C-Chain"?optionalEnv("BUILDPULSE_AVAX_RPC_URL")
+    :undefined;
+  if(!rpc)throw new Error("evm_rpc_not_configured");
   const receipt=await evmRpc(rpc,"eth_getTransactionReceipt",[txHash]);
   if(!receipt)return {state:"pending",confirmations:0,actual:0n,txTimeMs:0};
   if(receipt.status!=="0x1")throw new Error("transaction_failed");
@@ -260,7 +264,7 @@ async function verifyEvm(asset:Asset,rail:Rail,quote:any,txHash:string){
   const blockNo=BigInt(blockHex),head=BigInt(headHex),confirmations=Number(head>=blockNo?head-blockNo+1n:0n);
   const txTimeMs=Number(BigInt(block?.timestamp||"0x0"))*1000;
   let actual=0n;
-  if(asset==="ETH"){
+  if(!rail.tokenContract){
     const tx=await evmRpc(rpc,"eth_getTransactionByHash",[txHash]);
     if(!tx)throw new Error("transaction_not_found");
     if(normalizeAddress(tx.to)!==normalizeAddress(rail.destination))throw new Error("destination_mismatch");
@@ -324,7 +328,7 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
   const rail=railFor(asset,String(quote.network));
   if(normalizeAddress(rail.destination)!==normalizeAddress(String(quote.destination)))throw new Error("payment_destination_mismatch");
 
-  if(asset==="ETH"||asset==="USDC"||asset==="USDT"){
+  if(asset==="ETH"||asset==="USDC"||asset==="USDT"||asset==="BNB"||asset==="POL"||asset==="AVAX"){
     if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
   }else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
 
@@ -336,7 +340,7 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
   }
 
   let verified;
-  if(asset==="ETH"||asset==="USDC"||asset==="USDT")verified=await verifyEvm(asset,rail,quote,txHash);
+  if(asset==="ETH"||asset==="USDC"||asset==="USDT"||asset==="BNB"||asset==="POL"||asset==="AVAX")verified=await verifyEvm(asset,rail,quote,txHash);
   else if(asset==="BTC")verified=await verifyBitcoin(rail,txHash);
   else verified=await verifyXrp(rail,txHash);
 
