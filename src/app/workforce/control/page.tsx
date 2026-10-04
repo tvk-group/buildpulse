@@ -50,7 +50,7 @@ export default async function ControlPlane(){
   db.from("buildpulse_consent_events").select("id",{head:true,count:"exact"}).gte("created_at",since),
   db.from("buildpulse_social_posts").select("id",{head:true,count:"exact"}).gte("created_at",since),
   db.from("buildpulse_marketplace_listings").select("id",{head:true,count:"exact"}).gte("created_at",since),
-  db.from("buildpulse_affiliate_clicks").select("id",{head:true,count:"exact"}).gte("created_at",since)
+  db.from("buildpulse_affiliate_clicks").select("id",{head:true,count:"exact"}).gte("clicked_at",since)
  ]);
  const {data:financeExceptions,error:financeReconciliationError}=await db.from("buildpulse_finance_reconciliation_queue").select("reference_number,item_type,reconciliation_state,currency,gross_amount").neq("reconciliation_state","ok").limit(20);
  const evalRows=evaluationRuns??[],evalPassed=evalRows.filter((x:any)=>x.passed).length,evalFailed=evalRows.filter((x:any)=>!x.passed).length;
