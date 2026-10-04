@@ -72,7 +72,7 @@ on conflict(agent_id,name) do nothing;
 
 
 create or replace function public.buildpulse_queue_incomplete_routes(p_limit integer default 50)
-returns integer language plpgsql security invoker set search_path=public as $
+returns integer language plpgsql security invoker set search_path=public as $route_queue$
 declare queued_count integer;
 begin
  with candidates as (
@@ -92,6 +92,6 @@ begin
  )
  select count(*) into queued_count from inserted;
  return queued_count;
-end $$;
+end $route_queue$;
 revoke all on function public.buildpulse_queue_incomplete_routes(integer) from public,anon,authenticated;
 grant execute on function public.buildpulse_queue_incomplete_routes(integer) to service_role;
