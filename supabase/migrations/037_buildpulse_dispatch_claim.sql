@@ -4,7 +4,7 @@ ALTER TABLE buildpulse_editions ADD COLUMN IF NOT EXISTS dispatch_claimed_at TIM
 CREATE OR REPLACE FUNCTION buildpulse_claim_dispatch(p_edition_id UUID,p_revision INTEGER,p_token UUID)
 RETURNS BOOLEAN LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 BEGIN
- UPDATE buildpulse_editions SET dispatch_claim_token=p_token,dispatch_claimed_at=NOW(),brevo_dispatch_state='campaign_created',updated_at=NOW()
+ UPDATE buildpulse_editions SET dispatch_claim_token=p_token,dispatch_claimed_at=NOW(),brevo_dispatch_state='claimed',brevo_dispatch_error=NULL,updated_at=NOW()
  WHERE id=p_edition_id AND revision_number=p_revision AND founder_review_status='approved' AND founder_approved_revision=p_revision AND status IN ('approved','scheduled') AND brevo_campaign_id IS NULL AND dispatch_claim_token IS NULL;
  RETURN FOUND;
 END $$;
