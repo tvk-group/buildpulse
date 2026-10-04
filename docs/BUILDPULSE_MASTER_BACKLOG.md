@@ -198,3 +198,10 @@
 - [x] Public-route metadata pass: arts contribution now has dedicated metadata/canonical; marketplace seller submission is explicitly noindex/nofollow; contributor article canonical/correction URLs now use the canonical BuildPulse public-origin helper.
 - [x] Production route evidence advanced: 33 route QA work items completed; 34 remained queued at this checkpoint (22 auth/high-risk + 12 QA). Live canonical host returned 200 for sports, status, subscriptions, arts contribution, marketplace seller, auth, and the unauthenticated workforce-control auth gate.
 - [x] Vercel runtime error scan: no runtime errors reported in the last hour at this checkpoint.
+
+- [x] Production-verified admin access/SEO hardening: all six /admin control routes return Secure Sign In to unauthenticated users and noindex/nofollow; route ledger evidence recorded.
+- [x] Durable route-work consumer lifecycle applied live: atomic SKIP LOCKED claim RPC, bounded claims, claim tokens, attempts and guarded finish states; Page Completion Agent scheduler consumes one bounded work item and routes successful proposals to approval instead of auto-deploying.
+- [x] Auth-route evidence advanced: account, MFA and six protected workforce control surfaces production-verified with secure sign-in/noindex behavior; evidence-backed items closed in route ledger.
+- [ ] /workforce/accept metadata hardening committed (dedicated noindex layout); production verification pending READY head.
+- [ ] Founder review routes and advertiser invoice privacy hardening committed; production verification pending READY head.
+- [ ] Dynamic content route production smoke remains blocked by absence of real published edition, contributor and technology records; do not fabricate IDs or mark these content routes healthy without a published fixture/record.
