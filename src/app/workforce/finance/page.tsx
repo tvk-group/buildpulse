@@ -18,14 +18,15 @@ export default async function FinancePage(){
  const registrationsResult=await db.from("buildpulse_tax_registrations").select("id,jurisdiction,tax_type,status").order("jurisdiction");
  const registrations:any[]=registrationsResult.data??[];
  const cryptoResult=await db.from("buildpulse_crypto_accounting_evidence").select("id",{count:"exact",head:true}).eq("tax_status","pending_determination");
- const reconciliationResult=await db.from("buildpulse_finance_reconciliation_queue").select("document_id,document_number,currency,gross_amount,reconciliation_state,item_type,reference_number").neq("reconciliation_state","ok").limit(500);
+ const reconciliationResult=await db.from("buildpulse_finance_reconciliation_queue").select("document_id,document_number,currency,gross_amount,reconciliation_state,item_type,reference_number",{count:"exact"}).neq("reconciliation_state","ok").limit(500);
  const cryptoTaxPendingCount=cryptoResult.count??0;
  const cryptoTaxUnavailable=Boolean(cryptoResult.error);
  const reconciliation:any[]=reconciliationResult.data??[];
  const reconciliationUnavailable=Boolean(reconciliationResult.error);
+ const reconciliationExceptionCount=reconciliationResult.count??0;
  const foreignPaid=docs.filter(d=>d.status==="paid"&&entity?.base_currency&&d.currency!==entity.base_currency);
  const unresolvedTax=docs.filter(d=>d.status==="paid"&&!d.immutable_snapshot?.automatic_tax?.enabled);
- const closeReady=!reconciliationUnavailable&&!cryptoTaxUnavailable&&foreignPaid.length===0&&unresolvedTax.length===0&&cryptoTaxPendingCount===0&&reconciliation.length===0;
+ const closeReady=!reconciliationUnavailable&&!cryptoTaxUnavailable&&foreignPaid.length===0&&unresolvedTax.length===0&&cryptoTaxPendingCount===0&&reconciliationExceptionCount===0;
  return <main className="min-h-screen bg-[#f3f5f4] text-slate-950"><div className="mx-auto max-w-[1400px] px-5 py-8">
   <header className="flex flex-wrap items-end justify-between gap-4 border-b border-slate-300 pb-6"><div><p className="text-xs font-black uppercase tracking-[.22em] text-[#0b6b63]">BuildPulse Finance</p><h1 className="mt-2 text-4xl font-black">Accounting & close control</h1><p className="mt-2 text-sm text-slate-500">{entity?.legal_name||"Accounting entity"} · {entity?.company_number||"—"} · {entity?.base_currency||"—"}</p></div><div className="flex flex-wrap gap-2"><a href="/api/workforce/finance/export?from=2026-01-01&to=2026-12-31" className="rounded-full border bg-white px-5 py-3 text-sm font-bold">Export 2026 journal CSV</a><Link href="/workforce/control" className="rounded-full border bg-white px-5 py-3 text-sm font-bold">Control Plane</Link></div></header>
   <section className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5">{[
