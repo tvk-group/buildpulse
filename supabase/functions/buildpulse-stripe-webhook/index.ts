@@ -8,6 +8,17 @@ const ISSUER={
 };
 const headers={"Content-Type":"application/json"};
 function reply(body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers})}
+async function notifyOrderUser(admin:any,orderId:string,kind:"billing"|"marketplace",title:string,body:string,dedupeKey:string){
+  try{
+    const {data:order}=await admin.from("buildpulse_ad_orders").select("user_id").eq("id",orderId).maybeSingle();
+    if(!order?.user_id)return;
+    const prefKey=kind==="billing"?"billing_enabled":"marketplace_enabled";
+    const {data:prefs}=await admin.from("buildpulse_notification_preferences").select(prefKey).eq("user_id",order.user_id).maybeSingle();
+    if(prefs?.[prefKey]===false)return;
+    const {error}=await admin.from("buildpulse_notifications").insert({user_id:order.user_id,kind,title,body:body.slice(0,500),href:"/account",metadata:{order_id:orderId},dedupe_key:dedupeKey});
+    if(error&&error.code!=="23505")console.error("[buildpulse] payment notification",error.message);
+  }catch(error){console.error("[buildpulse] payment notification",error instanceof Error?error.message:"unknown")}
+}
 async function invoiceNumber(admin:any,orderId:string,issuedAt:string){
   const {data:existing,error:existingError}=await admin.from("buildpulse_billing_invoices").select("invoice_number").eq("order_id",orderId).maybeSingle();
   if(existingError)throw new Error("invoice_lookup_failed");
@@ -111,6 +122,7 @@ async function settleCheckout(admin:any,event:any,session:any){
     }).eq("order_id",order.id)
   ]);
   const affiliate=await bindAffiliateAdConversion(admin,order.user_id,order.id,amountUsd);
+  await notifyOrderUser(admin,order.id,"billing","Payment received","Your BuildPulse advertising payment was verified and the order is now in review.",`stripe-payment:${event.id}`);
   return {settled:true,orderId,affiliate};
 }
 async function handleCheckoutFailure(admin:any,event:any,session:any){
@@ -179,6 +191,7 @@ async function handleRefund(admin:any,event:any,charge:any){
       ?admin.from("buildpulse_ad_orders").update({status:"cancelled",updated_at:now}).eq("id",orderId).in("status",["review","approved","scheduled","active"])
       :admin.from("buildpulse_ad_orders").update({status:"review",updated_at:now}).eq("id",orderId).in("status",["approved","scheduled","active"])
   ]);
+  await notifyOrderUser(admin,orderId,"billing",full?"Refund processed":"Partial refund processed",full?"Your BuildPulse advertising payment was refunded.":"A partial refund was recorded for your BuildPulse advertising order.",`stripe-refund:${event.id}`);
   return {refund:true,full,orderId,incrementalRefund,creditNoteNumber};
 }
 async function handleDispute(admin:any,event:any,dispute:any){
@@ -193,6 +206,7 @@ async function handleDispute(admin:any,event:any,dispute:any){
       admin.from("buildpulse_billing_invoices").update({status:"disputed",updated_at:now,metadata:{stripe_dispute_id:dispute.id,stripe_payment_intent:paymentIntent,dispute_status:dispute.status}}).eq("order_id",orderId),
       admin.from("buildpulse_ad_orders").update({status:"review",updated_at:now}).eq("id",orderId).in("status",["approved","scheduled","active"])
     ]);
+    await notifyOrderUser(admin,orderId,"billing","Payment dispute opened","A payment dispute was opened for your BuildPulse advertising order. The order has been returned to review.",`stripe-dispute-open:${event.id}`);
     return {disputed:true,orderId};
   }
   if(event.type==="charge.dispute.closed"){
@@ -216,6 +230,7 @@ async function handleDispute(admin:any,event:any,dispute:any){
         ?admin.from("buildpulse_ad_orders").update({status:"review",updated_at:now}).eq("id",orderId).in("status",["approved","scheduled","active"])
         :admin.from("buildpulse_ad_orders").update({status:"cancelled",updated_at:now}).eq("id",orderId).in("status",["review","approved","scheduled","active"])
     ]);
+    await notifyOrderUser(admin,orderId,"billing",won?"Payment dispute resolved":"Payment dispute closed",won?"The payment dispute for your BuildPulse advertising order was resolved in your favor.":"The payment dispute was closed and the advertising order was cancelled.",`stripe-dispute-close:${event.id}`);
     return {disputeClosed:true,won,orderId,creditNoteNumber};
   }
   return {ignored:"unsupported_dispute_event"};
