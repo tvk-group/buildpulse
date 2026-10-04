@@ -1,6 +1,8 @@
 import { ArtsSubnav } from "@/components/buildpulse/ArtsSubnav";
 import { ArtsSubmissionPortal } from "@/components/buildpulse/ArtsSubmissionPortal";
 
+export const metadata={title:"Submit Creative Work | BuildPulse",description:"Submit original art, music, design and creative work for BuildPulse editorial review.",alternates:{canonical:"/arts/contribute"}};
+
 export default function Page() {
   return (
     <main>
