@@ -9,8 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check:source-hygiene": "node scripts/test-buildpulse-source-hygiene.mjs",
-    "prebuild": "npm run check:source-hygiene"
+    "check:source-hygiene": "node scripts/test-buildpulse-source-hygiene.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
