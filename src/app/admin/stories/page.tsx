@@ -5,12 +5,13 @@ import StoryReviewActions from "@/components/buildpulse/StoryReviewActions";
 import {LocalizedDate} from "@/components/buildpulse/LocalizedValue";
 
 export const dynamic="force-dynamic";
+export const metadata={title:"Story Review | BuildPulse",description:"Restricted BuildPulse editorial review queue.",robots:{index:false,follow:false}};
 type QueueRow={id:string;title:string;summary:string|null;canonical_url:string;published_at:string|null;verification_state:string;editorial_score:number|null;source_name:string};
 
 export default async function Page({searchParams}:{searchParams:Promise<{page?:string;source?:string}>}){
   const supabase=await createClient();
   const {data:{user}}=await supabase.auth.getUser();
-  if(!user)redirect("/advertiser");
+  if(!user)redirect("/auth?next=/admin/stories");
   const params=await searchParams,source=(params.source??"").trim().slice(0,120);
   const page=Math.max(1,Number.parseInt(params.page??"1",10)||1);
   const {data,error}=await supabase.functions.invoke("buildpulse-editorial-admin",{body:{action:"queue",page,source}});
