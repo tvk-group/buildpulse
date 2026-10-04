@@ -20,7 +20,7 @@ export default async function ControlPlane(){
  if(!auth.ok)redirect(auth.reason==="mfa_required"?"/auth/mfa?next=/workforce/control":"/auth?next=/workforce/control");
  const db=createAdminClient();if(!db)throw new Error("Control plane unavailable");
  const since=new Date(Date.now()-24*3600*1000).toISOString();
- const [{data:agents},{data:runs},{data:jobs},{data:approvals},{data:localizations},{data:reports},{data:appeals},{data:newsroomCases},{data:marketplaceListings},{data:connectionReports},{data:schedules},{data:usage},{data:budgets},{data:cryptoInventory},{data:evaluationRuns},{data:auditRows},{data:incidents},{data:taxRegistrations},{data:periods},{data:mailStatus},{data:affiliateAccounts},{count:review},{count:subs},{count:ads}]=await Promise.all([
+ const [{data:agents},{data:runs},{data:jobs},{data:approvals},{data:localizations},{data:reports},{data:appeals},{data:newsroomCases},{data:marketplaceListings},{data:connectionReports},{data:schedules},{data:usage},{data:budgets},{data:cryptoInventory},{data:evaluationRuns},{data:auditRows},{data:incidents},{data:taxRegistrations},{data:periods},{data:mailStatus},{data:dispatchReconciliation},{data:dueApprovedEditions},{data:affiliateAccounts},{count:review},{count:subs},{count:ads}]=await Promise.all([
   db.from("buildpulse_agents").select("id,code,name,domain,autonomy_level,enabled,description,schedule_hint").order("domain"),
   db.from("buildpulse_agent_runs").select("id,status,summary,error,created_at,buildpulse_agents(name)").order("created_at",{ascending:false}).limit(12),
   db.from("buildpulse_job_runs").select("job_name,status,started_at,finished_at,error,metrics").order("started_at",{ascending:false}).limit(60),
@@ -41,6 +41,8 @@ export default async function ControlPlane(){
   db.from("buildpulse_tax_registrations").select("id,jurisdiction,tax_type,status").order("jurisdiction"),
   db.from("buildpulse_accounting_periods").select("id,period_start,period_end,status,closed_at").order("period_end",{ascending:false}).limit(12),
   db.from("buildpulse_private_settings").select("value").eq("key","resend_domain_status").maybeSingle(),
+  db.from("buildpulse_editions").select("id,slug,brevo_dispatch_error").eq("brevo_dispatch_state","reconciliation_required").limit(20),
+  db.from("buildpulse_editions").select("id,slug",{head:true,count:"exact"}).eq("status","scheduled").eq("founder_review_status","approved").not("founder_approved_revision","is",null).is("brevo_campaign_id",null).lte("scheduled_at",new Date().toISOString()),
   db.from("buildpulse_affiliate_accounts").select("id,user_id,code,status,commission_bps,payout_status,created_at").in("status",["pending","active","paused"]).order("created_at",{ascending:true}).limit(40),
   db.from("buildpulse_stories").select("id",{head:true,count:"exact"}).in("verification_state",["pending","needs_review"]),
   db.from("buildpulse_subscribers").select("id",{head:true,count:"exact"}).eq("status","active"),
@@ -57,7 +59,9 @@ export default async function ControlPlane(){
   ...(incidents??[]).filter((x:any)=>x.status!=="resolved").map((x:any)=>({kind:"incident",title:x.summary,detail:`${x.severity} · ${x.status}`,href:"/workforce/control"})),
   ...automationAnomalies.map((x:any)=>({kind:"automation",title:x.name,detail:`${x.kind} · ${x.detail}`,href:"/workforce/control"})),
   ...(financeReconciliationError?[{kind:"finance",title:"Finance reconciliation unavailable",detail:"Close remains blocked until reconciliation evidence is queryable.",href:"/workforce/finance"}]:(financeExceptions??[]).map((x:any)=>({kind:"finance",title:x.reference_number||"Financial document",detail:`${x.item_type} · ${String(x.reconciliation_state).replaceAll("_"," ")} · ${x.currency} ${Number(x.gross_amount).toFixed(2)}`,href:"/workforce/finance"}))),
-  ...(!mailReady?[{kind:"delivery",title:"Transactional delivery gated",detail:"Dedicated BuildPulse mail domain is not verified; outbound edition/email delivery remains disabled.",href:"/workforce/control"}]:[]),
+  ...(!mailReady?[{kind:"delivery",title:"Outbound delivery gated",detail:"Dedicated BuildPulse mail domain is not verified; Resend transactional mail and Brevo campaign dispatch remain disabled.",href:"/workforce/control"}]:[]),
+  ...((dispatchReconciliation?.length??0)>0?[{kind:"delivery",title:"Edition dispatch reconciliation required",detail:`${dispatchReconciliation?.length??0} edition dispatch(es) have an ambiguous external provider state; automatic retry is suppressed.`,href:"/workforce/control"}]:[]),
+  ...((dueApprovedEditions??0)>0&&mailReady?[{kind:"delivery",title:"Approved editions awaiting dispatch",detail:`${dueApprovedEditions??0} approved due edition(s) are waiting for the campaign dispatcher.`,href:"/workforce/control"}]:[]),
   ...((approvals?.length??0)>0?[{kind:"approval",title:"AI approvals pending",detail:`${approvals?.length??0} governed decision(s) require a person.`,href:"/workforce/control"}]:[])
  ].slice(0,30);
  const cards=[["Review queue",review??0,"/admin/stories"],["Active subscribers",subs??0,"/subscriptions"],["Ad operations",ads??0,"/admin/advertising"],["Operational alerts",operationalAlerts.length,"/workforce/control"],["Affiliate fraud","Review","/workforce/affiliate-fraud"],["Finance & close",openPeriods+" open period"+(openPeriods===1?"":"s"),"/workforce/finance"],["Workforce",auth.roles.join(", "),"/workforce"]];
