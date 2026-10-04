@@ -179,7 +179,7 @@
 - [x] Add governed Page Completion Agent on the existing AI gateway and hourly scheduler; NVIDIA NIM remains server-side and provider routing remains policy/budget/privacy controlled.
 - [x] Remove broken Sports desk links to nonexistent routes and replace the surface with the verified public-story pipeline plus fail-closed empty state.
 - [x] Expand the thin People page into a verified-source reporting surface with explicit no-fabrication empty state.
-- [ ] Seed the complete current App Router route inventory in production and attach automated health findings/work items.
+- [x] Seed the complete current App Router page inventory deterministically in code (67 current pages), synchronize it from the secured agent scheduler, classify sensitive surfaces by risk and attach a bounded/idempotent work queue for unknown/incomplete/failed routes. Production deployment evidence remains required separately.
 - [ ] Add production route crawler/browser evidence and authenticated/mobile checks before route-completion status can become healthy.
 - [ ] Extend route workers to localization, SEO metadata, accessibility and integration-specific deterministic checks; AI output remains proposal-only unless a separately coded low-risk executor exists.
 
