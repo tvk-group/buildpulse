@@ -4,7 +4,7 @@ import {createClient} from "@/lib/supabase/server";
 import AdvertisingReviewActions from "@/components/buildpulse/AdvertisingReviewActions";
 
 export const dynamic="force-dynamic";
-export const metadata={title:"BuildPulse Advertising Control",description:"Review and schedule BuildPulse advertising."};
+export const metadata={title:"BuildPulse Advertising Control",description:"Review and schedule BuildPulse advertising.",robots:{index:false,follow:false}};
 
 type Creative={id:string;mimeType:string;byteSize:number;widthPx:number|null;heightPx:number|null;sha256:string;reviewState:string;reviewNotes:string|null;createdAt:string};
 type QueueItem={id:string;status:string;headline:string|null;copyText:string|null;destinationUrl:string;amountUsd:number|string;createdAt:string;startsAt:string|null;endsAt:string|null;reviewNotes:string|null;paymentState:string|null;product:{code:string;name:string;placement:string;widthPx:number|null;heightPx:number|null;durationDays:number};advertiser:{companyName:string|null;billingEmail:string|null;websiteUrl:string|null};creatives:Creative[]};
@@ -12,7 +12,7 @@ type QueueItem={id:string;status:string;headline:string|null;copyText:string|nul
 export default async function AdvertisingAdmin(){
   const supabase=await createClient();
   const {data:{user}}=await supabase.auth.getUser();
-  if(!user)redirect("/advertiser");
+  if(!user)redirect("/auth?next=/admin/advertising");
   const {data,error}=await supabase.functions.invoke("buildpulse-ad-admin",{body:{action:"queue"}});
   if(error||!data?.ok){
     if(String(data?.error??"").includes("admin_required"))redirect("/");
