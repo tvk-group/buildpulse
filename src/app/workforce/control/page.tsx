@@ -20,7 +20,7 @@ export default async function ControlPlane(){
  if(!auth.ok)redirect(auth.reason==="mfa_required"?"/auth/mfa?next=/workforce/control":"/auth?next=/workforce/control");
  const db=createAdminClient();if(!db)throw new Error("Control plane unavailable");
  const since=new Date(Date.now()-24*3600*1000).toISOString();
- const [{data:agents},{data:runs},{data:jobs},{data:approvals},{data:localizations},{data:reports},{data:appeals},{data:newsroomCases},{data:marketplaceListings},{data:connectionReports},{data:schedules},{data:usage},{data:budgets},{data:cryptoInventory},{data:evaluationRuns},{data:auditRows},{data:incidents},{data:taxRegistrations},{data:periods},{data:mailStatus},{data:dispatchReconciliation},{data:dueApprovedEditions},{data:affiliateAccounts},{count:review},{count:subs},{count:ads}]=await Promise.all([
+ const [{data:agents},{data:runs},{data:jobs},{data:approvals},{data:localizations},{data:reports},{data:appeals},{data:newsroomCases},{data:marketplaceListings},{data:connectionReports},{data:schedules},{data:usage},{data:budgets},{data:cryptoInventory},{data:evaluationRuns},{data:auditRows},{data:incidents},{data:taxRegistrations},{data:periods},{data:mailStatus},{data:dispatchReconciliation},{count:dueApprovedEditions},{data:affiliateAccounts},{count:review},{count:subs},{count:ads}]=await Promise.all([
   db.from("buildpulse_agents").select("id,code,name,domain,autonomy_level,enabled,description,schedule_hint").order("domain"),
   db.from("buildpulse_agent_runs").select("id,status,summary,error,created_at,buildpulse_agents(name)").order("created_at",{ascending:false}).limit(12),
   db.from("buildpulse_job_runs").select("job_name,status,started_at,finished_at,error,metrics").order("started_at",{ascending:false}).limit(60),
