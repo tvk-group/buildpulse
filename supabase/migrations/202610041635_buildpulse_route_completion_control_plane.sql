@@ -69,3 +69,30 @@ select id,'hourly-route-completion','hourly',
 now()
 from public.buildpulse_agents where code='page-completion'
 on conflict(agent_id,name) do nothing;
+
+
+create or replace function public.buildpulse_queue_incomplete_routes(p_limit integer default 50)
+returns integer language plpgsql security definer set search_path=public as $$
+declare queued_count integer;
+begin
+ if coalesce(auth.role(),'') <> 'service_role' then raise exception 'service_role required'; end if;
+ with candidates as (
+   select id,
+     case when surface in ('auth','account','admin','workforce','advertiser','review') then 'auth' else 'qa' end as kind,
+     case when risk_level in ('critical','high') then 90 when risk_level='medium' then 70 else 50 end as priority,
+     jsonb_build_object('route',route,'status',last_status,'findings',findings) as finding
+   from public.buildpulse_route_inventory
+   where enabled and last_status in ('unknown','incomplete','failed')
+   order by case risk_level when 'critical' then 4 when 'high' then 3 when 'medium' then 2 else 1 end desc,updated_at asc
+   limit greatest(1,least(coalesce(p_limit,50),200))
+ ), inserted as (
+   insert into public.buildpulse_route_work_items(route_id,kind,priority,finding)
+   select id,kind,priority,finding from candidates
+   on conflict do nothing
+   returning 1
+ )
+ select count(*) into queued_count from inserted;
+ return queued_count;
+end $$;
+revoke all on function public.buildpulse_queue_incomplete_routes(integer) from public,anon,authenticated;
+grant execute on function public.buildpulse_queue_incomplete_routes(integer) to service_role;
