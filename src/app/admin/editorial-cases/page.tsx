@@ -6,19 +6,21 @@ import {LocalizedDate} from "@/components/buildpulse/LocalizedValue";
 
 export const metadata={title:"Editorial Cases | BuildPulse",robots:{index:false,follow:false}};
 export const dynamic="force-dynamic";
+const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 async function decide(formData:FormData){
  "use server";
  const auth=await requireBuildPulseAdmin();
  if(!auth.ok)redirect((auth as any).mfaRequired?"/auth/mfa?next=/admin/editorial-cases":"/auth?next=/admin/editorial-cases");
  const id=String(formData.get("id")||""),status=String(formData.get("status")||""),resolution=String(formData.get("resolution")||"").trim();
- if(!["review","dismissed"].includes(status)||!id)return;
+ if(!["review","dismissed"].includes(status)||!UUID.test(id))return;
  const db=createAdminClient();if(!db)throw new Error("Editorial case service unavailable");
  const now=new Date().toISOString();
  const patch:any={status,resolution_notes:resolution||null,updated_at:now};
  if(status==="dismissed"){patch.reviewed_at=now;patch.reviewed_by=auth.userId;patch.resolution_action="none"}
- const {error}=await db.from("buildpulse_newsroom_cases").update(patch).eq("id",id);
+ const {data:updated,error}=await db.from("buildpulse_newsroom_cases").update(patch).eq("id",id).select("id").maybeSingle();
  if(error)throw error;
+ if(!updated)throw new Error("Editorial case no longer exists");
  await db.from("buildpulse_workforce_audit_log").insert({actor_user_id:auth.userId,action:"editorial_case_decision",resource_type:"editorial_case",resource_id:id,metadata:{status,resolution:resolution.slice(0,1000),reviewer:auth.email}});
  revalidatePath("/admin/editorial-cases");
 }
