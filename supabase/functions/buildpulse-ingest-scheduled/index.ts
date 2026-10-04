@@ -31,7 +31,7 @@ Deno.serve(async(req:Request)=>{
    try{
     if(!safeUrl(source.feed_url))throw new Error("unsafe_feed_url");
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
-    let response:Response;try{response=await fetch(source.feed_url,{headers:{accept:"application/feed+json, application/json, application/rss+xml, application/atom+xml, application/xml, text/xml","user-agent":"BuildPulse/1.0 (+https://buildpulse.news/methodology)"},signal:controller.signal,redirect:"follow"})}finally{clearTimeout(timer)}
+    let response:Response;try{response=await fetch(source.feed_url,{headers:{accept:"application/feed+json, application/json, application/rss+xml, application/atom+xml, application/xml, text/xml","user-agent":"BuildPulse/1.0 (+https://www.buildpulse.news/methodology)"},signal:controller.signal,redirect:"follow"})}finally{clearTimeout(timer)}
     if(!response.ok)throw new Error("source_http_"+response.status);
     const contentType=(response.headers.get("content-type")??"").toLowerCase();
     const text=await response.text();if(text.length>2_000_000)throw new Error("source_too_large");
