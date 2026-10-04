@@ -34,7 +34,8 @@ const C={
     "disclosure": "Disclosure",
     "privacy": "Privacy",
     "terms": "Terms",
-    "status": "Status"
+    "status": "Status",
+    "tagline": "Global Technology & Digital Intelligence"
   },
   "de": {
     "news": "Nachrichten",
@@ -70,7 +71,8 @@ const C={
     "disclosure": "Offenlegung",
     "privacy": "Datenschutz",
     "terms": "Bedingungen",
-    "status": "Status"
+    "status": "Status",
+    "tagline": "Globale Technologie & digitale Intelligence"
   },
   "fr": {
     "news": "Actualités",
@@ -106,7 +108,8 @@ const C={
     "disclosure": "Divulgation",
     "privacy": "Confidentialité",
     "terms": "Conditions",
-    "status": "Statut"
+    "status": "Statut",
+    "tagline": "Technologie mondiale et intelligence numérique"
   },
   "tr": {
     "news": "Haberler",
@@ -142,7 +145,8 @@ const C={
     "disclosure": "Açıklamalar",
     "privacy": "Gizlilik",
     "terms": "Koşullar",
-    "status": "Durum"
+    "status": "Durum",
+    "tagline": "Küresel Teknoloji ve Dijital İstihbarat"
   },
   "es": {
     "news": "Noticias",
@@ -178,7 +182,8 @@ const C={
     "disclosure": "Divulgación",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "status": "Estado"
+    "status": "Estado",
+    "tagline": "Tecnología global e inteligencia digital"
   },
   "it": {
     "news": "Notizie",
@@ -214,7 +219,8 @@ const C={
     "disclosure": "Informativa",
     "privacy": "Privacy",
     "terms": "Termini",
-    "status": "Stato"
+    "status": "Stato",
+    "tagline": "Tecnologia globale e intelligence digitale"
   },
   "pt": {
     "news": "Notícias",
@@ -250,7 +256,8 @@ const C={
     "disclosure": "Divulgação",
     "privacy": "Privacidade",
     "terms": "Termos",
-    "status": "Estado"
+    "status": "Estado",
+    "tagline": "Tecnologia global e inteligência digital"
   },
   "ru": {
     "news": "Новости",
@@ -286,7 +293,8 @@ const C={
     "disclosure": "Раскрытие информации",
     "privacy": "Конфиденциальность",
     "terms": "Условия",
-    "status": "Статус"
+    "status": "Статус",
+    "tagline": "Глобальные технологии и цифровая аналитика"
   },
   "pl": {
     "news": "Wiadomości",
@@ -322,7 +330,8 @@ const C={
     "disclosure": "Ujawnienia",
     "privacy": "Prywatność",
     "terms": "Warunki",
-    "status": "Status"
+    "status": "Status",
+    "tagline": "Globalna technologia i analityka cyfrowa"
   },
   "nl": {
     "news": "Nieuws",
@@ -358,7 +367,8 @@ const C={
     "disclosure": "Openbaarmaking",
     "privacy": "Privacy",
     "terms": "Voorwaarden",
-    "status": "Status"
+    "status": "Status",
+    "tagline": "Wereldwijde technologie en digitale intelligence"
   },
   "sv": {
     "news": "Nyheter",
@@ -394,7 +404,8 @@ const C={
     "disclosure": "Upplysningar",
     "privacy": "Integritet",
     "terms": "Villkor",
-    "status": "Status"
+    "status": "Status",
+    "tagline": "Global teknik och digital analys"
   },
   "no": {
     "news": "Nyheter",
@@ -430,7 +441,8 @@ const C={
     "disclosure": "Opplysninger",
     "privacy": "Personvern",
     "terms": "Vilkår",
-    "status": "Status"
+    "status": "Status",
+    "tagline": "Global teknologi og digital analyse"
   },
   "fi": {
     "news": "Uutiset",
@@ -466,7 +478,8 @@ const C={
     "disclosure": "Tiedot",
     "privacy": "Tietosuoja",
     "terms": "Ehdot",
-    "status": "Tila"
+    "status": "Tila",
+    "tagline": "Globaali teknologia ja digitaalinen analytiikka"
   },
   "da": {
     "news": "Nyheder",
@@ -502,7 +515,8 @@ const C={
     "disclosure": "Oplysninger",
     "privacy": "Privatliv",
     "terms": "Vilkår",
-    "status": "Status"
+    "status": "Status",
+    "tagline": "Global teknologi og digital analyse"
   },
   "ro": {
     "news": "Știri",
@@ -538,7 +552,8 @@ const C={
     "disclosure": "Dezvăluiri",
     "privacy": "Confidențialitate",
     "terms": "Termeni",
-    "status": "Stare"
+    "status": "Stare",
+    "tagline": "Tehnologie globală și analiză digitală"
   },
   "hu": {
     "news": "Hírek",
@@ -574,7 +589,8 @@ const C={
     "disclosure": "Közzététel",
     "privacy": "Adatvédelem",
     "terms": "Feltételek",
-    "status": "Állapot"
+    "status": "Állapot",
+    "tagline": "Globális technológia és digitális elemzés"
   },
   "cs": {
     "news": "Zprávy",
@@ -610,7 +626,8 @@ const C={
     "disclosure": "Zveřejnění",
     "privacy": "Soukromí",
     "terms": "Podmínky",
-    "status": "Stav"
+    "status": "Stav",
+    "tagline": "Globální technologie a digitální analýza"
   },
   "el": {
     "news": "Ειδήσεις",
@@ -646,7 +663,8 @@ const C={
     "disclosure": "Γνωστοποιήσεις",
     "privacy": "Απόρρητο",
     "terms": "Όροι",
-    "status": "Κατάσταση"
+    "status": "Κατάσταση",
+    "tagline": "Παγκόσμια τεχνολογία και ψηφιακή ανάλυση"
   },
   "bg": {
     "news": "Новини",
@@ -682,7 +700,8 @@ const C={
     "disclosure": "Оповестяване",
     "privacy": "Поверителност",
     "terms": "Условия",
-    "status": "Статус"
+    "status": "Статус",
+    "tagline": "Глобални технологии и дигитален анализ"
   },
   "uk": {
     "news": "Новини",
@@ -718,7 +737,8 @@ const C={
     "disclosure": "Розкриття інформації",
     "privacy": "Конфіденційність",
     "terms": "Умови",
-    "status": "Статус"
+    "status": "Статус",
+    "tagline": "Глобальні технології та цифрова аналітика"
   },
   "zh": {
     "news": "新闻",
@@ -754,7 +774,8 @@ const C={
     "disclosure": "披露",
     "privacy": "隐私",
     "terms": "条款",
-    "status": "状态"
+    "status": "状态",
+    "tagline": "全球科技与数字情报"
   },
   "ja": {
     "news": "ニュース",
@@ -790,7 +811,8 @@ const C={
     "disclosure": "開示",
     "privacy": "プライバシー",
     "terms": "利用規約",
-    "status": "ステータス"
+    "status": "ステータス",
+    "tagline": "グローバルテクノロジー＆デジタルインテリジェンス"
   },
   "ko": {
     "news": "뉴스",
@@ -826,7 +848,8 @@ const C={
     "disclosure": "공개",
     "privacy": "개인정보 보호",
     "terms": "약관",
-    "status": "상태"
+    "status": "상태",
+    "tagline": "글로벌 기술 및 디지털 인텔리전스"
   },
   "ar": {
     "news": "الأخبار",
@@ -862,7 +885,8 @@ const C={
     "disclosure": "الإفصاح",
     "privacy": "الخصوصية",
     "terms": "الشروط",
-    "status": "الحالة"
+    "status": "الحالة",
+    "tagline": "التكنولوجيا العالمية والاستخبارات الرقمية"
   },
   "hi": {
     "news": "समाचार",
@@ -898,7 +922,8 @@ const C={
     "disclosure": "प्रकटीकरण",
     "privacy": "गोपनीयता",
     "terms": "शर्तें",
-    "status": "स्थिति"
+    "status": "स्थिति",
+    "tagline": "वैश्विक प्रौद्योगिकी और डिजिटल इंटेलिजेंस"
   }
 } as const;
 export function uiCopy(locale:string){return C[(locale in C?locale:"en") as UiLocale]}
