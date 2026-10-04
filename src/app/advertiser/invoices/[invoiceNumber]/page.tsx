@@ -4,14 +4,14 @@ import {createClient} from "@/lib/supabase/server";
 import {LocalizedPrice} from "@/components/buildpulse/LocalizedPrice";
 
 export const dynamic="force-dynamic";
-export const metadata={title:"BuildPulse Invoice",description:"BuildPulse advertising invoice."};
+export const metadata={title:"BuildPulse Invoice",description:"BuildPulse advertising invoice.",robots:{index:false,follow:false}};
 
 export default async function InvoicePage({params}:{params:Promise<{invoiceNumber:string}>}){
   let supabase;
-  try{supabase=await createClient()}catch{redirect("/advertiser")}
+  try{supabase=await createClient()}catch{redirect("/auth?next=/advertiser")}
   const {data:{user}}=await supabase.auth.getUser();
-  if(!user)redirect("/advertiser");
   const {invoiceNumber}=await params;
+  if(!user)redirect(`/auth?next=${encodeURIComponent(`/advertiser/invoices/${invoiceNumber}`)}`);
   const {data:invoice,error}=await supabase.from("buildpulse_billing_invoices")
     .select("id,invoice_number,issuer_name,issuer_company_number,issuer_registered_office,billing_company,billing_email,customer_type,billing_address_line1,billing_address_line2,billing_city,billing_region,billing_postal_code,billing_country_code,tax_id,tax_id_type,tax_id_validation_status,amount_usd,currency,payment_method,payment_reference,status,issued_at,paid_at,order_id")
     .eq("invoice_number",decodeURIComponent(invoiceNumber))
