@@ -26,7 +26,7 @@ function signPayload(payload: string, secret: string): string {
 }
 
 function getSiteOrigin(): string {
-  return process.env.NEXT_PUBLIC_BUILDPULSE_ORIGIN?.replace(/\/$/, "") || "https://buildpulse.news";
+  return process.env.NEXT_PUBLIC_BUILDPULSE_ORIGIN?.replace(/\/$/, "") || "https://www.buildpulse.news";
 }
 
 export function buildMarketingUnsubscribeUrl(
