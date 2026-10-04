@@ -114,7 +114,7 @@
 - [x] Install control + Android fallback guidance.
 - [x] User-visible service-worker update flow.
 - [ ] Verify all three on production Android/mobile after build is green.
-- [ ] Complete offline/cache strategy and PWA QA. Service worker now excludes private/submission routes, refuses private/no-store/Set-Cookie responses, and checks for updates when the installed app returns to foreground; physical Android/offline QA remains open.
+- [ ] Complete offline/cache strategy and PWA QA. Service worker now excludes private/submission routes, refuses private/no-store/Set-Cookie responses, and checks for updates when the installed app returns to foreground. The install control now also detects an already-installed standalone session on startup instead of showing a false Install action. Physical Android/offline QA remains open.
 
 ## P1 — Advertising/affiliate
 - [x] Advertising catalog and Stripe links foundations.
