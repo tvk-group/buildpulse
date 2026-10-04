@@ -19,6 +19,17 @@ async function notifyOrderUser(admin:any,orderId:string,kind:"billing"|"marketpl
     if(error&&error.code!=="23505")console.error("[buildpulse] payment notification",error.message);
   }catch(error){console.error("[buildpulse] payment notification",error instanceof Error?error.message:"unknown")}
 }
+async function notifySubscriptionUser(admin:any,subscriptionId:string,kind:"billing"|"subscription",title:string,body:string,dedupeKey:string){
+  try{
+    const {data:sub}=await admin.from("buildpulse_intelligence_subscriptions").select("user_id").eq("stripe_subscription_id",subscriptionId).maybeSingle();
+    if(!sub?.user_id)return;
+    const prefKey=kind==="billing"?"billing_enabled":"subscription_enabled";
+    const {data:prefs}=await admin.from("buildpulse_notification_preferences").select(prefKey).eq("user_id",sub.user_id).maybeSingle();
+    if(prefs?.[prefKey]===false)return;
+    const {error}=await admin.from("buildpulse_notifications").insert({user_id:sub.user_id,kind,title,body:body.slice(0,500),href:"/account/intelligence",metadata:{stripe_subscription_id:subscriptionId},dedupe_key:dedupeKey});
+    if(error&&error.code!=="23505")console.error("[buildpulse] subscription notification",error.message);
+  }catch(error){console.error("[buildpulse] subscription notification",error instanceof Error?error.message:"unknown")}
+}
 async function invoiceNumber(admin:any,orderId:string,issuedAt:string){
   const {data:existing,error:existingError}=await admin.from("buildpulse_billing_invoices").select("invoice_number").eq("order_id",orderId).maybeSingle();
   if(existingError)throw new Error("invoice_lookup_failed");
@@ -280,14 +291,16 @@ async function settleSubscriptionCheckout(admin:any,session:any){
   if(error)throw error;
   return {subscriptionActivated:true,plan:normalizedPlan,billingInterval};
 }
-async function syncSubscription(admin:any,subscription:any){
+async function syncSubscription(admin:any,event:any,subscription:any){
   const id=String(subscription?.id||"");if(!id)return {ignored:"subscription_id_missing"};
   const stripeStatus=String(subscription?.status||"");
   const status=stripeStatus==="active"||stripeStatus==="trialing"?"active":stripeStatus==="past_due"||stripeStatus==="unpaid"?"past_due":stripeStatus==="paused"?"paused":stripeStatus==="canceled"?"cancelled":"pending";
   const periodEnd=subscription?.current_period_end?new Date(Number(subscription.current_period_end)*1000).toISOString():null;
   const cancelledAt=subscription?.canceled_at?new Date(Number(subscription.canceled_at)*1000).toISOString():null;
   const {error}=await admin.from("buildpulse_intelligence_subscriptions").update({status,current_period_end:periodEnd,cancelled_at:cancelledAt,updated_at:new Date().toISOString()}).eq("stripe_subscription_id",id);
-  if(error)throw error;return {subscriptionSynced:true,status};
+  if(error)throw error;
+  await notifySubscriptionUser(admin,id,"subscription",status==="active"?"Subscription active":status==="cancelled"?"Subscription cancelled":"Subscription updated",`Your BuildPulse Intelligence subscription status is now ${status}.`,`stripe-subscription:${event.id}`);
+  return {subscriptionSynced:true,status};
 }
 
 async function syncAccountingInvoice(admin:any,event:any,invoice:any){
@@ -330,6 +343,7 @@ async function syncAccountingInvoice(admin:any,event:any,invoice:any){
   const row={entity_id:entity.id,customer_id:customerId,document_type:"invoice",document_number:documentNumber,currency,net_amount:net,tax_amount:tax,gross_amount:gross,tax_jurisdiction:invoice?.customer_address?.country??null,tax_treatment:null,tax_rate:net>0?tax/net:null,reverse_charge:false,stripe_invoice_id:stripeInvoiceId,stripe_payment_intent_id:paymentIntent,stripe_subscription_id:subscriptionId,provider_pdf_url:invoice?.invoice_pdf??null,status,issued_at:issuedAt,due_at:invoice?.due_date?new Date(Number(invoice.due_date)*1000).toISOString():null,paid_at:paidAt,immutable_snapshot:snapshot};
   const {data:doc,error:docErr}=await admin.from("buildpulse_accounting_documents").upsert(row,{onConflict:"stripe_invoice_id"}).select("id,document_number").single();if(docErr)throw docErr;
   let journalId=null;if(status==="paid"&&!snapshot.fx_posting_required){const {data:j,error:jErr}=await admin.rpc("buildpulse_post_paid_invoice_journal",{p_document_id:doc.id});if(jErr)throw jErr;journalId=j}
+  if(subscriptionId)await notifySubscriptionUser(admin,subscriptionId,"billing",event.type==="invoice.paid"?"Invoice paid":"Payment failed",event.type==="invoice.paid"?`Invoice ${doc.document_number} has been paid.`:`Payment failed for invoice ${doc.document_number}.`,`stripe-invoice:${event.id}`);
   return {accountingInvoiceSynced:true,documentId:doc.id,documentNumber:doc.document_number,status,fxPostingRequired:snapshot.fx_posting_required,journalId};
 }
 
@@ -353,7 +367,7 @@ Deno.serve(async(req:Request)=>{
     else if(type==="checkout.session.async_payment_failed"||type==="checkout.session.expired")result=await handleCheckoutFailure(admin,event,object);
     else if(type==="charge.refunded")result=await handleRefund(admin,event,object);
     else if(type==="charge.dispute.created"||type==="charge.dispute.closed")result=await handleDispute(admin,event,object);
-    else if(type==="customer.subscription.updated"||type==="customer.subscription.deleted")result=await syncSubscription(admin,object);
+    else if(type==="customer.subscription.updated"||type==="customer.subscription.deleted")result=await syncSubscription(admin,event,object);
     else if(type==="invoice.paid"||type==="invoice.payment_failed")result=await syncAccountingInvoice(admin,event,object);
     return reply({ok:true,...result});
   }catch(error){
