@@ -5,12 +5,12 @@ import EditionBuildActions from "@/components/buildpulse/EditionBuildActions";
 import EditionControlActions from "@/components/buildpulse/EditionControlActions";
 
 export const dynamic="force-dynamic";
-export const metadata={title:"BuildPulse Edition Control",description:"Generate, review, approve and schedule BuildPulse editions."};
+export const metadata={title:"BuildPulse Edition Control",description:"Generate, review, approve and schedule BuildPulse editions.",robots:{index:false,follow:false}};
 
 type Edition={id:string;edition_type:string;subject:string;preheader:string|null;slug:string;status:string;body_html:string|null;revision_number:number;founder_review_status:string;founder_review_notes:string|null;founder_approved_revision:number|null;scheduled_at:string|null;published_at:string|null;created_at:string;updated_at:string;generation_error:string|null};
 
 export default async function EditionAdmin(){
- const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/advertiser");
+ const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/auth?next=/admin/editions");
  const {data,error}=await supabase.functions.invoke("buildpulse-edition-admin",{body:{action:"list"}});
  if(!error&&data?.error==="admin_required")redirect("/");
  const editions=(Array.isArray(data?.editions)?data.editions:[]) as Edition[];
