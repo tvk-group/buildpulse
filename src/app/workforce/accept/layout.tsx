@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 
 export const metadata:Metadata={
- title:"Accept Workforce Invitation | BuildPulse",
+ title:"Accept Workforce Invitation",
  description:"Secure BuildPulse workforce invitation acceptance.",
  robots:{index:false,follow:false},
  alternates:{canonical:"/workforce/accept"}
