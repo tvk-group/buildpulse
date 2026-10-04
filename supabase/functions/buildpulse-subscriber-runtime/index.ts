@@ -2,7 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import {createClient} from "npm:@supabase/supabase-js@2";
 
 const H={"Content-Type":"application/json","Cache-Control":"no-store","Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, apikey, content-type"};
-const TOPICS=new Set(["ai","blockchain","crypto","security","digital-economy","entelekron"]);
+const TOPICS=new Set(["ai","blockchain","crypto","security","digital-economy","entelekron"]);\nconst LOCALES=new Set(["en","de","fr","tr","es","it","pt","ru","pl","nl","sv","no","fi","da","ro","hu","cs","el","bg","uk","zh","ja","ko","ar","hi"]);
 function reply(body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:H})}
 function b64urlEncode(bytes:Uint8Array){let s="";for(const b of bytes)s+=String.fromCharCode(b);return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 function b64urlDecode(s:string){s=s.replace(/-/g,"+").replace(/_/g,"/");s+="=".repeat((4-s.length%4)%4);const raw=atob(s);return new Uint8Array([...raw].map(c=>c.charCodeAt(0)))}
@@ -38,7 +38,7 @@ async function subscribe(admin:any,body:any){
  if(!topics.length||!validTimeZone(deliveryTimezone))throw new Error("invalid_request");
  const {data:blocked}=await admin.from("email_marketing_unsubscribes").select("id").ilike("email",email).maybeSingle();if(blocked)throw new Error("suppressed");
  const now=new Date().toISOString(),patch={
-   email,locale:String(body.locale??"en").slice(0,10),cadence,topics,delivery_timezone:deliveryTimezone,status:"active",consent_basis:"explicit",
+   email,locale,cadence,topics,delivery_timezone:deliveryTimezone,status:"active",consent_basis:"explicit",
    consent_source:["buildpulse_web","ecosystem_prompt","account_preferences","transactional_email"].includes(body.consentSource)?body.consentSource:"buildpulse_web",
    consent_at:now,acquisition_surface:typeof body.surface==="string"?body.surface.slice(0,80):null,
    acquisition_product:typeof body.product==="string"?body.product.slice(0,80):"buildpulse",
