@@ -149,7 +149,7 @@
 
 ## P1 — Email/delivery
 - [x] Brevo bulk/newsletter foundation.
-- [ ] Company-domain transactional mail adapter. buildpulse.news exists in Resend but verification is not started; live DNS inspection on 2026-10-03 confirmed required DKIM, send MX/SPF and rsend CNAME records are absent, so delivery remains fail-closed.
+- [ ] Company-domain transactional mail adapter. A server-only Resend adapter is now implemented with an explicit database domain-verification gate, required managed API key/sender configuration, bounded provider timeout, provider idempotency key and ambiguous-outcome handling. Resend verification rechecked on 2026-10-04 still reports `buildpulse.news` as `not_started`, so actual delivery remains correctly fail-closed until DNS/domain verification and a real sender are configured.
 - [ ] Create/verify required company mailboxes before using them.
 - [ ] Keep suppression/bounce/unsubscribe safety for bulk mail.
 - [ ] Localized invoice, subscription, workforce and system emails.
