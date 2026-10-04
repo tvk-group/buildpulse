@@ -174,6 +174,15 @@
 - [ ] Optional BuildPulse invitations on eligible TVK ecosystem pages/emails only with explicit opt-in; never auto-subscribe and exclude sensitive flows.
 - [ ] Maintain BuildPulse as standalone source of truth while exposing only evidence-backed integrations.
 
+## 2026-10-04 route-completion batch
+- [x] Add service-only durable route inventory and per-route work-item queue with active-work deduplication.
+- [x] Add governed Page Completion Agent on the existing AI gateway and hourly scheduler; NVIDIA NIM remains server-side and provider routing remains policy/budget/privacy controlled.
+- [x] Remove broken Sports desk links to nonexistent routes and replace the surface with the verified public-story pipeline plus fail-closed empty state.
+- [x] Expand the thin People page into a verified-source reporting surface with explicit no-fabrication empty state.
+- [ ] Seed the complete current App Router route inventory in production and attach automated health findings/work items.
+- [ ] Add production route crawler/browser evidence and authenticated/mobile checks before route-completion status can become healthy.
+- [ ] Extend route workers to localization, SEO metadata, accessibility and integration-specific deterministic checks; AI output remains proposal-only unless a separately coded low-risk executor exists.
+
 ## Operating rules
 - BuildPulse only unless scope is explicitly changed.
 - Continue current/next/incomplete phases and report concrete progress.
