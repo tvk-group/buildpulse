@@ -9,7 +9,8 @@ export async function GET(req:NextRequest){
  if(!authorized(req))return NextResponse.json({ok:false,error:"unauthorized"},{status:401});
  const db=createAdminClient();if(!db)return NextResponse.json({ok:false,error:"service_unavailable"},{status:503});
  let routeInventory:{routes:number}|null=null;
- try{routeInventory=await syncBuildPulseRouteInventory();}catch(e){await db.from("buildpulse_job_runs").insert({job_name:"route-inventory-sync",status:"failed",started_at:new Date().toISOString(),finished_at:new Date().toISOString(),error:e instanceof Error?e.message:"route_inventory_sync_failed"});}
+ let routeWorkQueued=0;
+ try{routeInventory=await syncBuildPulseRouteInventory();const {data:q,error:qErr}=await (db.rpc as any)("buildpulse_queue_incomplete_routes",{p_limit:50});if(qErr)throw qErr;routeWorkQueued=Number(q??0);}catch(e){await db.from("buildpulse_job_runs").insert({job_name:"route-inventory-sync",status:"failed",started_at:new Date().toISOString(),finished_at:new Date().toISOString(),error:e instanceof Error?e.message:"route_inventory_sync_failed"});}
  const {data:claimed,error}=await (db.rpc as any)("buildpulse_claim_due_agent_schedules",{p_limit:12});
  if(error)return NextResponse.json({ok:false,error:"claim_failed"},{status:500});
  const results=[] as any[];
@@ -23,5 +24,5 @@ export async function GET(req:NextRequest){
  }
  const failed=results.filter((x:any)=>x.status==="failed").length,awaitingApproval=results.filter((x:any)=>x.status==="awaiting_approval").length;
  await db.from("buildpulse_job_runs").insert({job_name:"agent-scheduler",status:failed?"failed":"completed",started_at:new Date(startedAt).toISOString(),finished_at:new Date().toISOString(),error:failed?`${failed} scheduled agent run(s) failed`:null,metrics:{claimed:results.length,failed,awaitingApproval,completed:results.length-failed-awaitingApproval}});
- return NextResponse.json({ok:true,routeInventory,claimed:results.length,failed,awaitingApproval,results});
+ return NextResponse.json({ok:true,routeInventory,routeWorkQueued,claimed:results.length,failed,awaitingApproval,results});
 }
