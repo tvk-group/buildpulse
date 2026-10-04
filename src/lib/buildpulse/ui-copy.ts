@@ -35,7 +35,9 @@ const C={
     "privacy": "Privacy",
     "terms": "Terms",
     "status": "Status",
-    "tagline": "Global Technology & Digital Intelligence"
+    "tagline": "Global Technology & Digital Intelligence",
+    "openNav": "Open navigation",
+    "closeNav": "Close navigation"
   },
   "de": {
     "news": "Nachrichten",
@@ -72,7 +74,9 @@ const C={
     "privacy": "Datenschutz",
     "terms": "Bedingungen",
     "status": "Status",
-    "tagline": "Globale Technologie & digitale Intelligence"
+    "tagline": "Globale Technologie & digitale Intelligence",
+    "openNav": "Navigation öffnen",
+    "closeNav": "Navigation schließen"
   },
   "fr": {
     "news": "Actualités",
@@ -109,7 +113,9 @@ const C={
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "status": "Statut",
-    "tagline": "Technologie mondiale et intelligence numérique"
+    "tagline": "Technologie mondiale et intelligence numérique",
+    "openNav": "Ouvrir la navigation",
+    "closeNav": "Fermer la navigation"
   },
   "tr": {
     "news": "Haberler",
@@ -146,7 +152,9 @@ const C={
     "privacy": "Gizlilik",
     "terms": "Koşullar",
     "status": "Durum",
-    "tagline": "Küresel Teknoloji ve Dijital İstihbarat"
+    "tagline": "Küresel Teknoloji ve Dijital İstihbarat",
+    "openNav": "Navigasyonu aç",
+    "closeNav": "Navigasyonu kapat"
   },
   "es": {
     "news": "Noticias",
@@ -183,7 +191,9 @@ const C={
     "privacy": "Privacidad",
     "terms": "Términos",
     "status": "Estado",
-    "tagline": "Tecnología global e inteligencia digital"
+    "tagline": "Tecnología global e inteligencia digital",
+    "openNav": "Abrir navegación",
+    "closeNav": "Cerrar navegación"
   },
   "it": {
     "news": "Notizie",
@@ -220,7 +230,9 @@ const C={
     "privacy": "Privacy",
     "terms": "Termini",
     "status": "Stato",
-    "tagline": "Tecnologia globale e intelligence digitale"
+    "tagline": "Tecnologia globale e intelligence digitale",
+    "openNav": "Apri navigazione",
+    "closeNav": "Chiudi navigazione"
   },
   "pt": {
     "news": "Notícias",
@@ -257,7 +269,9 @@ const C={
     "privacy": "Privacidade",
     "terms": "Termos",
     "status": "Estado",
-    "tagline": "Tecnologia global e inteligência digital"
+    "tagline": "Tecnologia global e inteligência digital",
+    "openNav": "Abrir navegação",
+    "closeNav": "Fechar navegação"
   },
   "ru": {
     "news": "Новости",
@@ -294,7 +308,9 @@ const C={
     "privacy": "Конфиденциальность",
     "terms": "Условия",
     "status": "Статус",
-    "tagline": "Глобальные технологии и цифровая аналитика"
+    "tagline": "Глобальные технологии и цифровая аналитика",
+    "openNav": "Открыть навигацию",
+    "closeNav": "Закрыть навигацию"
   },
   "pl": {
     "news": "Wiadomości",
@@ -331,7 +347,9 @@ const C={
     "privacy": "Prywatność",
     "terms": "Warunki",
     "status": "Status",
-    "tagline": "Globalna technologia i analityka cyfrowa"
+    "tagline": "Globalna technologia i analityka cyfrowa",
+    "openNav": "Otwórz nawigację",
+    "closeNav": "Zamknij nawigację"
   },
   "nl": {
     "news": "Nieuws",
@@ -368,7 +386,9 @@ const C={
     "privacy": "Privacy",
     "terms": "Voorwaarden",
     "status": "Status",
-    "tagline": "Wereldwijde technologie en digitale intelligence"
+    "tagline": "Wereldwijde technologie en digitale intelligence",
+    "openNav": "Navigatie openen",
+    "closeNav": "Navigatie sluiten"
   },
   "sv": {
     "news": "Nyheter",
@@ -405,7 +425,9 @@ const C={
     "privacy": "Integritet",
     "terms": "Villkor",
     "status": "Status",
-    "tagline": "Global teknik och digital analys"
+    "tagline": "Global teknik och digital analys",
+    "openNav": "Öppna navigering",
+    "closeNav": "Stäng navigering"
   },
   "no": {
     "news": "Nyheter",
@@ -442,7 +464,9 @@ const C={
     "privacy": "Personvern",
     "terms": "Vilkår",
     "status": "Status",
-    "tagline": "Global teknologi og digital analyse"
+    "tagline": "Global teknologi og digital analyse",
+    "openNav": "Åpne navigasjon",
+    "closeNav": "Lukk navigasjon"
   },
   "fi": {
     "news": "Uutiset",
@@ -479,7 +503,9 @@ const C={
     "privacy": "Tietosuoja",
     "terms": "Ehdot",
     "status": "Tila",
-    "tagline": "Globaali teknologia ja digitaalinen analytiikka"
+    "tagline": "Globaali teknologia ja digitaalinen analytiikka",
+    "openNav": "Avaa navigointi",
+    "closeNav": "Sulje navigointi"
   },
   "da": {
     "news": "Nyheder",
@@ -516,7 +542,9 @@ const C={
     "privacy": "Privatliv",
     "terms": "Vilkår",
     "status": "Status",
-    "tagline": "Global teknologi og digital analyse"
+    "tagline": "Global teknologi og digital analyse",
+    "openNav": "Åbn navigation",
+    "closeNav": "Luk navigation"
   },
   "ro": {
     "news": "Știri",
@@ -553,7 +581,9 @@ const C={
     "privacy": "Confidențialitate",
     "terms": "Termeni",
     "status": "Stare",
-    "tagline": "Tehnologie globală și analiză digitală"
+    "tagline": "Tehnologie globală și analiză digitală",
+    "openNav": "Deschide navigarea",
+    "closeNav": "Închide navigarea"
   },
   "hu": {
     "news": "Hírek",
@@ -590,7 +620,9 @@ const C={
     "privacy": "Adatvédelem",
     "terms": "Feltételek",
     "status": "Állapot",
-    "tagline": "Globális technológia és digitális elemzés"
+    "tagline": "Globális technológia és digitális elemzés",
+    "openNav": "Navigáció megnyitása",
+    "closeNav": "Navigáció bezárása"
   },
   "cs": {
     "news": "Zprávy",
@@ -627,7 +659,9 @@ const C={
     "privacy": "Soukromí",
     "terms": "Podmínky",
     "status": "Stav",
-    "tagline": "Globální technologie a digitální analýza"
+    "tagline": "Globální technologie a digitální analýza",
+    "openNav": "Otevřít navigaci",
+    "closeNav": "Zavřít navigaci"
   },
   "el": {
     "news": "Ειδήσεις",
@@ -664,7 +698,9 @@ const C={
     "privacy": "Απόρρητο",
     "terms": "Όροι",
     "status": "Κατάσταση",
-    "tagline": "Παγκόσμια τεχνολογία και ψηφιακή ανάλυση"
+    "tagline": "Παγκόσμια τεχνολογία και ψηφιακή ανάλυση",
+    "openNav": "Άνοιγμα πλοήγησης",
+    "closeNav": "Κλείσιμο πλοήγησης"
   },
   "bg": {
     "news": "Новини",
@@ -701,7 +737,9 @@ const C={
     "privacy": "Поверителност",
     "terms": "Условия",
     "status": "Статус",
-    "tagline": "Глобални технологии и дигитален анализ"
+    "tagline": "Глобални технологии и дигитален анализ",
+    "openNav": "Отвори навигацията",
+    "closeNav": "Затвори навигацията"
   },
   "uk": {
     "news": "Новини",
@@ -738,7 +776,9 @@ const C={
     "privacy": "Конфіденційність",
     "terms": "Умови",
     "status": "Статус",
-    "tagline": "Глобальні технології та цифрова аналітика"
+    "tagline": "Глобальні технології та цифрова аналітика",
+    "openNav": "Відкрити навігацію",
+    "closeNav": "Закрити навігацію"
   },
   "zh": {
     "news": "新闻",
@@ -775,7 +815,9 @@ const C={
     "privacy": "隐私",
     "terms": "条款",
     "status": "状态",
-    "tagline": "全球科技与数字情报"
+    "tagline": "全球科技与数字情报",
+    "openNav": "打开导航",
+    "closeNav": "关闭导航"
   },
   "ja": {
     "news": "ニュース",
@@ -812,7 +854,9 @@ const C={
     "privacy": "プライバシー",
     "terms": "利用規約",
     "status": "ステータス",
-    "tagline": "グローバルテクノロジー＆デジタルインテリジェンス"
+    "tagline": "グローバルテクノロジー＆デジタルインテリジェンス",
+    "openNav": "ナビゲーションを開く",
+    "closeNav": "ナビゲーションを閉じる"
   },
   "ko": {
     "news": "뉴스",
@@ -849,7 +893,9 @@ const C={
     "privacy": "개인정보 보호",
     "terms": "약관",
     "status": "상태",
-    "tagline": "글로벌 기술 및 디지털 인텔리전스"
+    "tagline": "글로벌 기술 및 디지털 인텔리전스",
+    "openNav": "탐색 열기",
+    "closeNav": "탐색 닫기"
   },
   "ar": {
     "news": "الأخبار",
@@ -886,7 +932,9 @@ const C={
     "privacy": "الخصوصية",
     "terms": "الشروط",
     "status": "الحالة",
-    "tagline": "التكنولوجيا العالمية والاستخبارات الرقمية"
+    "tagline": "التكنولوجيا العالمية والاستخبارات الرقمية",
+    "openNav": "فتح التنقل",
+    "closeNav": "إغلاق التنقل"
   },
   "hi": {
     "news": "समाचार",
@@ -923,7 +971,9 @@ const C={
     "privacy": "गोपनीयता",
     "terms": "शर्तें",
     "status": "स्थिति",
-    "tagline": "वैश्विक प्रौद्योगिकी और डिजिटल इंटेलिजेंस"
+    "tagline": "वैश्विक प्रौद्योगिकी और डिजिटल इंटेलिजेंस",
+    "openNav": "नेविगेशन खोलें",
+    "closeNav": "नेविगेशन बंद करें"
   }
 } as const;
 export function uiCopy(locale:string){return C[(locale in C?locale:"en") as UiLocale]}
