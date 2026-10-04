@@ -2,7 +2,7 @@
 
 Global Technology & Digital Intelligence.
 
-Canonical website: `https://buildpulse.news`
+Canonical website: `https://www.buildpulse.news`
 
 Production repository: `tvk-group/buildpulse`
 
