@@ -193,3 +193,8 @@
 - Do not invent credentials, registrations, partners, data feeds, audits, translations, payments or legal/tax status.
 - Public factual/news content requires source verification and provenance.
 - Automation must be observable, auditable, reversible where practical and fail closed on high-risk uncertainty.
+
+- [x] High-risk admin auth/SEO audit: corrected unauthenticated redirects for stories/advertising/editions to /auth with return paths; all admin control pages explicitly noindex/nofollow. Production verification pending the new head becoming READY.
+- [x] Public-route metadata pass: arts contribution now has dedicated metadata/canonical; marketplace seller submission is explicitly noindex/nofollow; contributor article canonical/correction URLs now use the canonical BuildPulse public-origin helper.
+- [x] Production route evidence advanced: 33 route QA work items completed; 34 remained queued at this checkpoint (22 auth/high-risk + 12 QA). Live canonical host returned 200 for sports, status, subscriptions, arts contribution, marketplace seller, auth, and the unauthenticated workforce-control auth gate.
+- [x] Vercel runtime error scan: no runtime errors reported in the last hour at this checkpoint.
