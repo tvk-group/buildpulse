@@ -309,10 +309,36 @@ async function verifyBitcoin(rail:Rail,txHash:string){
   return {state:confirmations>=rail.requiredConfirmations?"confirmed":"confirming",confirmations,actual,txTimeMs};
 }
 
+async function solanaRpc(method:string,params:unknown[]){
+  const rpc=optionalEnv("BUILDPULSE_SOL_RPC_URL");
+  if(!rpc)throw new Error("solana_rpc_not_configured");
+  const body=await fetchJson(rpc,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method,params})});
+  if(body?.error)throw new Error(String(body.error?.message||"solana_rpc_error"));
+  return body?.result;
+}
+
+async function verifySolana(rail:Rail,txHash:string){
+  const tx=await solanaRpc("getTransaction",[txHash,{encoding:"jsonParsed",commitment:"confirmed",maxSupportedTransactionVersion:0}]);
+  if(!tx)return {state:"pending",confirmations:0,actual:0n,txTimeMs:0};
+  if(tx?.meta?.err)throw new Error("transaction_failed");
+  const keys=(tx?.transaction?.message?.accountKeys??[]).map((x:any)=>typeof x==="string"?x:String(x?.pubkey??""));
+  const destinationIndex=keys.indexOf(rail.destination);
+  if(destinationIndex<0)throw new Error("destination_mismatch");
+  const pre=BigInt(tx?.meta?.preBalances?.[destinationIndex]??0),post=BigInt(tx?.meta?.postBalances?.[destinationIndex]??0);
+  const actual=post>pre?post-pre:0n;
+  const status=await solanaRpc("getSignatureStatuses",[[txHash],{searchTransactionHistory:true}]);
+  const entry=status?.value?.[0];
+  if(entry?.err)throw new Error("transaction_failed");
+  const confirmationStatus=String(entry?.confirmationStatus??"");
+  const confirmations=confirmationStatus==="finalized"?rail.requiredConfirmations:confirmationStatus==="confirmed"?1:0;
+  const txTimeMs=Number(tx?.blockTime??0)*1000;
+  return {state:confirmations>=rail.requiredConfirmations?"confirmed":"confirming",confirmations,actual,txTimeMs};
+}
+
 const EVM_VERIFIED_ASSETS=new Set<Asset>(["ETH","USDC","USDT","BNB","POL","AVAX"]);
-function assertSupportedVerifier(asset:Asset){if(!EVM_VERIFIED_ASSETS.has(asset)&&asset!=="BTC"&&asset!=="XRP")throw new Error("verifier_not_implemented")}
-function validateTransactionHash(asset:Asset,txHash:string){if(EVM_VERIFIED_ASSETS.has(asset)){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");return}if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}
-async function verifyRailTransaction(asset:Asset,rail:Rail,evidence:any,txHash:string){if(EVM_VERIFIED_ASSETS.has(asset))return verifyEvm(asset,rail,evidence,txHash);if(asset==="BTC")return verifyBitcoin(rail,txHash);if(asset==="XRP")return verifyXrp(rail,txHash);throw new Error("verifier_not_implemented")}
+function assertSupportedVerifier(asset:Asset){if(!EVM_VERIFIED_ASSETS.has(asset)&&asset!=="BTC"&&asset!=="XRP"&&asset!=="SOL")throw new Error("verifier_not_implemented")}
+function validateTransactionHash(asset:Asset,txHash:string){if(EVM_VERIFIED_ASSETS.has(asset)){if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");return}if(asset==="SOL"){if(!/^[1-9A-HJ-NP-Za-km-z]{80,90}$/.test(txHash))throw new Error("invalid_transaction_hash");return}if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash")}
+async function verifyRailTransaction(asset:Asset,rail:Rail,evidence:any,txHash:string){if(EVM_VERIFIED_ASSETS.has(asset))return verifyEvm(asset,rail,evidence,txHash);if(asset==="BTC")return verifyBitcoin(rail,txHash);if(asset==="XRP")return verifyXrp(rail,txHash);if(asset==="SOL")return verifySolana(rail,txHash);throw new Error("verifier_not_implemented")}
 
 async function verifyXrp(rail:Rail,txHash:string){
   const body=await fetchJson("https://xrplcluster.com/",{
