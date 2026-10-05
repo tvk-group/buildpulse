@@ -38,9 +38,9 @@ export async function GET(req:NextRequest){
    if(routeWork?.id&&routeWork?.claim_token)await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:"failed",p_error:detail.error});
   }
   await (db.rpc as any)("buildpulse_finish_agent_schedule",{p_schedule_id:s.schedule_id,p_claim_token:s.claim_token,p_status:status});
-  results.push({scheduleId:s.schedule_id,agent:s.agent_code,status,...detail});
+  results.push({scheduleId:s.schedule_id,agent:s.agent_code,scheduleStatus:status,...detail});
  }
- const failed=results.filter((x:any)=>x.status==="failed").length,awaitingApproval=results.filter((x:any)=>x.status==="awaiting_approval").length;
+ const failed=results.filter((x:any)=>x.scheduleStatus==="failed").length,awaitingApproval=results.filter((x:any)=>x.status==="awaiting_approval").length;
  await db.from("buildpulse_job_runs").insert({job_name:"agent-scheduler",status:failed?"failed":"completed",started_at:new Date(startedAt).toISOString(),finished_at:new Date().toISOString(),error:failed?`${failed} scheduled agent run(s) failed`:null,metrics:{claimed:results.length,failed,awaitingApproval,completed:results.length-failed-awaitingApproval}});
  return NextResponse.json({ok:true,routeInventory,routeWorkQueued,claimed:results.length,failed,awaitingApproval,results});
 }
