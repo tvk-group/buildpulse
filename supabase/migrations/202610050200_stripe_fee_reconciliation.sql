@@ -1,0 +1,18 @@
+-- Integrate authoritative Stripe fee evidence into finance reconciliation.
+create or replace view public.buildpulse_finance_reconciliation_queue with (security_invoker=true) as
+select d.id document_id,d.document_number,d.currency,d.gross_amount,d.status,d.paid_at,d.stripe_invoice_id,case when d.status='paid' and j.id is null and coalesce((d.immutable_snapshot->>'fx_posting_required')::boolean,false)=false then 'missing_journal' when d.status='paid' and coalesce((d.immutable_snapshot->>'fx_posting_required')::boolean,false)=true then 'fx_review_required' else 'ok' end reconciliation_state,j.id journal_id,j.status journal_status,'invoice'::text item_type,d.id source_id,d.document_number reference_number from public.buildpulse_accounting_documents d left join public.buildpulse_journal_entries j on j.entity_id=d.entity_id and j.source_type='accounting_invoice' and j.source_id=d.id::text where d.status='paid'
+union all
+select c.id,c.credit_note_number,c.currency,c.amount_usd::numeric(20,6),'issued',c.issued_at,null,case when j.id is not null then 'ok' when upper(c.currency)=upper(e.base_currency) then 'missing_journal' else 'fx_review_required' end,j.id,j.status,'credit_note',c.id,c.credit_note_number from public.buildpulse_billing_credit_notes c join public.buildpulse_accounting_entities e on e.is_default=true left join public.buildpulse_journal_entries j on j.entity_id=e.id and j.source_type='billing_credit_note' and j.source_id=c.id::text
+union all
+select f.id,'STRIPE-FEE-'||f.stripe_balance_transaction_id,f.currency,f.fee_amount,'verified',f.verified_at,f.stripe_balance_transaction_id,case when j.id is not null then 'ok' when upper(f.currency)=upper(e.base_currency) then 'missing_journal' else 'fx_review_required' end,j.id,j.status,'stripe_fee',f.id,f.stripe_balance_transaction_id from public.buildpulse_stripe_fee_evidence f join public.buildpulse_accounting_entities e on e.id=f.entity_id left join public.buildpulse_journal_entries j on j.entity_id=f.entity_id and j.source_type='stripe_processing_fee' and j.source_id=f.stripe_balance_transaction_id;
+revoke all on public.buildpulse_finance_reconciliation_queue from anon,authenticated;grant select on public.buildpulse_finance_reconciliation_queue to service_role;
+
+create or replace function public.buildpulse_remediate_safe_reconciliation(p_limit integer default 25)
+returns table(item_type text,source_id uuid,journal_id uuid,outcome text) language plpgsql security definer set search_path=public as $$
+declare r record;jid uuid;begin
+ if coalesce(p_limit,0)<1 or p_limit>100 then raise exception 'invalid_limit';end if;
+ for r in select q.item_type,q.source_id from public.buildpulse_finance_reconciliation_queue q where q.reconciliation_state='missing_journal' order by q.paid_at nulls last,q.reference_number limit p_limit loop
+  jid:=null;if r.item_type='invoice' then jid:=public.buildpulse_post_paid_invoice_journal(r.source_id);elsif r.item_type='credit_note' then jid:=public.buildpulse_post_credit_note_journal(r.source_id);elsif r.item_type='stripe_fee' then jid:=public.buildpulse_post_stripe_fee_journal(r.source_id);else continue;end if;
+  item_type:=r.item_type;source_id:=r.source_id;journal_id:=jid;outcome:=case when jid is null then 'not_posted' else 'posted' end;return next;
+ end loop;return;end $$;
+revoke all on function public.buildpulse_remediate_safe_reconciliation(integer) from public,anon,authenticated;grant execute on function public.buildpulse_remediate_safe_reconciliation(integer) to service_role;
