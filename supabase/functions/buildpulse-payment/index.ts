@@ -372,9 +372,7 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
   const rail=railFor(asset,String(quote.network));
   if(normalizeAddress(rail.destination)!==normalizeAddress(String(quote.destination)))throw new Error("payment_destination_mismatch");
 
-  if(asset==="ETH"||asset==="USDC"||asset==="USDT"||asset==="BNB"||asset==="POL"||asset==="AVAX"){
-    if(!/^0x[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
-  }else if(!/^[0-9a-fA-F]{64}$/.test(txHash))throw new Error("invalid_transaction_hash");
+  validateTransactionHash(asset,txHash);
 
   const eventKey=`onchain:${rail.network.toLowerCase()}:${txHash.toLowerCase()}`;
   const {data:existing}=await admin.from("buildpulse_ad_payment_events").select("order_id,state,confirmations").eq("provider_event_key",eventKey).maybeSingle();
