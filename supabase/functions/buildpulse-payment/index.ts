@@ -51,6 +51,19 @@ function materializeRail(def:RailDefinition):Rail{
   const {destinationEnv,memoEnv,...rail}=def;
   return {...rail,destination,memo:memoEnv?optionalEnv(memoEnv):undefined};
 }
+function railReleaseReady(def:RailDefinition){
+  if(!optionalEnv(def.destinationEnv))return false;
+  if(def.asset==="USDT"&&def.network==="Base")return false;
+  if(def.network==="BNB Chain"&&!optionalEnv("BUILDPULSE_BNB_RPC_URL"))return false;
+  if(def.network==="Polygon"&&!optionalEnv("BUILDPULSE_POL_RPC_URL"))return false;
+  if(def.network==="Avalanche C-Chain"&&!optionalEnv("BUILDPULSE_AVAX_RPC_URL"))return false;
+  if(def.asset==="SOL"&&!optionalEnv("BUILDPULSE_SOL_RPC_URL"))return false;
+  if(def.asset==="TRX"&&!optionalEnv("BUILDPULSE_TRON_NODE_URL"))return false;
+  if(def.asset==="ADA"&&!optionalEnv("BUILDPULSE_CARDANO_BLOCKFROST_PROJECT_ID"))return false;
+  if(def.asset==="SUI")return false;
+  return true;
+}
+function assertRailReleaseReady(asset:Asset,network:string){const def=RAIL_DEFINITIONS[asset+":"+network.toUpperCase()];if(!def||!railReleaseReady(def))throw new Error("payment_rail_not_ready")}
 function railFor(asset:Asset,networkRaw?:string){
   const network=String(networkRaw||"").trim().toUpperCase();
   if(network){const exact=RAIL_DEFINITIONS[`${asset}:${network}`];if(exact)return materializeRail(exact);throw new Error("unsupported_network")}
@@ -473,21 +486,16 @@ Deno.serve(async(req:Request)=>{
     if(!body||typeof body!=="object")return reply({ok:false,error:"invalid_request"},400);
     const action=String(body.action??"");
     if(action==="capabilities"){
-      const supported=new Set(["ETH","BTC","USDC","USDT","XRP"]);
-      const rails=Object.values(RAIL_DEFINITIONS).filter(def=>{
-        if(!supported.has(def.asset))return false;
-        if(def.asset==="USDT"&&def.network==="Base")return false;
-        return Boolean(optionalEnv(def.destinationEnv));
-      }).map(def=>({asset:def.asset,network:def.network,requiresMemo:Boolean(def.memoEnv&&optionalEnv(def.memoEnv))}));
+      const rails=Object.values(RAIL_DEFINITIONS).filter(railReleaseReady).map(def=>({asset:def.asset,network:def.network,requiresMemo:Boolean(def.memoEnv&&optionalEnv(def.memoEnv))}));
       return reply({ok:true,rails});
     }
     const subscriptionPaymentId=String(body.paymentId??"");
-    if(action==="subscription_quote"){const asset=String(body.asset??"").toUpperCase() as Asset;let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){return reply({ok:false,error:e instanceof Error?e.message:"unsupported_network"},400)}if(!["ETH","BTC","USDC","USDT","XRP"].includes(asset)||(asset==="USDT"&&rail.network==="Base"))return reply({ok:false,error:"verification_not_enabled_for_asset"},503);return reply({ok:true,method:asset,...await issueSubscriptionQuote(admin,user,String(body.planCode??""),String(body.billingInterval??""),asset,rail.network)})}
+    if(action==="subscription_quote"){const asset=String(body.asset??"").toUpperCase() as Asset;let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){return reply({ok:false,error:e instanceof Error?e.message:"unsupported_network"},400)}try{assertRailReleaseReady(asset,rail.network)}catch{return reply({ok:false,error:"payment_rail_not_ready"},503)}return reply({ok:true,method:asset,...await issueSubscriptionQuote(admin,user,String(body.planCode??""),String(body.billingInterval??""),asset,rail.network)})}
     if(action==="subscription_verify"){if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(subscriptionPaymentId))return reply({ok:false,error:"invalid_payment"},400);return reply({ok:true,...await verifySubscriptionClaim(admin,user,subscriptionPaymentId,String(body.txHash??""))})}
     const submissionId=String(body.submissionId??"");
     if(action==="contributor_quote"||action==="contributor_verify"){
       if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId))return reply({ok:false,error:"invalid_submission"},400);
-      if(action==="contributor_quote"){const asset=String(body.asset??"").toUpperCase() as Asset;let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){return reply({ok:false,error:e instanceof Error?e.message:"unsupported_network"},400)}if(!["ETH","BTC","USDC","USDT","XRP"].includes(asset)||(asset==="USDT"&&rail.network==="Base"))return reply({ok:false,error:"verification_not_enabled_for_asset"},503);return reply({ok:true,method:asset,...await issueContributorQuote(admin,user,submissionId,asset,rail.network)})}
+      if(action==="contributor_quote"){const asset=String(body.asset??"").toUpperCase() as Asset;let rail:Rail;try{rail=railFor(asset,String(body.network??""))}catch(e){return reply({ok:false,error:e instanceof Error?e.message:"unsupported_network"},400)}try{assertRailReleaseReady(asset,rail.network)}catch{return reply({ok:false,error:"payment_rail_not_ready"},503)}return reply({ok:true,method:asset,...await issueContributorQuote(admin,user,submissionId,asset,rail.network)})}
       return reply({ok:true,...await verifyContributorClaim(admin,user,submissionId,String(body.txHash??""))});
     }
     const orderId=String(body.orderId??"");
