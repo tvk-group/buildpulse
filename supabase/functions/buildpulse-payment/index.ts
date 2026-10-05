@@ -184,6 +184,7 @@ async function verifyContributorClaim(admin:any,user:any,submissionId:string,txH
   if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,quote.quoted_at,quote.expires_at))throw new Error("transaction_outside_quote_window");
   if(verified.state!=="confirmed"){await admin.from("buildpulse_contributor_payment_quotes").update({state:"observed"}).eq("id",quote.id).eq("state","open");return {state:"confirming",confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
   const actualAmount=atomicToDecimal(verified.actual,rail.decimals);
+  await claimCryptoTx(admin,rail.network,txHash,"contributor_review",submission.id);
   const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_contributor_crypto_payment",{p_quote_id:quote.id,p_tx_hash:txHash,p_observed_amount:actualAmount,p_confirmations:verified.confirmations,p_metadata:{verified_at:new Date().toISOString()}});
   if(se)throw new Error(se.message||"crypto_settlement_failed");
   const {error:evidenceError}=await admin.rpc("buildpulse_record_service_crypto_evidence",{p_service_type:"contributor_review",p_service_reference_id:submission.id,p_user_id:user.id,p_asset:asset,p_network:rail.network,p_tx_hash:txHash,p_destination:quote.destination,p_expected:Number(quote.expected_amount),p_observed:actualAmount,p_rate:Number((quote as any).rate_usd||0),p_gross:149,p_confirmations:verified.confirmations,p_evidence:{quote_id:quote.id,verified_at:new Date().toISOString()}});if(evidenceError)throw new Error("accounting_evidence_persistence_failed");
@@ -214,7 +215,8 @@ async function verifySubscriptionClaim(admin:any,user:any,paymentId:string,txHas
   if(verified.actual<decimalToAtomic(payment.expected_amount,rail.decimals))throw new Error("payment_underpaid");
   if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,payment.quoted_at,payment.expires_at))throw new Error("transaction_outside_quote_window");
   if(verified.state!=="confirmed"){await admin.from("buildpulse_subscription_crypto_payments").update({state:"observed",tx_hash:txHash}).eq("id",payment.id).eq("state","open");return {state:"confirming",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
-  await claimCryptoTx(admin,rail.network,txHash,"intelligence_subscription",payment.id);\n  const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_subscription_crypto_payment",{p_payment_id:payment.id,p_tx_hash:txHash,p_confirmations:verified.confirmations});
+  await claimCryptoTx(admin,rail.network,txHash,"intelligence_subscription",payment.id);
+  const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_subscription_crypto_payment",{p_payment_id:payment.id,p_tx_hash:txHash,p_confirmations:verified.confirmations});
   if(se)throw new Error(se.message||"crypto_settlement_failed");const observed=atomicToDecimal(verified.actual,rail.decimals);const {error:evidenceError}=await admin.rpc("buildpulse_record_service_crypto_evidence",{p_service_type:"intelligence_subscription",p_service_reference_id:payment.id,p_user_id:user.id,p_asset:asset,p_network:rail.network,p_tx_hash:txHash,p_destination:payment.destination,p_expected:Number(payment.expected_amount),p_observed:observed,p_rate:Number(payment.rate_usd),p_gross:Number(payment.usd_amount),p_confirmations:verified.confirmations,p_evidence:{plan_code:payment.plan_code,billing_interval:payment.billing_interval,verified_at:new Date().toISOString()}});if(evidenceError)throw new Error("accounting_evidence_persistence_failed");return {state:"confirmed",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,settled};
 }
 
@@ -372,6 +374,7 @@ async function verifyClaim(admin:any,user:any,orderId:string,txHashRaw:string){
   }
 
   const actualAmount=atomicToDecimal(verified.actual,rail.decimals);
+  await claimCryptoTx(admin,rail.network,txHash,"advertising",order.id);
   const {error:settlementError}=await admin.rpc("buildpulse_finalize_crypto_ad_payment",{
     p_order_id:order.id,p_quote_id:quote.id,p_provider_event_key:eventKey,p_tx_hash:txHash,
     p_observed_amount:actualAmount,p_confirmations:verified.confirmations,p_verified_at:new Date().toISOString()
