@@ -104,7 +104,7 @@ async function evmRpc(url:string,method:string,params:unknown[]){
   return body?.result;
 }
 function topicForAddress(address:string){return "0x"+address.toLowerCase().replace(/^0x/,"").padStart(64,"0")}
-function normalizeAddress(address:string|null|undefined){return (address||"").toLowerCase()}
+function normalizeAddress(address:string|null|undefined){return (address||"").toLowerCase()}\nasync function claimCryptoTx(admin:any,network:string,txHash:string,settlementType:"advertising"|"contributor_review"|"intelligence_subscription",referenceId:string){const {error}=await admin.rpc("buildpulse_claim_crypto_tx",{p_network:network,p_tx_hash:txHash,p_settlement_type:settlementType,p_settlement_reference_id:referenceId});if(error)throw new Error(error.message?.includes("transaction_already_used")?"transaction_already_used":"transaction_claim_failed")}
 
 async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?:string){
   const rail=railFor(asset,network);
@@ -213,7 +213,7 @@ async function verifySubscriptionClaim(admin:any,user:any,paymentId:string,txHas
   if(verified.actual<decimalToAtomic(payment.expected_amount,rail.decimals))throw new Error("payment_underpaid");
   if(verified.txTimeMs&&!withinQuoteWindow(verified.txTimeMs,payment.quoted_at,payment.expires_at))throw new Error("transaction_outside_quote_window");
   if(verified.state!=="confirmed"){await admin.from("buildpulse_subscription_crypto_payments").update({state:"observed",tx_hash:txHash}).eq("id",payment.id).eq("state","open");return {state:"confirming",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations}}
-  const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_subscription_crypto_payment",{p_payment_id:payment.id,p_tx_hash:txHash,p_confirmations:verified.confirmations});
+  await claimCryptoTx(admin,rail.network,txHash,"intelligence_subscription",payment.id);\n  const {data:settled,error:se}=await admin.rpc("buildpulse_finalize_subscription_crypto_payment",{p_payment_id:payment.id,p_tx_hash:txHash,p_confirmations:verified.confirmations});
   if(se)throw new Error(se.message||"crypto_settlement_failed");const observed=atomicToDecimal(verified.actual,rail.decimals);const {error:evidenceError}=await admin.rpc("buildpulse_record_service_crypto_evidence",{p_service_type:"intelligence_subscription",p_service_reference_id:payment.id,p_user_id:user.id,p_asset:asset,p_network:rail.network,p_tx_hash:txHash,p_destination:payment.destination,p_expected:Number(payment.expected_amount),p_observed:observed,p_rate:Number(payment.rate_usd),p_gross:Number(payment.usd_amount),p_confirmations:verified.confirmations,p_evidence:{plan_code:payment.plan_code,billing_interval:payment.billing_interval,verified_at:new Date().toISOString()}});if(evidenceError)throw new Error("accounting_evidence_persistence_failed");return {state:"confirmed",paymentId:payment.id,confirmations:verified.confirmations,requiredConfirmations:rail.requiredConfirmations,settled};
 }
 
