@@ -220,3 +220,7 @@
 - [x] Stale route-work recovery deployed: service-only RPC requeues claims stale >30 minutes and fails them after 3 attempts; anon/authenticated EXECUTE=false, service_role=true. Canonical scheduled agent worker upgraded to Edge Function v7 and invokes recovery before claims.
 - [x] Supabase security advisor rerun after stale-recovery DDL: no new ERROR/WARN surfaced; INFO findings are RLS-enabled/no-policy service-only tables and remain intentionally non-public.
 - [x] /people production deployment verified READY and live: HTTP 200, title People | BuildPulse, person-focused verified cards rendered.
+
+- [x] Canonical agent worker status semantics corrected in production Edge v8 and Vercel fallback: scheduler completion/failure is now carried as scheduleStatus and cannot be overwritten by agent detail status such as idle/awaiting_approval.
+- [x] Advertiser route classification made durable: /advertiser is explicitly public/low-risk while invoice paths remain advertiser/medium-risk. Production route inventory reconciled accordingly.
+- [ ] Founder review production prerequisite clarified: Vercel currently lacks BOTH a server-side Supabase admin credential and BUILDPULSE_REVIEW_SECRET. Review token implementation is HMAC/action/expiry/revision bound, but production generation/validation and mutations remain fail-closed until both secrets are configured. Safe readiness booleans reviewSecretConfigured/founderReviewReady added; values only, never secret material.
