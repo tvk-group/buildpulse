@@ -224,3 +224,7 @@
 - [x] Canonical agent worker status semantics corrected in production Edge v8 and Vercel fallback: scheduler completion/failure is now carried as scheduleStatus and cannot be overwritten by agent detail status such as idle/awaiting_approval.
 - [x] Advertiser route classification made durable: /advertiser is explicitly public/low-risk while invoice paths remain advertiser/medium-risk. Production route inventory reconciled accordingly.
 - [ ] Founder review production prerequisite clarified: Vercel currently lacks BOTH a server-side Supabase admin credential and BUILDPULSE_REVIEW_SECRET. Review token implementation is HMAC/action/expiry/revision bound, but production generation/validation and mutations remain fail-closed until both secrets are configured. Safe readiness booleans reviewSecretConfigured/founderReviewReady added; values only, never secret material.
+
+- [x] Required production crypto settlement release completed: ETH/Ethereum, ETH/Base, BTC/Bitcoin Mainnet, USDC/Ethereum, USDC/Base, USDT/Ethereum, XRP/XRPL. USDT/Base remains intentionally disabled. Payment Edge Function v16 ACTIVE; status runtime v7 ACTIVE.
+- [x] Live readiness after crypto release: paymentsReady=true, advertisingReady=true, stripeReady=true, cryptoReady=true, missingCryptoAssets=[]; all five required assets are visible with seven released network rails.
+- [x] Settlement destinations use the founder-authorized BuildPulse public receiving wallets; XRP keeps destination tag 1234. No private key, seed phrase, or API credential is embedded or exposed.
