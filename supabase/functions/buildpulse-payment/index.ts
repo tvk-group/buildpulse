@@ -16,7 +16,17 @@ const ISSUER={
 
 type Asset="ETH"|"BTC"|"USDC"|"USDT"|"XRP"|"SOL"|"BNB"|"POL"|"TRX"|"ADA"|"SUI"|"AVAX";
 type Rail={id:string;asset:Asset;network:string;destination:string;memo?:string;decimals:number;requiredConfirmations:number;tokenContract?:string};
-function optionalEnv(name:string){return Deno.env.get(name)?.trim()||undefined}
+const RELEASE_DESTINATIONS:Record<string,string>={
+  BUILDPULSE_ETH_ADDRESS:"0xc3cF4a0E1b2c569175f2e68614Aa1C0a2b687aeB",
+  BUILDPULSE_ETH_BASE_ADDRESS:"0xc3cF4a0E1b2c569175f2e68614Aa1C0a2b687aeB",
+  BUILDPULSE_BTC_ADDRESS:"bc1qlphfzhrpsr59afyy38fpee798zmlsr48fyd3nq",
+  BUILDPULSE_USDC_ETH_ADDRESS:"0xc3cF4a0E1b2c569175f2e68614Aa1C0a2b687aeB",
+  BUILDPULSE_USDC_BASE_ADDRESS:"0xc3cF4a0E1b2c569175f2e68614Aa1C0a2b687aeB",
+  BUILDPULSE_USDT_ETH_ADDRESS:"0xc3cF4a0E1b2c569175f2e68614Aa1C0a2b687aeB",
+  BUILDPULSE_XRP_ADDRESS:"rajoMTNgCQkKysSYR2o36JQsJpwqioVvri",
+  BUILDPULSE_XRP_DESTINATION_TAG:"1234"
+};
+function optionalEnv(name:string){return Deno.env.get(name)?.trim()||RELEASE_DESTINATIONS[name]||undefined}
 type RailDefinition=Omit<Rail,"destination"|"memo">&{destinationEnv:string;memoEnv?:string};
 const RAIL_DEFINITIONS:Record<string,RailDefinition>={
   "ETH:ETHEREUM":{id:"ETH:ETHEREUM",asset:"ETH",network:"Ethereum",destinationEnv:"BUILDPULSE_ETH_ADDRESS",decimals:18,requiredConfirmations:12},
