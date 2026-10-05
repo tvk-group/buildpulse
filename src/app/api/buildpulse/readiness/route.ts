@@ -26,6 +26,8 @@ export async function GET(){
   const serverAdminConfigured=Boolean((process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY)?.trim());
   const cronConfigured=Boolean(process.env.CRON_SECRET?.trim());
   const nvidiaConfigured=Boolean((process.env.NVIDIA_NIM_API_KEY||process.env.NVIDIA_API_KEY)?.trim());
+  const reviewSecretConfigured=Boolean(process.env.BUILDPULSE_REVIEW_SECRET?.trim());
+  const founderReviewReady=serverAdminConfigured&&reviewSecretConfigured;
   const privilegedAutomationReady=serverAdminConfigured&&cronConfigured;
   return NextResponse.json({
     ok:Boolean(status?.ok),
@@ -45,6 +47,8 @@ export async function GET(){
     serverAdminConfigured,
     cronConfigured,
     nvidiaConfigured,
+    reviewSecretConfigured,
+    founderReviewReady,
     privilegedAutomationReady,
     mail:status?.mail??{provider:"resend",domain:"buildpulse.news",domainStatus:"unknown",deliveryEnabled:false},
     checks:status?.checks??{},
