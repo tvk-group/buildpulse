@@ -104,7 +104,8 @@ async function evmRpc(url:string,method:string,params:unknown[]){
   return body?.result;
 }
 function topicForAddress(address:string){return "0x"+address.toLowerCase().replace(/^0x/,"").padStart(64,"0")}
-function normalizeAddress(address:string|null|undefined){return (address||"").toLowerCase()}\nasync function claimCryptoTx(admin:any,network:string,txHash:string,settlementType:"advertising"|"contributor_review"|"intelligence_subscription",referenceId:string){const {error}=await admin.rpc("buildpulse_claim_crypto_tx",{p_network:network,p_tx_hash:txHash,p_settlement_type:settlementType,p_settlement_reference_id:referenceId});if(error)throw new Error(error.message?.includes("transaction_already_used")?"transaction_already_used":"transaction_claim_failed")}
+function normalizeAddress(address:string|null|undefined){return (address||"").toLowerCase()}
+async function claimCryptoTx(admin:any,network:string,txHash:string,settlementType:"advertising"|"contributor_review"|"intelligence_subscription",referenceId:string){const {error}=await admin.rpc("buildpulse_claim_crypto_tx",{p_network:network,p_tx_hash:txHash,p_settlement_type:settlementType,p_settlement_reference_id:referenceId});if(error)throw new Error(error.message?.includes("transaction_already_used")?"transaction_already_used":"transaction_claim_failed")}
 
 async function issueQuote(admin:any,user:any,orderId:string,asset:Asset,network?:string){
   const rail=railFor(asset,network);
