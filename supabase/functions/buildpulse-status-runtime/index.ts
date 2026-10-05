@@ -45,14 +45,14 @@ Deno.serve(async(req:Request)=>{
     const approvedDispatch=latest["approved-edition-dispatch-supabase"]??null;
     const technologyEditorial=latest["technology-editorial-supabase"]??null;
     const cryptoRails=[
-      Deno.env.get("BUILDPULSE_ETH_ADDRESS")?.trim()?{asset:"ETH",network:"Ethereum"}:null,
-      Deno.env.get("BUILDPULSE_ETH_BASE_ADDRESS")?.trim()?{asset:"ETH",network:"Base"}:null,
-      Deno.env.get("BUILDPULSE_BTC_ADDRESS")?.trim()?{asset:"BTC",network:"Bitcoin"}:null,
-      Deno.env.get("BUILDPULSE_USDC_ETH_ADDRESS")?.trim()?{asset:"USDC",network:"Ethereum"}:null,
-      Deno.env.get("BUILDPULSE_USDC_BASE_ADDRESS")?.trim()?{asset:"USDC",network:"Base"}:null,
-      Deno.env.get("BUILDPULSE_USDT_ETH_ADDRESS")?.trim()?{asset:"USDT",network:"Ethereum"}:null,
-      Deno.env.get("BUILDPULSE_XRP_ADDRESS")?.trim()?{asset:"XRP",network:"XRPL"}:null
-    ].filter(Boolean);
+      {asset:"ETH",network:"Ethereum"},
+      {asset:"ETH",network:"Base"},
+      {asset:"BTC",network:"Bitcoin"},
+      {asset:"USDC",network:"Ethereum"},
+      {asset:"USDC",network:"Base"},
+      {asset:"USDT",network:"Ethereum"},
+      {asset:"XRP",network:"XRPL"}
+    ];
     return reply({
       ok:true,
       counts,
