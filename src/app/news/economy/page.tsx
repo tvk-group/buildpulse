@@ -1,0 +1,1 @@
+import {VerifiedNewsDesk} from "@/components/buildpulse/VerifiedNewsDesk";export const dynamic="force-dynamic";export default function Page(){return <VerifiedNewsDesk eyebrow="Economy" title="Economy & business news" description="Verified economic, regulatory and digital-economy reporting from BuildPulse sources." categories={["economy","digital-economy"]}/>}
