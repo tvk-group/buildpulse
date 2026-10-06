@@ -1,0 +1,1 @@
+import {VerifiedNewsDesk} from "@/components/buildpulse/VerifiedNewsDesk";export const dynamic="force-dynamic";export default function Page(){return <VerifiedNewsDesk eyebrow="Infrastructure" title="Developer & cloud infrastructure" description="Verified developer-platform, cloud and infrastructure developments." categories={["developer-infrastructure","technology"]}/>}
