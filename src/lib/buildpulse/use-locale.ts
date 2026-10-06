@@ -1,0 +1,4 @@
+"use client";import{useEffect,useState}from"react";import{getBuildPulseLocale,setBuildPulseLocale}from "@/lib/buildpulse/localization";
+export function useBuildPulseLocale(){const[locale,setLocaleState]=useState("en");useEffect(()=>{setLocaleState(getBuildPulseLocale())},[]);const setLocale=(next:string,{reload=true}:{reload?:boolean}={})=>{const normalized=setBuildPulseLocale(next);setLocaleState(normalized);if(reload&&typeof window!=="undefined")window.location.reload()};return{locale,setLocale}}
+export function isRtlLocale(locale:string){return locale==="ar"}
+export const BUILDPULSE_LOCALES=["en","de","fr","tr","es","it","pt","ru","pl","nl","sv","no","fi","da","ro","hu","cs","el","bg","uk","zh","ja","ko","ar","hi"] as const;
