@@ -25,7 +25,7 @@ export default async function AdvertisingAdmin(){
     <div className="mt-8 grid gap-6">{queue.map(item=><article key={item.id} className="rounded-2xl border bg-white p-6 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-black uppercase tracking-wider text-slate-500">{item.product.name} · {item.product.placement.replaceAll("_"," ")}</p><h2 className="mt-2 text-2xl font-black">{item.headline||"Untitled campaign"}</h2></div><div className="text-right"><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase">{item.status}</span><p className="mt-2 text-sm font-bold"><LocalizedCurrency value={item.amountUsd} currency="USD"/></p><p className="text-xs text-slate-500">Payment: {item.paymentState||"none"}</p></div></div>
       <p className="mt-4 leading-7 text-slate-600">{item.copyText}</p>
-      <a href={item.destinationUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block break-all text-sm font-bold underline">Open sponsor destination ↗</a>
+      <a href={item.destinationUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block break-all text-sm font-bold underline">Open sponsor destination ↗</a>
       <div className="mt-4 grid gap-2 text-xs text-slate-500 md:grid-cols-2"><p>Advertiser: {item.advertiser.companyName||"—"} · {item.advertiser.billingEmail||"—"}</p><p>Created: <LocalizedDate value={item.createdAt}/></p>{item.startsAt?<p>Starts: <LocalizedDate value={item.startsAt}/></p>:null}{item.endsAt?<p>Ends: <LocalizedDate value={item.endsAt}/></p>:null}</div>
       <AdvertisingReviewActions orderId={item.id} status={item.status} creatives={item.creatives??[]} durationDays={item.product.durationDays}/>
     </article>)}
