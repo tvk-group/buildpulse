@@ -477,7 +477,9 @@ Deno.serve(async(req:Request)=>{
     const service=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
     const authorization=req.headers.get("Authorization")??"";
     if(!url||!anon||!service)return reply({ok:false,error:"service_not_configured"},503);
-    if(!authorization.startsWith("Bearer "))return reply({ok:false,error:"authentication_required"},401);\n    const preBody=await req.clone().json().catch(()=>null);\n    if(preBody&&typeof preBody==="object"&&String(preBody.action??"")==="capabilities"){const rails=Object.values(RAIL_DEFINITIONS).filter(railReleaseReady).map(def=>({asset:def.asset,network:def.network,requiresMemo:Boolean(def.memoEnv&&optionalEnv(def.memoEnv))}));return reply({ok:true,rails})}
+    if(!authorization.startsWith("Bearer "))return reply({ok:false,error:"authentication_required"},401);
+    const preBody=await req.clone().json().catch(()=>null);
+    if(preBody&&typeof preBody==="object"&&String(preBody.action??"")==="capabilities"){const rails=Object.values(RAIL_DEFINITIONS).filter(railReleaseReady).map(def=>({asset:def.asset,network:def.network,requiresMemo:Boolean(def.memoEnv&&optionalEnv(def.memoEnv))}));return reply({ok:true,rails})}
     const userClient=createClient(url,anon,{global:{headers:{Authorization:authorization}},auth:{persistSession:false,autoRefreshToken:false}});
     const {data:{user},error:userError}=await userClient.auth.getUser();
     if(userError||!user)return reply({ok:false,error:"authentication_required"},401);
