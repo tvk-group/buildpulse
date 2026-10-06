@@ -13,7 +13,7 @@ export async function GET(){
       status=null;
     }
   }
-  const cryptoRailDetails=Array.isArray(status?.cryptoRails)?status.cryptoRails:[];
+  let cryptoRailDetails=Array.isArray(status?.cryptoRails)?status.cryptoRails:[];\n  if(config.configured){\n    try{\n      const paymentEndpoint=new URL("/functions/v1/buildpulse-payment",config.url);\n      const response=await fetch(paymentEndpoint,{method:"POST",cache:"no-store",headers:{apikey:config.key,Authorization:`Bearer ${config.key}`,"Content-Type":"application/json"},body:JSON.stringify({action:"capabilities"})});\n      const capabilities=response.ok?await response.json().catch(()=>null):null;\n      if(Array.isArray(capabilities?.rails))cryptoRailDetails=capabilities.rails;\n    }catch{}\n  }
   const cryptoRails=[...new Set(cryptoRailDetails.map((r:{asset?:string})=>String(r?.asset||"")).filter(Boolean))];
   const requiredCryptoAssets=["ETH","BTC","USDC","USDT","XRP"] as const;
   const missingCryptoAssets=requiredCryptoAssets.filter(asset=>!cryptoRails.includes(asset));
@@ -54,6 +54,6 @@ export async function GET(){
     checks:status?.checks??{},
     counts:status?.counts??{},
     scheduler:status?.scheduler??{},
-    architecture:{...(status?.architecture??{}),payments:{checkout:"stripe-payment-links-plus-supabase-edge",cryptoVerification:"supabase-edge",legacyVercelSecretsRequired:false}}
+    architecture:{...(status?.architecture??{}),payments:{checkout:"stripe-payment-links-plus-supabase-edge",cryptoVerification:"supabase-edge-v21-capability-driven",capabilities:"live-payment-edge",legacyVercelSecretsRequired:false}}
   },{headers:{"cache-control":"no-store"}});
 }
