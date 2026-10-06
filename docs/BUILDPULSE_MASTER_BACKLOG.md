@@ -141,7 +141,7 @@
 
 ## P1 — Markets/Intelligence
 - [x] Crypto and FX ticker foundations.
-- [ ] Licensed/verified indices, metals and global exchange feeds; never fabricate. Twelve Data/Finnhub market adapters and TradingView visualization are integrated; quote API now exposes provider, observation time and real-time/reference status, while full licensed global indices/metals coverage remains incomplete.
+- [ ] Licensed/verified indices, metals and global exchange feeds; never fabricate. Twelve Data/Finnhub market adapters and TradingView visualization are integrated; the normalized quote API exposes provider, observation time and LIVE/REF semantics. Production verification on 2026-10-06 confirms non-empty equities, index ETF proxies, GLD/SLV/CPER metals proxies, USO/BNO energy proxies, CoinGecko crypto, ECB-reference FX and FRED macro groups. Direct underlying global-index/spot/futures redistribution remains entitlement-gated and is never mislabeled as proxy data.
 - [x] Align ticker behavior consistently across BuildPulse pages — shared market tape consumes the normalized market endpoint and visibly labels source plus LIVE/REF freshness semantics.
 - [x] Intelligence subscriber dashboard/watchlists — authenticated /account/intelligence claims eligible signed-Stripe entitlements, exposes active/past-due/paused plan state, and persists bounded topic/watchlist, IANA delivery-time-zone, service-email and separate marketing-consent preferences with an audit event trail.
 - [x] Public/licensed-data-only analysis policy — the generation contract and public methodology restrict analytical inputs to public or properly licensed information and explicitly reject confidential, leaked, material non-public or unlawfully obtained information.
