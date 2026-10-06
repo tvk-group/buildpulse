@@ -11,7 +11,7 @@ Deno.serve(async(req:Request)=>{
   const supabaseUrl=Deno.env.get("SUPABASE_URL")??"",service=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
   if(!supabaseUrl||!service)return reply({ok:false,error:"service_not_configured"},503);
   const admin=createClient(supabaseUrl,service,{auth:{persistSession:false,autoRefreshToken:false}});
-  const publicStates=["published","sending","sent"];
+  const publicStates=["published","sending","sent"];const supportedLocales=new Set(["en","de","fr","tr","es","it","pt","ru","pl","nl","sv","no","fi","da","ro","hu","cs","el","bg","uk","zh","ja","ko","ar","hi"]);
 
   if(action==="latest"||action==="list"){
     const limit=safeLimit(url.searchParams.get("limit"),action==="latest"?20:100);
@@ -30,7 +30,7 @@ Deno.serve(async(req:Request)=>{
   if(action==="stories"){
     const limit=safeLimit(url.searchParams.get("limit"),50);
     const category=(url.searchParams.get("category")??"").trim().slice(0,80);
-    const sinceHours=Math.max(0,Math.min(24*30,Number(url.searchParams.get("sinceHours")??0)||0));
+    const sinceHours=Math.max(0,Math.min(24*30,Number(url.searchParams.get("sinceHours")??0)||0));const requested=(url.searchParams.get("locale")??"").toLowerCase();const locale=supportedLocales.has(requested)?requested:"";
     let query=admin.from("buildpulse_stories")
       .select("id,title,summary,canonical_source_url,image_url,published_at,category,editorial_score,verified_at,verified_by,source_id,publication_state,correction_note,corrected_at")
       .eq("verification_state","verified")
@@ -49,10 +49,10 @@ Deno.serve(async(req:Request)=>{
     const {data:sources,error:sourceError}=sourceIds.length
       ?await admin.from("buildpulse_sources").select("id,name").in("id",sourceIds)
       :{data:[],error:null};
-    if(sourceError)throw sourceError;
+    if(sourceError)throw sourceError;const storyIds=(data??[]).map((x:any)=>x.id);let localizationMap=new Map();if(locale&&storyIds.length){const {data:locs,error:locError}=await admin.from("buildpulse_story_localizations").select("story_id,title,summary,locale,translation_state").in("story_id",storyIds).eq("locale",locale).in("translation_state",["review","published"]);if(locError)throw locError;localizationMap=new Map((locs??[]).map((x:any)=>[x.story_id,x]))}
     const sourceMap=new Map((sources??[]).map((x:any)=>[x.id,x.name]));
     return reply({ok:true,stories:(data??[]).map((x:any)=>({
-      id:x.id,title:x.title,summary:x.summary,canonicalSourceUrl:x.canonical_source_url,imageUrl:x.image_url,
+      id:x.id,title:localizationMap.get(x.id)?.title??x.title,summary:localizationMap.get(x.id)?.summary??x.summary,requestedLocale:locale||null,localized:Boolean(localizationMap.get(x.id)),localizationState:localizationMap.get(x.id)?.translation_state??null,canonicalSourceUrl:x.canonical_source_url,imageUrl:x.image_url,
       publishedAt:x.published_at,category:x.category,editorialScore:x.editorial_score,
       verifiedAt:x.verified_at,sourceName:sourceMap.get(x.source_id)??"Source",publicationState:x.publication_state,correctionNote:x.correction_note,correctedAt:x.corrected_at
     }))});
