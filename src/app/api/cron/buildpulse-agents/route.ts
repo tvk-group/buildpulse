@@ -20,7 +20,7 @@ export async function GET(req:NextRequest){
   if(sqErr)throw sqErr;
   specializedRouteWorkQueued=Number(sq??0);
  }catch(e){await db.from("buildpulse_job_runs").insert({job_name:"route-inventory-sync",status:"failed",started_at:new Date().toISOString(),finished_at:new Date().toISOString(),error:e instanceof Error?e.message:"route_inventory_sync_failed"});}
- const {data:claimed,error}=await (db.rpc as any)("buildpulse_claim_due_agent_schedules",{p_limit:12});
+ const {data:claimed,error}=await (db.rpc as any)("buildpulse_claim_due_agent_schedules",{p_limit:30});
  if(error)return NextResponse.json({ok:false,error:"claim_failed"},{status:500});
  const results=[] as any[];
  const startedAt=Date.now();
