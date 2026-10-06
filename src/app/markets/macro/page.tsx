@@ -1,1 +1,14 @@
-import {LiveMarketGrid} from "@/components/buildpulse/LiveMarketGrid";import {MarketsSubnav} from "@/components/buildpulse/MarketsSubnav";export default function Macro(){return <main><MarketsSubnav/><section className="mx-auto max-w-[1440px] px-5 py-10"><p className="text-xs font-black uppercase tracking-widest text-[#0b6b63]">Macro</p><h1 className="mt-3 text-5xl font-black">Economic signals</h1><p className="mt-4 max-w-3xl text-[#53606b]">Authoritative FRED observations for inflation, employment, policy rates, real GDP and Treasury yields. Release calendars remain separate from observation data.</p><LiveMarketGrid group="macro"/></section></main>
+import {LiveMarketGrid} from "@/components/buildpulse/LiveMarketGrid";
+import {MarketsSubnav} from "@/components/buildpulse/MarketsSubnav";
+
+export default function Macro(){
+ return <main>
+  <MarketsSubnav/>
+  <section className="mx-auto max-w-[1440px] px-5 py-10">
+   <p className="text-xs font-black uppercase tracking-widest text-[#0b6b63]">Macro</p>
+   <h1 className="mt-3 text-5xl font-black">Economic signals</h1>
+   <p className="mt-4 max-w-3xl text-[#53606b]">Authoritative FRED observations for inflation, employment, policy rates, real GDP and Treasury yields. Release calendars remain separate from observation data.</p>
+   <LiveMarketGrid group="macro"/>
+  </section>
+ </main>;
+}
