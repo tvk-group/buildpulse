@@ -5,7 +5,7 @@ import {useEffect,useState} from "react";
 import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localization";import {uiCopy} from "@/lib/buildpulse/ui-copy";
 
 const groupDefs=[
- {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/archive?category=politics"],["Economy","/markets"]]},
+ {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/news/politics"],["Economy","/news/economy"],["AI","/news/ai"],["Blockchain","/news/blockchain"],["Security","/news/security"]]},
  {label:"Intelligence",items:[["Markets","/markets"],["Methodology","/methodology"]]},
  {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"]]},
  {label:"Culture",items:[["Sports","/sports"],["Arts","/arts"],["Marketplace","/marketplace"]]},
