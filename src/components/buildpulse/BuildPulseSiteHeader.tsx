@@ -5,10 +5,10 @@ import {useEffect,useState} from "react";
 import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localization";import {uiCopy} from "@/lib/buildpulse/ui-copy";
 
 const groupDefs=[
- {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/news/politics"],["Economy","/news/economy"],["AI","/news/ai"],["Blockchain","/news/blockchain"],["Security","/news/security"]]},
+ {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/news/politics"],["Economy","/news/economy"],["AI","/news/ai"],["Blockchain","/news/blockchain"],["Security","/news/security"],["Science","/news/science"],["Health","/news/health"]]},
  {label:"Intelligence",items:[["Markets","/markets"],["Methodology","/methodology"]]},
  {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"]]},
- {label:"Culture",items:[["Sports","/sports"],["Arts","/arts"],["Marketplace","/marketplace"]]},
+ {label:"Culture",items:[["Sports","/sports"],["Culture News","/news/culture"],["Life","/news/life"],["Arts","/arts"],["Marketplace","/marketplace"]]},
  {label:"About",items:[["Account","/account"],["About BuildPulse","/about"],["Contribute","/contribute"],["Advertise","/advertise"]]},
 ] as const;
 const langs=[["EN","English"],["DE","Deutsch"],["FR","Français"],["TR","Türkçe"],["ES","Español"],["IT","Italiano"],["PT","Português"],["RU","Русский"],["PL","Polski"],["NL","Nederlands"],["SV","Svenska"],["NO","Norsk"],["FI","Suomi"],["DA","Dansk"],["RO","Română"],["HU","Magyar"],["CS","Čeština"],["EL","Ελληνικά"],["BG","Български"],["UK","Українська"],["ZH","中文"],["JA","日本語"],["KO","한국어"],["AR","العربية"],["HI","हिन्दी"]];
