@@ -79,6 +79,8 @@ async function reviewCreative(admin:any,user:any,body:any){
   return {ok:true,creativeId,state:decision,reviewedBy:user.email??user.id};
 }
 
+async function notifyAdvertiser(admin:any,orderId:string,state:string,details:Record<string,unknown>={}){const {data:o}=await admin.from("buildpulse_ad_orders").select("user_id").eq("id",orderId).maybeSingle();if(!o?.user_id)return;const {data:prefs}=await admin.from("buildpulse_notification_preferences").select("in_app_enabled,billing_enabled").eq("user_id",o.user_id).maybeSingle();if(prefs&&(prefs.in_app_enabled===false||prefs.billing_enabled===false))return;const title=state==="approved"?"Advertising order approved":state==="rejected"?"Advertising order not approved":state==="scheduled"?"Advertising campaign scheduled":"Advertising creative reviewed";await admin.from("buildpulse_notifications").upsert({user_id:o.user_id,kind:"billing",title,body:state==="scheduled"&&details.startsAt?`Campaign start: ${String(details.startsAt)}`:"",href:"/advertise/portal",metadata:{order_id:orderId,state,...details},dedupe_key:`advertising:${orderId}:${state}`},{onConflict:"user_id,dedupe_key",ignoreDuplicates:true})}
+
 async function orderAction(admin:any,user:any,body:any){
   const orderId=String(body.orderId??""),action=String(body.actionType??body.orderAction??body.order_action??body.decision??body.command??body.orderCommand??body.actionName??body.orderActionName??body.order_op??body.orderOp??body.actionValue??body.operation??"");
   const desired=action||String(body.value??"");
