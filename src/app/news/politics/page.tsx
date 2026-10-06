@@ -1,0 +1,1 @@
+import {VerifiedNewsDesk} from "@/components/buildpulse/VerifiedNewsDesk";export const dynamic="force-dynamic";export default function Page(){return <VerifiedNewsDesk eyebrow="Politics" title="Politics & public policy" description="Source-verified political and public-policy reporting. Coverage is reporting, not endorsement." categories={["politics"]}/>}
