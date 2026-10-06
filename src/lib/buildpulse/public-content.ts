@@ -26,10 +26,10 @@ export async function latestPublicEditions(limit=7):Promise<PublicEdition[]>{
 }
 export type PublicStory={
   id:string;title:string;summary:string|null;canonicalSourceUrl:string;imageUrl?:string|null;publishedAt:string|null;
-  category:string|null;editorialScore:number|null;verifiedAt:string;sourceName:string;sourceLanguage:string;publicationState?:"active"|"corrected"|"withheld";correctionNote?:string|null;correctedAt?:string|null;
+  category:string|null;editorialScore:number|null;verifiedAt:string;sourceName:string;sourceLanguage:string;publicationState?:"active"|"corrected"|"withheld";correctionNote?:string|null;correctedAt?:string|null;requestedLocale?:string|null;localized?:boolean;localizationState?:string|null;
 };
-export async function listVerifiedStories(options:{limit?:number;category?:string;sinceHours?:number}={}):Promise<PublicStory[]>{
-  const data=await runtime({action:"stories",limit:String(options.limit??20),category:options.category??"",sinceHours:String(options.sinceHours??0)});
+export async function listVerifiedStories(options:{limit?:number;category?:string;sinceHours?:number;locale?:string}={}):Promise<PublicStory[]>{
+  const data=await runtime({action:"stories",limit:String(options.limit??20),category:options.category??"",sinceHours:String(options.sinceHours??0),locale:options.locale??""});
   return Array.isArray(data?.stories)?data.stories:[];
 }
 export async function getPublicEdition(slug:string):Promise<PublicEdition|null>{
