@@ -9,8 +9,8 @@ const groups=new Set<Group>(["crypto","fx","equities","indices","metals","energy
 const specs:{symbol:string;label:string;group:Group;currency?:string;digits?:number}[]=[
  {symbol:"AAPL",label:"Apple",group:"equities",currency:"USD",digits:2},{symbol:"MSFT",label:"Microsoft",group:"equities",currency:"USD",digits:2},{symbol:"NVDA",label:"NVIDIA",group:"equities",currency:"USD",digits:2},
  {symbol:"SPY",label:"S&P 500 ETF",group:"indices",currency:"USD",digits:2},{symbol:"QQQ",label:"Nasdaq 100 ETF",group:"indices",currency:"USD",digits:2},{symbol:"DIA",label:"Dow Jones ETF",group:"indices",currency:"USD",digits:2},{symbol:"EWG",label:"Germany ETF",group:"indices",currency:"USD",digits:2},{symbol:"EWU",label:"United Kingdom ETF",group:"indices",currency:"USD",digits:2},{symbol:"EWJ",label:"Japan ETF",group:"indices",currency:"USD",digits:2},
- {symbol:"XAU/USD",label:"Gold",group:"metals",currency:"USD",digits:2},{symbol:"XAG/USD",label:"Silver",group:"metals",currency:"USD",digits:3},{symbol:"HG1",label:"Copper",group:"metals",currency:"USD",digits:3},
- {symbol:"WTI/USD",label:"WTI crude oil",group:"energy",currency:"USD",digits:2},{symbol:"BRENT/USD",label:"Brent crude oil",group:"energy",currency:"USD",digits:2}
+ {symbol:"GLD",label:"Gold · ETF proxy",group:"metals",currency:"USD",digits:2},{symbol:"SLV",label:"Silver · ETF proxy",group:"metals",currency:"USD",digits:2},{symbol:"CPER",label:"Copper · ETF proxy",group:"metals",currency:"USD",digits:2},
+ {symbol:"USO",label:"WTI crude · ETF proxy",group:"energy",currency:"USD",digits:2},{symbol:"BNO",label:"Brent crude · ETF proxy",group:"energy",currency:"USD",digits:2}
 ];
 const macro=[["CPIAUCSL","US CPI","Index"],["UNRATE","US unemployment","%"],["FEDFUNDS","Fed funds rate","%"],["GDPC1","US real GDP","Billions chained 2017 USD"],["DGS10","US 10Y Treasury","%"]] as const;
 
