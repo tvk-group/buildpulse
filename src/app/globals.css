@@ -5,3 +5,7 @@
 
 @keyframes bpLine{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
 @keyframes bpIntro{0%{opacity:0;transform:translateY(8px)}20%,78%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-4px)}}
+
+/* Accessible dark-action invariant: dark CTA surfaces always use high-contrast text. */
+a[class*="bg-slate-950"],button[class*="bg-slate-950"],a[class*="bg-black"],button[class*="bg-black"]{color:#fff!important}
+a[class*="bg-slate-900"],button[class*="bg-slate-900"]{color:#fff!important}
