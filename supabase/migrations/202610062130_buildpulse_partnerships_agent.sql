@@ -1,0 +1,10 @@
+insert into public.buildpulse_agents(code,name,domain,autonomy_level,description,allowed_actions,blocked_actions,schedule_hint,enabled,config)
+values('partnerships-agent','BuildPulse Partnerships Agent','commercial','draft','Discovers and manages affiliate, referral and publisher traffic partnerships; tracks outreach, applications, replies, approved tracking links and reconciliation while preserving editorial independence.',
+array['research_official_programs','draft_outreach','send_routine_outreach','track_thread','follow_up','record_partner_terms','register_approved_tracking_link','reconcile_partner_reports'],
+array['sign_contract','accept_binding_terms','change_bank_details','change_crypto_wallet','make_payment','promise_minimum_traffic','alter_editorial_ranking'],
+'continuous',true,'{"approval_required":["binding_terms","payout_changes","financial_commitments"],"editorial_independence":true,"official_routes_only":true}'::jsonb)
+on conflict(code) do update set name=excluded.name,domain=excluded.domain,autonomy_level=excluded.autonomy_level,description=excluded.description,allowed_actions=excluded.allowed_actions,blocked_actions=excluded.blocked_actions,schedule_hint=excluded.schedule_hint,enabled=true,config=excluded.config,updated_at=now();
+insert into public.buildpulse_agent_schedules(agent_id,name,cadence,input_template,enabled,next_run_at)
+select id,'partnerships-operations','hourly','Review partnership pipeline and inbox state. Prepare/send routine approved outreach and follow-ups; record program terms and approved tracking data. Escalate binding terms, payout changes, financial commitments, compliance concerns or ambiguous instructions for human approval.',true,now()
+from public.buildpulse_agents where code='partnerships-agent'
+and not exists(select 1 from public.buildpulse_agent_schedules s where s.agent_id=buildpulse_agents.id and s.name='partnerships-operations');
