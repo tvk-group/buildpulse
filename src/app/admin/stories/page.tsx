@@ -26,7 +26,7 @@ export default async function Page({searchParams}:{searchParams:Promise<{page?:s
     <div className="mt-5 space-y-5">{stories.map(s=><article key={s.id} className="rounded-2xl border bg-white p-6 shadow-sm">
       <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wide text-slate-500"><span>{s.source_name||"Source"}</span><span>•</span><span>{s.verification_state}</span>{s.published_at?<><span>•</span><span><LocalizedDate value={s.published_at}/></span></>:null}{s.editorial_score!=null?<><span>•</span><span>Score {s.editorial_score}</span></>:null}</div>
       <h2 className="mt-3 text-2xl font-black">{s.title}</h2>{s.summary?<p className="mt-3 leading-7 text-slate-600">{s.summary}</p>:null}
-      <a href={s.canonical_url} target="_blank" rel="noreferrer" className="mt-4 inline-block break-all text-sm font-bold underline">Open canonical source ↗</a>
+      <a href={s.canonical_url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block break-all text-sm font-bold underline">Open canonical source ↗</a>
       <StoryReviewActions id={s.id} canonicalUrl={s.canonical_url}/>
     </article>)}
     {!error&&data?.ok&&!stories.length?<div className="rounded-2xl border bg-white p-8 text-slate-600">No stories are awaiting review.</div>:null}</div>
