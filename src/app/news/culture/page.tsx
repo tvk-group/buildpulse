@@ -1,0 +1,1 @@
+import {VerifiedNewsDesk} from "@/components/buildpulse/VerifiedNewsDesk";export const dynamic="force-dynamic";export default function Page(){return <VerifiedNewsDesk eyebrow="Culture" title="Culture news" description="Source-verified culture, arts and heritage reporting from the newsroom pipeline." categories={["culture"]}/>}
