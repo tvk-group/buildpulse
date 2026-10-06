@@ -1,0 +1,1 @@
+import {VerifiedNewsDesk} from "@/components/buildpulse/VerifiedNewsDesk";export const dynamic="force-dynamic";export default function Page(){return <VerifiedNewsDesk eyebrow="Life" title="Life & society" description="Source-verified reporting on daily life, society and human-interest developments." categories={["life"]}/>}
