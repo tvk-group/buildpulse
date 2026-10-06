@@ -13,7 +13,15 @@ export async function GET(){
       status=null;
     }
   }
-  let cryptoRailDetails=Array.isArray(status?.cryptoRails)?status.cryptoRails:[];\n  if(config.configured){\n    try{\n      const paymentEndpoint=new URL("/functions/v1/buildpulse-payment",config.url);\n      const response=await fetch(paymentEndpoint,{method:"POST",cache:"no-store",headers:{apikey:config.key,Authorization:`Bearer ${config.key}`,"Content-Type":"application/json"},body:JSON.stringify({action:"capabilities"})});\n      const capabilities=response.ok?await response.json().catch(()=>null):null;\n      if(Array.isArray(capabilities?.rails))cryptoRailDetails=capabilities.rails;\n    }catch{}\n  }
+  let cryptoRailDetails=Array.isArray(status?.cryptoRails)?status.cryptoRails:[];
+  if(config.configured){
+    try{
+      const paymentEndpoint=new URL("/functions/v1/buildpulse-payment",config.url);
+      const response=await fetch(paymentEndpoint,{method:"POST",cache:"no-store",headers:{apikey:config.key,Authorization:`Bearer ${config.key}`,"Content-Type":"application/json"},body:JSON.stringify({action:"capabilities"})});
+      const capabilities=response.ok?await response.json().catch(()=>null):null;
+      if(Array.isArray(capabilities?.rails))cryptoRailDetails=capabilities.rails;
+    }catch{}
+  }
   const cryptoRails=[...new Set(cryptoRailDetails.map((r:{asset?:string})=>String(r?.asset||"")).filter(Boolean))];
   const requiredCryptoAssets=["ETH","BTC","USDC","USDT","XRP"] as const;
   const missingCryptoAssets=requiredCryptoAssets.filter(asset=>!cryptoRails.includes(asset));
