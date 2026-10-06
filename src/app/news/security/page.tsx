@@ -1,0 +1,1 @@
+import {VerifiedNewsDesk} from "@/components/buildpulse/VerifiedNewsDesk";export const dynamic="force-dynamic";export default function Page(){return <VerifiedNewsDesk eyebrow="Security" title="Cybersecurity" description="Verified security research, incident, infrastructure and policy reporting." categories={["security"]}/>}
