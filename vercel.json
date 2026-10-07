@@ -1,11 +1,5 @@
 {
   "crons": [
-    {"path":"/api/cron/buildpulse-ingest","schedule":"*/15 * * * *"},
-    {"path":"/api/cron/technology-editorial","schedule":"7,37 * * * *"},
-    {"path":"/api/cron/buildpulse-localize","schedule":"17,47 * * * *"},
-    {"path":"/api/cron/buildpulse-agents","schedule":"5,20,35,50 * * * *"},
-    {"path":"/api/cron/buildpulse-editions","schedule":"10 * * * *"},
-    {"path":"/api/cron/buildpulse-approved-editions","schedule":"25,55 * * * *"},
     {"path":"/api/cron/sovra-market-learning","schedule":"12,42 * * * *"}
   ],
   "framework":"nextjs"
