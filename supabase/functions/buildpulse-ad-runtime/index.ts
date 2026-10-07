@@ -68,9 +68,13 @@ Deno.serve(async(req:Request)=>{
 
     if(action==="lookup"){
       const placement=String(url.searchParams.get("placement")??"");
+      const productCode=String(url.searchParams.get("product")??"").trim();
       if(!["homepage","archive","edition_top","edition_inline","edition_footer","newsletter"].includes(placement))return reply({ok:false,error:"invalid_placement"},400);
+      if(productCode&&!/^[A-Z0-9_]{2,64}$/.test(productCode))return reply({ok:false,error:"invalid_product"},400);
       const now=new Date().toISOString();
-      const {data:products,error:productError}=await admin.from("buildpulse_ad_products").select("id,width_px,height_px").eq("placement",placement).eq("active",true);
+      let productQuery=admin.from("buildpulse_ad_products").select("id,code,width_px,height_px").eq("placement",placement).eq("active",true);
+      if(productCode)productQuery=productQuery.eq("code",productCode);
+      const {data:products,error:productError}=await productQuery;
       if(productError)throw productError;
       if(!products?.length)return reply({ok:true,ad:null});
       const {data:ad,error:adError}=await admin.from("buildpulse_ad_orders")
