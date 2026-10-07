@@ -44,7 +44,7 @@ export function BuildPulseSiteHeader(){
       <div className="grid grid-cols-2 gap-1 border-t border-white/20 p-2 sm:grid-cols-3">{g.items.map(([n,h])=><Link key={h} href={h} className={`rounded-lg px-3 py-3 text-sm font-bold ${active(h)?"bg-[#0b6b63] text-white":"hover:bg-white/10"}`}>{n}</Link>)}</div>
      </details>)}
     </nav>
-    <div className="mt-3 sm:hidden"><label className="mb-1 block text-[10px] font-black uppercase tracking-widest" htmlFor="bp-language-mobile">{t.language}</label><select id="bp-language-mobile" value={locale} onChange={e=>choose(e.target.value)} className="w-full rounded border border-white/25 bg-transparent px-3 py-3 text-sm font-bold">{langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}</select></div>
+    <div className="mt-3 sm:hidden"><label className="mb-1 block text-[10px] font-black uppercase tracking-widest" htmlFor="bp-language-mobile">{t.language}</label><select id="bp-language-mobile" value={locale} onChange={e=>choose(e.target.value)} className="w-full rounded border border-white/30 bg-[#0d2927] px-3 py-3 text-sm font-bold text-white">{langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}</select></div>
    </div>}
   </div>
  </header>
