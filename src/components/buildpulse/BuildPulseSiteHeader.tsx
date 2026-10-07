@@ -7,14 +7,14 @@ import {getBuildPulseLocale,setBuildPulseLocale} from "@/lib/buildpulse/localiza
 const groupDefs=[
  {label:"News",items:[["Latest","/archive"],["Local","/local"],["World","/world"],["Technology","/technology"],["Politics","/news/politics"],["Economy","/news/economy"],["AI","/news/ai"],["Blockchain","/news/blockchain"],["Security","/news/security"],["Science","/news/science"],["Health","/news/health"]]},
  {label:"Intelligence",items:[["Markets","/markets"],["Methodology","/methodology"]]},
- {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"]]},
+ {label:"Community",items:[["Social","/social"],["Blogs","/blog"],["People","/people"],["Connections","/connections"],["Open Forum","/open-forum"]]},
  {label:"Culture",items:[["Sports","/sports"],["Culture News","/news/culture"],["Life","/news/life"],["Arts","/arts"],["Marketplace","/marketplace"]]},
  {label:"About",items:[["Account","/account"],["About BuildPulse","/about"],["Contribute","/contribute"],["Advertise","/advertise"]]},
 ] as const;
 const langs=[["EN","English"],["DE","Deutsch"],["FR","Français"],["TR","Türkçe"],["ES","Español"],["IT","Italiano"],["PT","Português"],["RU","Русский"],["PL","Polski"],["NL","Nederlands"],["SV","Svenska"],["NO","Norsk"],["FI","Suomi"],["DA","Dansk"],["RO","Română"],["HU","Magyar"],["CS","Čeština"],["EL","Ελληνικά"],["BG","Български"],["UK","Українська"],["ZH","中文"],["JA","日本語"],["KO","한국어"],["AR","العربية"],["HI","हिन्दी"]];
 
 export function BuildPulseSiteHeader(){
- const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN"); const t=uiCopy(locale.toLowerCase()); const groups=groupDefs.map((g,gi)=>({...g,label:[t.news,t.intelligence,t.community,t.culture,t.about][gi],items:g.items.map(([n,h],ii)=>{const names=[[t.latest,t.local,t.world,t.technology,t.politics,t.economy,t.ai,t.blockchain,t.security,t.science,t.health],[t.markets,t.methodology],[t.social,t.blogs,t.people,t.connections],[t.sports,t.cultureNews,t.life,t.arts,t.marketplace],[t.account,t.aboutBp,t.contribute,t.advertise]][gi];return [names[ii]||n,h] as const})}));
+ const p=usePathname(),[open,setOpen]=useState(false),[locale,setLocale]=useState("EN"); const t=uiCopy(locale.toLowerCase()); const groups=groupDefs.map((g,gi)=>({...g,label:[t.news,t.intelligence,t.community,t.culture,t.about][gi],items:g.items.map(([n,h],ii)=>{const names=[[t.latest,t.local,t.world,t.technology,t.politics,t.economy,t.ai,t.blockchain,t.security,t.science,t.health],[t.markets,t.methodology],[t.social,t.blogs,t.people,t.connections,"Open Forum"],[t.sports,t.cultureNews,t.life,t.arts,t.marketplace],[t.account,t.aboutBp,t.contribute,t.advertise]][gi];return [names[ii]||n,h] as const})}));
  useEffect(()=>setOpen(false),[p]);
  useEffect(()=>setLocale(getBuildPulseLocale().toUpperCase()),[]);
  const choose=(v:string)=>{setLocale(v);setBuildPulseLocale(v);window.location.reload()};
