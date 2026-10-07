@@ -1,4 +1,4 @@
-import {LiveMarketGrid} from "@/components/buildpulse/LiveMarketGrid";
+import {VerifiedNewsDesk} from "@/components/buildpulse/VerifiedNewsDesk";import {LiveMarketGrid} from "@/components/buildpulse/LiveMarketGrid";
 import {MarketsSubnav} from "@/components/buildpulse/MarketsSubnav";
 
 export default function Macro(){
@@ -10,5 +10,5 @@ export default function Macro(){
    <p className="mt-4 max-w-3xl text-[#53606b]">Authoritative FRED observations for inflation, employment, policy rates, real GDP and Treasury yields. Release calendars remain separate from observation data.</p>
    <LiveMarketGrid group="macro"/>
   </section>
- </main>;
+ <VerifiedNewsDesk eyebrow="Markets · live newsroom" title="Macro & economic news" description="Verified reporting on central banks, inflation, employment, growth and policy." categories={["economy","markets","politics"]} limit={36}/></main>;
 }
