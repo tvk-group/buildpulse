@@ -4,7 +4,7 @@ import {getSupabasePublicConfig} from "@/lib/supabase/env";
 
 export async function GET(request:Request){
   const url=new URL(request.url),orderId=url.searchParams.get("order");
-  if(!orderId||!/^[0-9a-f-]{36}$/i.test(orderId))return NextResponse.redirect(new URL("/",url),302);
+  if(!orderId||(!/^[0-9a-f-]{36}$/i.test(orderId)&&!/^house:[0-9a-f-]{36}$/i.test(orderId)))return NextResponse.redirect(new URL("/",url),302);
   const {url:supabaseUrl,key}=getSupabasePublicConfig();
   try{
     const endpoint=new URL(`${supabaseUrl}/functions/v1/buildpulse-ad-runtime`);
