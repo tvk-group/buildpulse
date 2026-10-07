@@ -9,3 +9,9 @@
 /* Accessible dark-action invariant: dark CTA surfaces always use high-contrast text. */
 a[class*="bg-slate-950"],button[class*="bg-slate-950"],a[class*="bg-black"],button[class*="bg-black"]{color:#fff!important}
 a[class*="bg-slate-900"],button[class*="bg-slate-900"]{color:#fff!important}
+
+/* Header readability invariant: navigation stays legible regardless of inherited link/button styles. */
+.bp-site-header{color:#111827!important}
+.bp-site-header .bp-nav-trigger,.bp-site-header nav a,.bp-site-header select,.bp-site-header summary{color:#111827}
+.bp-site-header nav a[class*="bg-[#0b6b63]"]{color:#fff!important}
+.bp-site-header option{background:#fff;color:#111827}
