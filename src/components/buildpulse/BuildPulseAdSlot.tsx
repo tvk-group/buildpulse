@@ -1,14 +1,15 @@
 import {getSupabasePublicConfig} from "@/lib/supabase/env";
 
-type Props={placement:"homepage"|"archive"|"edition_top"|"edition_inline"|"edition_footer"|"newsletter";className?:string};
+type Props={placement:"homepage"|"archive"|"edition_top"|"edition_inline"|"edition_footer"|"newsletter";productCode?:string;className?:string};
 type ActiveAd={orderId:string;headline:string|null;copyText:string|null;productId:string;widthPx:number|null;heightPx:number|null;hasCreative:boolean};
 
-export async function BuildPulseAdSlot({placement,className=""}:Props){
+export async function BuildPulseAdSlot({placement,productCode,className=""}:Props){
   const {url,key,configured}=getSupabasePublicConfig();
   if(!configured)return null;
   const endpoint=new URL(`${url}/functions/v1/buildpulse-ad-runtime`);
   endpoint.searchParams.set("action","lookup");
   endpoint.searchParams.set("placement",placement);
+  if(productCode)endpoint.searchParams.set("product",productCode);
   const response=await fetch(endpoint,{cache:"no-store",headers:{apikey:key}}).catch(()=>null);
   if(!response?.ok)return null;
   const body=await response.json() as {ok?:boolean;ad?:ActiveAd|null};
