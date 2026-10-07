@@ -19,32 +19,32 @@ export function BuildPulseSiteHeader(){
  useEffect(()=>setLocale(getBuildPulseLocale().toUpperCase()),[]);
  const choose=(v:string)=>{setLocale(v);setBuildPulseLocale(v);window.location.reload()};
  const active=(href:string)=>p===href.split("?")[0]||(href!=="/"&&p.startsWith(href.split("?")[0]+"/"));
- return <header className="bp-site-header sticky top-0 z-50 border-b border-black/20 bg-[#fbfaf6]/98 text-[#111827] shadow-[0_1px_0_rgba(0,0,0,.06)] backdrop-blur">
+ return <header className="bp-site-header sticky top-0 z-50 border-b border-white/25 bg-[#071b1a] text-white shadow-[0_1px_0_rgba(0,0,0,.06)] backdrop-blur">
   <div className="mx-auto max-w-[1440px] px-4 md:px-5">
    <div className="flex min-h-16 items-center gap-3">
-    <Link href="/" aria-label="BuildPulse home" prefetch={false} onClick={(e)=>{if(p==="/"){e.preventDefault();window.location.assign("/")}}} className="mr-auto text-2xl font-black tracking-[-.06em] text-[#0b6b63]">BUILD<span className="font-light">PULSE</span></Link>
+    <Link href="/" aria-label="BuildPulse home" prefetch={false} onClick={(e)=>{if(p==="/"){e.preventDefault();window.location.assign("/")}}} className="mr-auto text-2xl font-black tracking-[-.06em] text-white">BUILD<span className="font-light">PULSE</span></Link>
     <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
      {groups.map(g=><div key={g.label} className="group relative">
-      <button className="bp-nav-trigger rounded-lg px-3 py-2 text-[11px] font-black uppercase tracking-wide text-[#111827] hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b6b63] group-focus-within:bg-black/5" aria-haspopup="menu">{g.label} <span aria-hidden="true">⌄</span></button>
-      <div className="invisible absolute left-0 top-full z-50 min-w-56 translate-y-1 rounded-xl border border-black/20 bg-[#fffef9] p-2 text-[#111827] opacity-0 shadow-xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-       {g.items.map(([n,h])=><Link key={h} href={h} className={`block rounded-lg px-3 py-2.5 text-sm font-bold ${active(h)?"bg-[#0b6b63] text-white":"text-[#111827] hover:bg-black/10"}`}>{n}</Link>)}
+      <button className="bp-nav-trigger rounded-lg px-3 py-2 text-[11px] font-black uppercase tracking-wide text-white hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b6b63] group-focus-within:bg-white/10" aria-haspopup="menu">{g.label} <span aria-hidden="true">⌄</span></button>
+      <div className="invisible absolute left-0 top-full z-50 min-w-56 translate-y-1 rounded-xl border border-white/25 bg-[#071b1a] p-2 text-white opacity-0 shadow-xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+       {g.items.map(([n,h])=><Link key={h} href={h} className={`block rounded-lg px-3 py-2.5 text-sm font-bold ${active(h)?"bg-[#0b6b63] text-white":"text-white hover:bg-white/15"}`}>{n}</Link>)}
       </div>
      </div>)}
     </nav>
-    <Link href="/subscriptions" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase text-[#111827] hover:bg-black/10 xl:block">{t.subscriptions}</Link><Link href="/build-with-ai" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase hover:bg-black/5 xl:block">{t.buildAi}</Link><Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase text-[#111827] hover:bg-black/10 md:block">{t.account}</Link><label className="sr-only" htmlFor="bp-language">{t.language}</label>
-    <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-black/30 bg-white px-2 py-2 text-xs font-bold text-[#111827] sm:block" aria-label={t.language}>
+    <Link href="/subscriptions" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase text-white hover:bg-white/15 xl:block">{t.subscriptions}</Link><Link href="/build-with-ai" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase text-white hover:bg-white/15 xl:block">{t.buildAi}</Link><Link href="/account" className="hidden rounded-lg px-2 py-2 text-[11px] font-black uppercase text-white hover:bg-white/15 md:block">{t.account}</Link><label className="sr-only" htmlFor="bp-language">{t.language}</label>
+    <select id="bp-language" value={locale} onChange={e=>choose(e.target.value)} className="hidden rounded border border-white/30 bg-[#0d2927] px-2 py-2 text-xs font-bold text-white sm:block" aria-label={t.language}>
      {langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}
     </select>
-    <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full border border-black/30 bg-white text-[#111827] lg:hidden" aria-expanded={open} aria-controls="bp-mobile-nav" aria-label={open?t.closeNav:t.openNav} onClick={()=>setOpen(v=>!v)}><span aria-hidden="true" className="text-xl leading-none">{open?"×":"☰"}</span></button>
+    <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-[#0d2927] text-white lg:hidden" aria-expanded={open} aria-controls="bp-mobile-nav" aria-label={open?t.closeNav:t.openNav} onClick={()=>setOpen(v=>!v)}><span aria-hidden="true" className="text-xl leading-none">{open?"×":"☰"}</span></button>
    </div>
-   {open&&<div id="bp-mobile-nav" className="border-t border-black/10 pb-5 pt-3 lg:hidden">
+   {open&&<div id="bp-mobile-nav" className="border-t border-white/20 pb-5 pt-3 lg:hidden">
     <nav className="space-y-2" aria-label="Mobile">
-     {groups.map(g=><details key={g.label} className="rounded-xl border border-black/10 bg-white/50" open={g.label==="News"}>
+     {groups.map(g=><details key={g.label} className="rounded-xl border border-white/20 bg-[#0d2927]" open={g.label==="News"}>
       <summary className="cursor-pointer list-none px-4 py-3 text-sm font-black uppercase">{g.label}<span className="float-right">⌄</span></summary>
-      <div className="grid grid-cols-2 gap-1 border-t border-black/10 p-2 sm:grid-cols-3">{g.items.map(([n,h])=><Link key={h} href={h} className={`rounded-lg px-3 py-3 text-sm font-bold ${active(h)?"bg-[#0b6b63] text-white":"hover:bg-black/5"}`}>{n}</Link>)}</div>
+      <div className="grid grid-cols-2 gap-1 border-t border-white/20 p-2 sm:grid-cols-3">{g.items.map(([n,h])=><Link key={h} href={h} className={`rounded-lg px-3 py-3 text-sm font-bold ${active(h)?"bg-[#0b6b63] text-white":"hover:bg-white/10"}`}>{n}</Link>)}</div>
      </details>)}
     </nav>
-    <div className="mt-3 sm:hidden"><label className="mb-1 block text-[10px] font-black uppercase tracking-widest" htmlFor="bp-language-mobile">{t.language}</label><select id="bp-language-mobile" value={locale} onChange={e=>choose(e.target.value)} className="w-full rounded border border-black/20 bg-transparent px-3 py-3 text-sm font-bold">{langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}</select></div>
+    <div className="mt-3 sm:hidden"><label className="mb-1 block text-[10px] font-black uppercase tracking-widest" htmlFor="bp-language-mobile">{t.language}</label><select id="bp-language-mobile" value={locale} onChange={e=>choose(e.target.value)} className="w-full rounded border border-white/25 bg-transparent px-3 py-3 text-sm font-bold">{langs.map(([code,n])=><option key={code} value={code}>{code} · {n}</option>)}</select></div>
    </div>}
   </div>
  </header>
