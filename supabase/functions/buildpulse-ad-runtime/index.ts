@@ -68,13 +68,9 @@ Deno.serve(async(req:Request)=>{
 
     if(action==="lookup"){
       const placement=String(url.searchParams.get("placement")??"");
-      const productCode=String(url.searchParams.get("product")??"").trim();
       if(!["homepage","archive","edition_top","edition_inline","edition_footer","newsletter"].includes(placement))return reply({ok:false,error:"invalid_placement"},400);
-      if(productCode&&!/^[A-Z0-9_]{2,64}$/.test(productCode))return reply({ok:false,error:"invalid_product"},400);
       const now=new Date().toISOString();
-      let productQuery=admin.from("buildpulse_ad_products").select("id,code,width_px,height_px").eq("placement",placement).eq("active",true);
-      if(productCode)productQuery=productQuery.eq("code",productCode);
-      const {data:products,error:productError}=await productQuery;
+      const {data:products,error:productError}=await admin.from("buildpulse_ad_products").select("id,width_px,height_px").eq("placement",placement).eq("active",true);
       if(productError)throw productError;
       if(!products?.length)return reply({ok:true,ad:null});
       const {data:ad,error:adError}=await admin.from("buildpulse_ad_orders")
@@ -82,6 +78,21 @@ Deno.serve(async(req:Request)=>{
         .eq("status","active").in("product_id",products.map((p:any)=>p.id))
         .lte("starts_at",now).gte("ends_at",now).order("created_at",{ascending:true}).limit(1).maybeSingle();
       if(adError)throw adError;
+      if(!ad&&placement==="homepage"){
+        const {data:houses,error:houseError}=await admin.from("buildpulse_house_ads")
+          .select("id,campaign_code,brand,headline,copy_text,destination_url,creative_width,creative_height,metadata,disclosure")
+          .eq("status","active").eq("placement","homepage").lte("starts_at",now)
+          .or("ends_at.is.null,ends_at.gte."+now).order("priority",{ascending:false}).order("campaign_code",{ascending:true});
+        if(houseError)throw houseError;
+        if(houses?.length){
+          const day=Math.floor(Date.now()/86400000);
+          const house=houses[day%houses.length];
+          const storagePath=String(house.metadata?.storage_path??"");
+          const {data:file}=storagePath?await admin.storage.from(BUCKET).download(storagePath):{data:null};
+          return reply({ok:true,ad:{orderId:"house:"+house.id,campaignCode:house.campaign_code,headline:house.headline,copyText:house.copy_text,
+            widthPx:house.creative_width,heightPx:house.creative_height,hasCreative:Boolean(file),house:true,brand:house.brand,disclosure:house.disclosure}});
+        }
+      }
       if(!ad)return reply({ok:true,ad:null});
       const product=products.find((p:any)=>p.id===ad.product_id);
       const {data:creative}=await admin.from("buildpulse_ad_creatives").select("id").eq("order_id",ad.id).eq("review_state","approved").limit(1).maybeSingle();
@@ -89,6 +100,31 @@ Deno.serve(async(req:Request)=>{
         orderId:ad.id,headline:ad.headline,copyText:ad.copy_text,productId:ad.product_id,
         widthPx:product?.width_px??null,heightPx:product?.height_px??null,hasCreative:Boolean(creative)
       }});
+    }
+
+    if(orderId.startsWith("house:")){
+      const campaignId=orderId.slice(6);
+      if(!/^[0-9a-f-]{36}$/i.test(campaignId))return reply({ok:false,error:"invalid_campaign"},400);
+      const now=new Date().toISOString();
+      const {data:house,error:houseError}=await admin.from("buildpulse_house_ads").select("id,destination_url,status,starts_at,ends_at,metadata").eq("id",campaignId).eq("status","active").lte("starts_at",now).or("ends_at.is.null,ends_at.gte."+now).maybeSingle();
+      if(houseError)throw houseError;if(!house)return reply({ok:false,error:"active_campaign_not_found"},404);
+      if(action==="click"||action==="impression"){
+        const ua=req.headers.get("x-buildpulse-user-agent")??req.headers.get("user-agent")??"";
+        const verified=humanLike(ua),hour=Math.floor(Date.now()/3600000);
+        const eventKey="house:"+action+":"+await hashText(campaignId+"|"+action+"|"+hour+"|"+ua);
+        const {error:eventError}=await admin.from("buildpulse_house_ad_events").insert({campaign_id:campaignId,event_type:action,event_key:eventKey,is_verified:verified,rejection_reason:verified?null:"automated_or_missing_user_agent",metadata:{source:"buildpulse_supabase_ad_runtime",hour_bucket:hour}});
+        if(eventError&&eventError.code!=="23505")throw eventError;
+        if(action==="impression")return new Response(null,{status:204,headers:{"Cache-Control":"no-store"}});
+        return reply({ok:true,destination:await safeDestination(house.destination_url)});
+      }
+      if(action==="creative"){
+        const storagePath=String(house.metadata?.storage_path??"");
+        if(!storagePath)return reply({ok:false,error:"creative_unavailable"},404);
+        const {data:file,error:downloadError}=await admin.storage.from(BUCKET).download(storagePath);
+        if(downloadError||!file)return reply({ok:false,error:"creative_unavailable"},404);
+        return new Response(file.stream(),{status:200,headers:{"Content-Type":"image/jpeg","Cache-Control":"public, max-age=300, stale-while-revalidate=600","X-Content-Type-Options":"nosniff","Content-Security-Policy":"default-src 'none'","ETag":'"'+String(house.metadata?.sha256??"")+'"'}});
+      }
+      return reply({ok:false,error:"unsupported_action"},400);
     }
 
     if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId))return reply({ok:false,error:"invalid_order"},400);
