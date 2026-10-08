@@ -18,3 +18,8 @@ a[class*="bg-slate-900"],button[class*="bg-slate-900"]{color:#fff!important}
 .bp-site-header option{background:#0d2927!important;color:#fff!important}
 .bp-site-header [role="menu"],.bp-site-header nav+div{color:#fff}
 @media(max-width:1023px){.bp-site-header #bp-mobile-nav{background:#071b1a!important;color:#fff!important}.bp-site-header #bp-mobile-nav details{background:#0d2927!important;border-color:rgba(255,255,255,.2)!important}}
+
+/* Premium motion: transform-only hero entrance with accessible fallback. */
+@keyframes bp-hero-enter{from{opacity:0;transform:translate3d(0,18px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@media(prefers-reduced-motion:no-preference){.bp-hero-entrance{animation:bp-hero-enter .55s cubic-bezier(.2,.75,.2,1) both}.bp-hero-entrance h1{animation:bp-hero-enter .7s .08s cubic-bezier(.2,.75,.2,1) both}}
+@media(prefers-reduced-motion:reduce){.bp-hero-entrance,.bp-hero-entrance h1{animation:none!important;transform:none!important}}
