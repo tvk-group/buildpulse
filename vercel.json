@@ -1,6 +1,13 @@
 {
   "crons": [
-    {"path":"/api/cron/sovra-market-learning","schedule":"12,42 * * * *"}
+    {
+      "path": "/api/cron/sovra-market-learning",
+      "schedule": "12,42 * * * *"
+    },
+    {
+      "path": "/api/cron/blog-editorial-plan",
+      "schedule": "15 6 * * *"
+    }
   ],
-  "framework":"nextjs"
+  "framework": "nextjs"
 }
