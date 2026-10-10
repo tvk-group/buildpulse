@@ -1,0 +1,39 @@
+name: TVK Labs dependency security audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1"
+  pull_request:
+    paths:
+      - "**/package.json"
+      - "**/package-lock.json"
+      - "**/npm-shrinkwrap.json"
+      - "**/Cargo.lock"
+      - "**/go.sum"
+      - ".github/workflows/tvk-security-audit.yml"
+permissions:
+  contents: read
+jobs:
+  dependency-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Detect project manifests and scan npm lockfiles
+        shell: bash
+        run: |
+          set -euo pipefail
+          failures=0
+          while IFS= read -r -d '' lockfile; do
+            dir="$(dirname "$lockfile")"
+            echo "::group::npm audit: $dir"
+            (cd "$dir" && npm audit --audit-level=high --omit=dev) || failures=1
+            echo "::endgroup::"
+          done < <(find . -type f -name package-lock.json -not -path '*/node_modules/*' -not -path '*/.git/*' -print0)
+          if find . -type f -name Cargo.lock -not -path '*/.git/*' -print -quit | grep -q .; then
+            echo "::notice::Rust lockfile detected; configure cargo-audit in Rust-specific CI."
+          fi
+          if find . -type f -name go.sum -not -path '*/.git/*' -print -quit | grep -q .; then
+            echo "::notice::Go dependencies detected; configure govulncheck/Nancy in Go-specific CI."
+          fi
+          exit "$failures"
