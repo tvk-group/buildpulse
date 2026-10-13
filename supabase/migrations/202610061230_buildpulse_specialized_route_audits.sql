@@ -56,6 +56,10 @@ begin
     cross join (values ('localization'),('seo'),('accessibility'),('integration')) as k(kind)
     where r.enabled
       and not exists (
+        select 1 from public.buildpulse_route_work_items completed
+        where completed.route_id=r.id and completed.kind=k.kind and completed.status='completed'
+      )
+      and not exists (
         select 1 from public.buildpulse_route_work_items done
         where done.route_id=r.id and done.kind=k.kind and done.status='completed'
       )
