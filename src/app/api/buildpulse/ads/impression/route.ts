@@ -2,7 +2,7 @@ import {getSupabasePublicConfig} from "@/lib/supabase/env";
 const pixel='<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>';
 export async function GET(request:Request){
   const url=new URL(request.url),orderId=url.searchParams.get("order");
-  if(orderId&&/^[0-9a-f-]{36}$/i.test(orderId)){
+  if(orderId&&/^(?:house:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)){
     const {url:supabaseUrl,key}=getSupabasePublicConfig();
     const endpoint=new URL(`${supabaseUrl}/functions/v1/buildpulse-ad-runtime`);
     endpoint.searchParams.set("action","impression");
