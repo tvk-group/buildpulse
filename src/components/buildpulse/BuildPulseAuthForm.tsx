@@ -22,7 +22,7 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
     const password=String(fd.get("password")??"");
     const next=safeNext(nextPath==="/account"&&mode==="register"?(destinations[accountType]??"/account"):nextPath);
 
-    if(mode==="register"){const redirectTo=new URL("/auth/callback",window.location.origin);redirectTo.searchParams.set("next",next);const {error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:redirectTo.toString(),data:{account_type:accountType}}});setMessage(error?.message??"Registration received. Check your email to confirm your account.");}else if(mode==="magic"){
+    if(mode==="register"){const redirectTo=new URL("/auth/callback",window.location.origin);redirectTo.searchParams.set("next",next);const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:redirectTo.toString(),data:{account_type:accountType}}});if(error)setMessage(error.message);else if(data.session&&data.user)window.location.assign(next);else setMessage("Registration received. If email verification is required, check your inbox to confirm your account.");}else if(mode==="magic"){
       const redirectTo=new URL("/auth/callback",window.location.origin);
       redirectTo.searchParams.set("next",next);
       const {error}=await supabase.auth.signInWithOtp({
