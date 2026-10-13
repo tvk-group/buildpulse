@@ -7,12 +7,15 @@ export const metadata={title:"Secure Sign In",description:"Sign in to authorized
 
 function safeNext(value:string|undefined){if(!value||!value.startsWith("/")||value.startsWith("//")||value.includes("\\")||/[\r\n]/.test(value))return "/account";return value;}
 
-export default async function AuthPage({searchParams}:{searchParams:Promise<{next?:string}>}){
+export default async function AuthPage({searchParams}:{searchParams:Promise<{next?:string;error?:string}>}){
   const params=await searchParams,next=safeNext(params.next);
+  const errorMessages:Record<string,string>={missing_code:"This sign-in link is missing its verification code. Request a new link.",invalid_link:"This sign-in link has expired or cannot be verified. Request a new link.",invalid_session:"We could not verify your session. Please sign in again.",service_unavailable:"Authentication is temporarily unavailable. Please try again."};
+  const authError=params.error?errorMessages[params.error]:undefined;
   const supabase=createClientSafe(await cookies());
   if(supabase){const {data:{user}}=await supabase.auth.getUser();if(user)redirect(next)}
   return <main className="min-h-[72vh] bg-slate-50 px-5 py-16"><div className="mx-auto max-w-5xl">
     <div className="mx-auto mb-8 max-w-xl text-center"><p className="text-xs font-black uppercase tracking-[.18em] text-[#0b6b63]">BuildPulse Secure Access</p><h1 className="mt-3 text-4xl font-black tracking-tight">One account for every BuildPulse community workspace.</h1><p className="mt-4 text-slate-600">Sign in once to manage your reader profile, blog contributions, advertising campaigns, creative submissions and subscriptions. Workforce access is separately authorized and role-scoped.</p></div>
+    {authError&&<p role="alert" className="mx-auto mb-5 max-w-md rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-900">{authError}</p>}
     <BuildPulseAuthForm nextPath={next}/>
     <div className="mx-auto mt-8 max-w-xl rounded-2xl border bg-white p-5 text-sm text-slate-600"><p className="font-bold text-slate-950">Where can I go after signing in?</p><p className="mt-2">Your personal account is the entry point for contributor and blogger submissions, advertiser tools, subscriptions, and community features. Staff workspaces require an independently approved workforce role and stronger authentication.</p><div className="mt-3 flex flex-wrap gap-4"><a className="font-bold text-[#0b6b63] underline" href="/account">Account dashboard</a><a className="font-bold text-[#0b6b63] underline" href="/workforce">Workforce sign-in</a></div></div>
   </div></main>
