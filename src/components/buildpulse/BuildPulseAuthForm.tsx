@@ -8,6 +8,8 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
   const [mode,setMode]=useState<"password"|"magic"|"register">("password");
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState("");
+  const [accountType,setAccountType]=useState("reader");
+  const destinations:Record<string,string>={reader:"/account/intelligence",social:"/account/social",blogger:"/contribute",people:"/account/social",connections:"/account/social",markets:"/markets",advertiser:"/advertiser",creator:"/arts/contribute"};
 
   async function submit(e:FormEvent<HTMLFormElement>){
     e.preventDefault();
@@ -18,9 +20,9 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
     const fd=new FormData(e.currentTarget);
     const email=String(fd.get("email")??"").trim();
     const password=String(fd.get("password")??"");
-    const next=safeNext(nextPath);
+    const next=safeNext(nextPath==="/account"&&mode==="register"?(destinations[accountType]??"/account"):nextPath);
 
-    if(mode==="register"){const accountType=String(fd.get("accountType")||"reader");const redirectTo=new URL("/auth/callback",window.location.origin);redirectTo.searchParams.set("next",next);const {error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:redirectTo.toString(),data:{account_type:accountType}}});setMessage(error?.message??"Registration received. Check your email to confirm your account.");}else if(mode==="magic"){
+    if(mode==="register"){const redirectTo=new URL("/auth/callback",window.location.origin);redirectTo.searchParams.set("next",next);const {error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:redirectTo.toString(),data:{account_type:accountType}}});setMessage(error?.message??"Registration received. Check your email to confirm your account.");}else if(mode==="magic"){
       const redirectTo=new URL("/auth/callback",window.location.origin);
       redirectTo.searchParams.set("next",next);
       const {error}=await supabase.auth.signInWithOtp({
@@ -44,7 +46,7 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
     </div>
     <form onSubmit={submit} className="mt-6 grid gap-4">
       <label className="text-sm font-bold">Email address<input required type="email" name="email" autoComplete="email" className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"/></label>
-      {mode!=="magic"?<label className="text-sm font-bold">Password<input required type="password" name="password" minLength={8} autoComplete={mode==="register"?"new-password":"current-password"} className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"/></label>:null}{mode==="register"?<label className="text-sm font-bold">Primary interest (you can access other areas later)<select name="accountType" className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"><option value="reader">Reader / subscriptions</option><option value="social">Community / social</option><option value="blogger">Blogs / publishing</option><option value="people">People profile</option><option value="connections">Connections</option><option value="markets">Markets</option><option value="advertiser">Advertising / advertiser</option><option value="creator">Arts / creator</option></select></label>:null}
+      {mode!=="magic"?<label className="text-sm font-bold">Password<input required type="password" name="password" minLength={8} autoComplete={mode==="register"?"new-password":"current-password"} className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"/></label>:null}{mode==="register"?<label className="text-sm font-bold">Primary interest (you can access other areas later)<select name="accountType" value={accountType} onChange={e=>setAccountType(e.target.value)} className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"><option value="reader">Reader / subscriptions</option><option value="social">Community / social</option><option value="blogger">Blogs / publishing</option><option value="people">People profile</option><option value="connections">Connections</option><option value="markets">Markets</option><option value="advertiser">Advertising / advertiser</option><option value="creator">Arts / creator</option></select></label>:null}
       <button disabled={busy} className="rounded-xl bg-slate-950 px-5 py-3 font-black text-white disabled:opacity-50">{busy?(mode==="register"?"Registering…":"Signing in…"):mode==="password"?"Sign in securely":mode==="magic"?"Send magic link":"Create account"}</button>
       {message?<p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">{message}</p>:null}
     </form>
