@@ -78,6 +78,6 @@ export async function GET(req:NextRequest){
   results.push({scheduleId:s.schedule_id,agent:s.agent_code,scheduleStatus:status,...detail});
  }
  const failed=results.filter((x:any)=>x.scheduleStatus==="failed").length,awaitingApproval=results.filter((x:any)=>x.status==="awaiting_approval").length;
- await db.from("buildpulse_job_runs").insert({job_name:"agent-scheduler",status:failed?"failed":"completed",started_at:new Date(startedAt).toISOString(),finished_at:new Date().toISOString(),error:failed?`${failed} scheduled agent run(s) failed`:null,metrics:{claimed:results.length,failed,awaitingApproval,completed:results.length-failed-awaitingApproval}});
- return NextResponse.json({ok:!routeQueueError&&failed===0,routeInventory,routeWorkQueued,specializedRouteWorkQueued,routeQueueError,claimed:results.length,failed,awaitingApproval,results},{status:routeQueueError||failed?500:200});
+ const {error:jobLogError}=await db.from("buildpulse_job_runs").insert({job_name:"agent-scheduler",status:failed||routeQueueError?"failed":"completed",started_at:new Date(startedAt).toISOString(),finished_at:new Date().toISOString(),error:routeQueueError??(failed?`${failed} scheduled agent run(s) failed`:null),metrics:{claimed:results.length,failed,awaitingApproval,completed:results.length-failed-awaitingApproval}});
+ return NextResponse.json({ok:!routeQueueError&&failed===0&&!jobLogError,jobLogError:jobLogError?.message??null,routeInventory,routeWorkQueued,specializedRouteWorkQueued,routeQueueError,claimed:results.length,failed,awaitingApproval,results},{status:routeQueueError||failed||jobLogError?500:200});
 }
