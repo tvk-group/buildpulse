@@ -48,7 +48,7 @@ export async function GET(req:NextRequest){
     if(!routeWork){detail={status:"idle",message:"No queued route work"};}
     else agentInput={...agentInput,routeWork:{id:routeWork.id,kind:routeWork.kind,priority:routeWork.priority,finding:routeWork.finding},instruction:"Audit this bounded route work item. Produce a concrete remediation proposal and verification plan. Do not deploy, publish, move money, change roles, expose secrets, weaken security, or delete data."};
    }
-   if(!detail)detail=await executeBuildPulseAgent(s.agent_code,agentInput,"schedule");
+   if(!detail)detail=await executeBuildPulseAgent(s.agent_code,JSON.stringify(agentInput),"schedule");
    if(routeWork){
     const next=detail?.status==="failed"||detail?.status==="error"||detail?.status==="cancelled"?"failed":"awaiting_approval";
     const {data:finished,error:finishError}=await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:next,p_error:detail?.error??null});
