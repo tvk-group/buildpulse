@@ -2,7 +2,7 @@ import {getSupabasePublicConfig} from "@/lib/supabase/env";
 
 export async function GET(_request:Request,{params}:{params:Promise<{orderId:string}>}){
   const {orderId}=await params;
-  if(!/^[0-9a-f-]{36}$/i.test(orderId))return new Response("Not found",{status:404});
+  if(!/^(?:house:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId))return new Response("Not found",{status:404});
   const {url,key}=getSupabasePublicConfig();
   const endpoint=new URL(`${url}/functions/v1/buildpulse-ad-runtime`);
   endpoint.searchParams.set("action","creative");
