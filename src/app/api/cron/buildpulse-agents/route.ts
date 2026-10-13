@@ -45,6 +45,10 @@ export async function GET(req:NextRequest){
     const next=detail?.status==="failed"||detail?.status==="error"?"failed":"awaiting_approval";
     const {data:finished,error:finishError}=await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:next,p_error:detail?.error??null});
     if(finishError||finished!==true)throw new Error("route_work_finalization_failed");
+    if(next==="failed"){
+     status="failed";
+     detail={...detail,error:detail?.error??"route_agent_execution_failed"};
+    }
    }
   }
   catch(e){
@@ -54,7 +58,11 @@ export async function GET(req:NextRequest){
     if(recoveryError)detail.recoveryError="route_work_recovery_failed";
    }
   }
-  await (db.rpc as any)("buildpulse_finish_agent_schedule",{p_schedule_id:s.schedule_id,p_claim_token:s.claim_token,p_status:status});
+  const {data:scheduleFinished,error:scheduleFinishError}=await (db.rpc as any)("buildpulse_finish_agent_schedule",{p_schedule_id:s.schedule_id,p_claim_token:s.claim_token,p_status:status});
+  if(scheduleFinishError||scheduleFinished===false){
+   status="failed";
+   detail={...detail,scheduleFinalizationError:"agent_schedule_finalization_failed"};
+  }
   results.push({scheduleId:s.schedule_id,agent:s.agent_code,scheduleStatus:status,...detail});
  }
  const failed=results.filter((x:any)=>x.scheduleStatus==="failed").length,awaitingApproval=results.filter((x:any)=>x.status==="awaiting_approval").length;
