@@ -6,13 +6,16 @@ function safeNext(value:string|null){return value?.startsWith("/")&&!value.start
 
 export async function GET(request:NextRequest){
   const url=new URL(request.url),code=url.searchParams.get("code"),next=safeNext(url.searchParams.get("next"));
-  if(!code)return NextResponse.redirect(new URL("/auth?error=missing_code",url.origin));
+  const denied=(reason:string)=>NextResponse.redirect(new URL(`/auth?error=${reason}`,url.origin));
+  if(!code)return denied("missing_code");
   try{
     const supabase=createClient(await cookies());
     const {error}=await supabase.auth.exchangeCodeForSession(code);
-    if(error)return NextResponse.redirect(new URL("/auth?error=invalid_link",url.origin));
+    if(error)return denied("invalid_link");
+    const {data:{user},error:userError}=await supabase.auth.getUser();
+    if(userError||!user)return denied("invalid_session");
     return NextResponse.redirect(new URL(next,url.origin));
   }catch{
-    return NextResponse.redirect(new URL("/auth?error=service_unavailable",url.origin));
+    return denied("service_unavailable");
   }
 }
