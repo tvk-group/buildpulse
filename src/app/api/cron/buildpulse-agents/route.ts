@@ -42,13 +42,17 @@ export async function GET(req:NextRequest){
    }
    if(!detail)detail=await executeBuildPulseAgent(s.agent_code,agentInput,"schedule");
    if(routeWork){
-    const next=detail?.status==="failed"?"failed":"awaiting_approval";
-    await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:next,p_error:detail?.error??null});
+    const next=detail?.status==="failed"||detail?.status==="error"?"failed":"awaiting_approval";
+    const {data:finished,error:finishError}=await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:next,p_error:detail?.error??null});
+    if(finishError||finished!==true)throw new Error("route_work_finalization_failed");
    }
   }
   catch(e){
    status="failed";detail={error:e instanceof Error?e.message:"agent_failed"};
-   if(routeWork?.id&&routeWork?.claim_token)await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:"failed",p_error:detail.error});
+   if(routeWork?.id&&routeWork?.claim_token){
+    const {error:recoveryError}=await (db.rpc as any)("buildpulse_finish_route_work",{p_work_id:routeWork.id,p_claim_token:routeWork.claim_token,p_status:"failed",p_error:detail.error});
+    if(recoveryError)detail.recoveryError="route_work_recovery_failed";
+   }
   }
   await (db.rpc as any)("buildpulse_finish_agent_schedule",{p_schedule_id:s.schedule_id,p_claim_token:s.claim_token,p_status:status});
   results.push({scheduleId:s.schedule_id,agent:s.agent_code,scheduleStatus:status,...detail});
