@@ -58,8 +58,10 @@ export async function GET(req:NextRequest){
     if(recoveryError)detail.recoveryError="route_work_recovery_failed";
    }
   }
-  const {data:scheduleFinished,error:scheduleFinishError}=await (db.rpc as any)("buildpulse_finish_agent_schedule",{p_schedule_id:s.schedule_id,p_claim_token:s.claim_token,p_status:status});
-  if(scheduleFinishError||scheduleFinished===false){
+  try{
+   const {data:scheduleFinished,error:scheduleFinishError}=await (db.rpc as any)("buildpulse_finish_agent_schedule",{p_schedule_id:s.schedule_id,p_claim_token:s.claim_token,p_status:status});
+   if(scheduleFinishError||scheduleFinished===false)throw new Error("agent_schedule_finalization_failed");
+  }catch{
    status="failed";
    detail={...detail,scheduleFinalizationError:"agent_schedule_finalization_failed"};
   }
