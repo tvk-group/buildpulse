@@ -23,3 +23,9 @@ a[class*="bg-slate-900"],button[class*="bg-slate-900"]{color:#fff!important}
 @keyframes bp-hero-enter{from{opacity:0;transform:translate3d(0,18px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
 @media(prefers-reduced-motion:no-preference){.bp-hero-entrance{animation:bp-hero-enter .55s cubic-bezier(.2,.75,.2,1) both}.bp-hero-entrance h1{animation:bp-hero-enter .7s .08s cubic-bezier(.2,.75,.2,1) both}}
 @media(prefers-reduced-motion:reduce){.bp-hero-entrance,.bp-hero-entrance h1{animation:none!important;transform:none!important}}
+
+/* Marketing glass treatment: editorial hero and newsletter only. */
+.bp-hero-entrance{position:relative;isolation:isolate;background:linear-gradient(125deg,rgba(255,255,255,.88),rgba(220,239,235,.45));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.bp-hero-entrance:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 90% 10%,rgba(11,107,99,.13),transparent 55%)}
+.bp-hero-entrance h1{overflow-wrap:normal}.bp-hero-entrance p{max-width:68ch}
+@media(max-width:600px){.bp-hero-entrance h1{font-size:clamp(2.6rem,13vw,4.4rem);line-height:1}.bp-hero-entrance{padding-block:2.75rem}}
