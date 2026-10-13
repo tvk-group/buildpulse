@@ -2,7 +2,7 @@
 import {FormEvent,useState} from "react";
 import {createClient} from "@/utils/supabase/client";
 
-function safeNext(value:string){return value.startsWith("/")&&!value.startsWith("//")?value:"/workforce"}
+function safeNext(value:string){return value.startsWith("/")&&!value.startsWith("//")&&!value.includes("\\")&&!/[\r\n]/.test(value)?value:"/account"}
 
 export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
   const [mode,setMode]=useState<"password"|"magic"|"register">("password");
@@ -13,6 +13,7 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
     e.preventDefault();
     setBusy(true);
     setMessage("");
+    try{
     const supabase=createClient();
     const fd=new FormData(e.currentTarget);
     const email=String(fd.get("email")??"").trim();
@@ -26,13 +27,14 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
         email,
         options:{emailRedirectTo:redirectTo.toString(),shouldCreateUser:false}
       });
-      setMessage(error?.message??"Magic sign-in link sent. Check your company mailbox.");
+      setMessage(error?.message??"Magic sign-in link sent. Check your email inbox.");
     }else{
       const {error}=await supabase.auth.signInWithPassword({email,password});
       if(error)setMessage(error.message);
       else window.location.assign(next);
     }
-    setBusy(false);
+    }catch{setMessage("Unable to contact the authentication service. Please try again.");}
+    finally{setBusy(false);}
   }
 
   return <div className="mx-auto w-full max-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
@@ -41,8 +43,8 @@ export default function BuildPulseAuthForm({nextPath}:{nextPath:string}){
       <button type="button" onClick={()=>setMode("magic")} className={"flex-1 rounded-lg px-3 py-2 text-sm font-bold "+(mode==="magic"?"bg-white shadow":"text-slate-500")}>Magic link</button><button type="button" onClick={()=>setMode("register")} className={"flex-1 rounded-lg px-3 py-2 text-sm font-bold "+(mode==="register"?"bg-white shadow":"text-slate-500")}>Register</button>
     </div>
     <form onSubmit={submit} className="mt-6 grid gap-4">
-      <label className="text-sm font-bold">Work email<input required type="email" name="email" autoComplete="email" className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"/></label>
-      {mode!=="magic"?<label className="text-sm font-bold">Password<input required type="password" name="password" minLength={8} autoComplete={mode==="register"?"new-password":"current-password"} className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"/></label>:null}{mode==="register"?<label className="text-sm font-bold">Account area<select name="accountType" className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"><option value="reader">Reader / subscriptions</option><option value="social">Community / social</option><option value="blogger">Blogs / publishing</option><option value="people">People profile</option><option value="connections">Connections</option><option value="markets">Markets</option><option value="advertiser">Advertising / advertiser</option><option value="creator">Arts / creator</option></select></label>:null}
+      <label className="text-sm font-bold">Email address<input required type="email" name="email" autoComplete="email" className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"/></label>
+      {mode!=="magic"?<label className="text-sm font-bold">Password<input required type="password" name="password" minLength={8} autoComplete={mode==="register"?"new-password":"current-password"} className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"/></label>:null}{mode==="register"?<label className="text-sm font-bold">Primary interest (you can access other areas later)<select name="accountType" className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 font-normal"><option value="reader">Reader / subscriptions</option><option value="social">Community / social</option><option value="blogger">Blogs / publishing</option><option value="people">People profile</option><option value="connections">Connections</option><option value="markets">Markets</option><option value="advertiser">Advertising / advertiser</option><option value="creator">Arts / creator</option></select></label>:null}
       <button disabled={busy} className="rounded-xl bg-slate-950 px-5 py-3 font-black text-white disabled:opacity-50">{busy?(mode==="register"?"Registering…":"Signing in…"):mode==="password"?"Sign in securely":mode==="magic"?"Send magic link":"Create account"}</button>
       {message?<p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">{message}</p>:null}
     </form>
