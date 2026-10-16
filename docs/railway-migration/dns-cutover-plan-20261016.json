@@ -1,0 +1,2176 @@
+{
+  "capturedAt": "2026-10-16T11:43:33.730Z",
+  "notes": "Required web traffic CNAME and Railway ownership TXT records only. Preserve email, MX, DKIM, SPF, DMARC and unrelated records.",
+  "domains": [
+    {
+      "service": {
+        "id": "54d13419-a517-4ac3-a78e-67c85d7c9b34",
+        "name": "energiemind-main"
+      },
+      "domain": {
+        "id": "ae6134ae-512d-49c6-befd-9eae58ec70e1",
+        "domain": "energiemind.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "energiemind.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "8w9wj4ol.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.energiemind.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=56576a349a733ca7285391cc96fdab6a3f8164488960f455c8885e2dbccc2770",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "54d13419-a517-4ac3-a78e-67c85d7c9b34",
+        "name": "energiemind-main"
+      },
+      "domain": {
+        "id": "2118bcc6-f183-4ae6-9c45-14f5a49c738c",
+        "domain": "www.energiemind.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.energiemind.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "vv4tatcg.up.railway.app",
+          "currentValue": "3b37f1e5e2835612.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.energiemind.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=2fdbe852cdee67ec20e209248493b7abbb48f23e784a6718d07d9ee15b3e3b43",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "ce281e33-1686-420f-93cb-8f768c055ae3",
+        "name": "tvk-labs"
+      },
+      "domain": {
+        "id": "810782b2-9775-433f-bc84-c8d04d016d1b",
+        "domain": "www.tvklabs.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.tvklabs.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "wn34jomc.up.railway.app",
+          "currentValue": "85d6bf66b828303a.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.tvklabs.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=d19487c0b3eb603bfa44ddebd4f1e6cceea89e9687aa799c0c10b033806bc090",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "ce281e33-1686-420f-93cb-8f768c055ae3",
+        "name": "tvk-labs"
+      },
+      "domain": {
+        "id": "05149840-a218-404d-a9a6-5ef96b14a008",
+        "domain": "tvklabs.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "tvklabs.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "h26g9eyd.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.tvklabs.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=6f373ccb1aabbec6b618a2a2b0b3bb5705fb0d50d2a5ebb53546f74aefa6805c",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "b923b7fb-5e01-4238-8a15-cf9d2c389427",
+        "name": "tvk-wallet-site"
+      },
+      "domain": {
+        "id": "72b4a964-eaf0-4f66-a660-77c7586b10b5",
+        "domain": "tvkwallet.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "tvkwallet.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "8i6h1j7f.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.tvkwallet.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=e706e14815a35aa47722f07f72a5b22de59642c355b3764c3913ea75402435ea",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "b923b7fb-5e01-4238-8a15-cf9d2c389427",
+        "name": "tvk-wallet-site"
+      },
+      "domain": {
+        "id": "2816b7d3-8efc-41e0-bda2-74b9a036cb6c",
+        "domain": "www.tvkwallet.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.tvkwallet.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "asfbzbz7.up.railway.app",
+          "currentValue": "6e9c4570add93b19.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.tvkwallet.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=c44baea3848a3da392961e0317294cc417cccc3c9f59e03a1c714a8f20e3dd1a",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "64fec39e-5909-4098-91c0-c0916a5b05dc",
+        "name": "entelekron-org"
+      },
+      "domain": {
+        "id": "9d95e462-1aa0-4d7f-807b-4afb37aa761c",
+        "domain": "www.entelekron.org",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.entelekron.org",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "1e6klufw.up.railway.app",
+          "currentValue": "f93884d1feefb379.vercel-dns-017.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.entelekron.org",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=30bd832b6ced36edc710e82b7c8988e671ee3435ac461b6c4685515bcda83576",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "64fec39e-5909-4098-91c0-c0916a5b05dc",
+        "name": "entelekron-org"
+      },
+      "domain": {
+        "id": "2ba5fba7-a287-441a-8c7e-4b9ac94e6c8d",
+        "domain": "entelekron.org",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "entelekron.org",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "jjizgmae.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.entelekron.org",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=6ee862b5ee3d8a5197ec5db3b5dc30b66851c44375299a2b115aeaa932f6fb2b",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "c1d871d6-5755-4256-9551-8b21bb7f0806",
+        "name": "enteleexchange-status"
+      },
+      "domain": {
+        "id": "93f8d410-afce-4ba4-ab92-c060d16190f5",
+        "domain": "status.enteleexchange.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "status",
+          "fqdn": "status.enteleexchange.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "t90k8bli.up.railway.app",
+          "currentValue": "d7460f2449c0e343.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.status",
+          "fqdn": "_railway-verify.status.enteleexchange.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=2b0906e70d10a79dbc895de8d9684fa5ea9aefa27fa1fbcf7bf21f11bf51c0d3",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "5bf9957e-9d1b-448f-8a57-47d9785a584e",
+        "name": "enteleexchange"
+      },
+      "domain": {
+        "id": "1c63fd6b-de1e-4319-9b7f-2a670aadb508",
+        "domain": "enteleexchange.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "enteleexchange.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "xh54r2dr.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.enteleexchange.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=f2305c6661c171302e04c83fa43c86f412488895aecd6133b3da4a73abcbd129",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "5bf9957e-9d1b-448f-8a57-47d9785a584e",
+        "name": "enteleexchange"
+      },
+      "domain": {
+        "id": "cbf8116d-43e9-4da6-99c6-db0da4569747",
+        "domain": "www.enteleexchange.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.enteleexchange.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "o56vvr66.up.railway.app",
+          "currentValue": "e2d423fb1c6a5187.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.enteleexchange.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=e28a759b02d9647ed8be88fa8137276fe2d401a2fffecb579c2c87462f387ac4",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "79d23811-1429-40d2-b29f-ce6db87371cf",
+        "name": "sovikron"
+      },
+      "domain": {
+        "id": "4189a333-8699-4ed8-964a-7cee3af3480e",
+        "domain": "sovikron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "sovikron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "j3hlskct.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.sovikron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=3bb3238a13c8c308b96c52b86b796941fe22ed49121545e310102ff6da7443d3",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "79d23811-1429-40d2-b29f-ce6db87371cf",
+        "name": "sovikron"
+      },
+      "domain": {
+        "id": "37d6637b-8113-4bb3-a721-b5dde9dafa03",
+        "domain": "www.sovikron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.sovikron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "nxseqlmp.up.railway.app",
+          "currentValue": "d956d3183b4fd8f7.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.sovikron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=bb33e14e560e9da6c2f962e9a427610670c65879dc585c456382c77aea6d4ef6",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "7a9d825e-c3aa-4989-a958-d0c0c47b51df",
+        "name": "purikron"
+      },
+      "domain": {
+        "id": "bdba64f5-a93d-45d7-9f52-01ef5e74a2b5",
+        "domain": "purikron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "purikron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "uphr6sxp.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.purikron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=a7c475ba9a035dd57285a4b8b991db88d8aa1a3fa97557d64f43da8ef2586691",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "7a9d825e-c3aa-4989-a958-d0c0c47b51df",
+        "name": "purikron"
+      },
+      "domain": {
+        "id": "dd07c082-ee5a-4486-ac12-f7844d3349d2",
+        "domain": "www.purikron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.purikron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "fd0djy63.up.railway.app",
+          "currentValue": "822df2755e3346dc.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.purikron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=84a2b89a283d8075420746666ddeaffa0419a8a789c82629eb7cfa8f3ff21200",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "c7306c79-3f12-4f0d-b6fe-85961b55276d",
+        "name": "minekron"
+      },
+      "domain": {
+        "id": "1bbc0d48-3791-41a8-b7f3-a0a1295b3c4a",
+        "domain": "minekron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "minekron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "vsj979pm.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.minekron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=5a88f622ff706813fed16967c81ebda124b1508b91263a2f4f0f22629d0d3979",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "c7306c79-3f12-4f0d-b6fe-85961b55276d",
+        "name": "minekron"
+      },
+      "domain": {
+        "id": "21e257d6-5cfa-4e3b-b585-02dbd99e445e",
+        "domain": "www.minekron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.minekron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "2fwlhl2r.up.railway.app",
+          "currentValue": "5cd77e09adac82e2.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.minekron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=7e17bb4c8afaaca288e35f9ee0759a638d5fc795355887eb8b32c766ba8ce4f7",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "08289ca2-be14-435f-980a-693f2ee2ea17",
+        "name": "energiemind-network"
+      },
+      "domain": {
+        "id": "8bfc2e24-81ce-403f-b8c0-298f5b94aca8",
+        "domain": "energiemind.network",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "energiemind.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "ak4oj43r.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.energiemind.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=c0b71278c987cffe404ff44d25c9727a7d1b1a7e0ec63343edb43ca31f2fe118",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "08289ca2-be14-435f-980a-693f2ee2ea17",
+        "name": "energiemind-network"
+      },
+      "domain": {
+        "id": "e440b161-7669-4394-9425-2d07ddefc980",
+        "domain": "www.energiemind.network",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.energiemind.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "pns33beu.up.railway.app",
+          "currentValue": "84e84552a9fcef5f.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.energiemind.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=644576296748fcc9ec065fd9b6034151398a529874265c2f92a4e6fa15fc3c5b",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "08289ca2-be14-435f-980a-693f2ee2ea17",
+        "name": "energiemind-network"
+      },
+      "domain": {
+        "id": "23046e38-c98d-405c-ab8f-e188f6aed357",
+        "domain": "app.energiemind.network",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "app",
+          "fqdn": "app.energiemind.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "zh0m0xui.up.railway.app",
+          "currentValue": "84e84552a9fcef5f.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.app",
+          "fqdn": "_railway-verify.app.energiemind.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=90f4d052987d68141c81a9572aedb21a126db0a05f9f29fa65194d8a88067090",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "1e6a3401-4363-434c-b8cb-b8c7749abfad",
+        "name": "aerospace"
+      },
+      "domain": {
+        "id": "1ec698c1-f5db-4063-804a-21a4a3c18a47",
+        "domain": "tvkaerospace.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "tvkaerospace.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "0k9hmtab.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.tvkaerospace.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=61e4e747243bb50877c64d299b0b4f4508adfce169b3721cf785619370a8981f",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "1e6a3401-4363-434c-b8cb-b8c7749abfad",
+        "name": "aerospace"
+      },
+      "domain": {
+        "id": "c190595b-e423-48c0-864d-e7919bb5c1a0",
+        "domain": "www.tvkaerospace.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.tvkaerospace.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "7r7xjs5p.up.railway.app",
+          "currentValue": "1f69f58f8f3b1fdf.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.tvkaerospace.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=b4a46840c850492bf54b5db73f10ec8ba72fd6eceeb7788bf4b748bc5146f90f",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "1a276309-cef4-4de3-9b65-30aad7d8803b",
+        "name": "tvk-cyberlab"
+      },
+      "domain": {
+        "id": "103c1193-4c76-4f7d-8748-f170b373989f",
+        "domain": "www.tvkcyberlab.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.tvkcyberlab.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "byoc53iu.up.railway.app",
+          "currentValue": "a1be51dfaf851bce.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.tvkcyberlab.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=4e0e58c6e517e1f3f641fc334bfa8fd161546781e9a65b57b48325f8a54f45ef",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "1a276309-cef4-4de3-9b65-30aad7d8803b",
+        "name": "tvk-cyberlab"
+      },
+      "domain": {
+        "id": "905497ae-ca3a-4cd8-8fc5-5f74f7351d84",
+        "domain": "tvkcyberlab.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "tvkcyberlab.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "2bafe0f6.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.tvkcyberlab.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=8355b9c45318c8de027de213ed62e38cbb95ff323efa37e231d3e392ed7a58bf",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "e559b847-d351-4e17-9e5a-8126dfe35c91",
+        "name": "entelelink"
+      },
+      "domain": {
+        "id": "fe1b7524-9e56-48bd-a987-8d2622ad7697",
+        "domain": "entelelink.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "entelelink.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "mxl3eso2.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.entelelink.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=17d375b591aeb8d5c9e489976bafe9293998f915a5a3b23a9cd3a40f0ab513fb",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "e559b847-d351-4e17-9e5a-8126dfe35c91",
+        "name": "entelelink"
+      },
+      "domain": {
+        "id": "1fd96e5e-1c94-41ef-a0e3-751c53b5b8b9",
+        "domain": "www.entelelink.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.entelelink.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "fw2jem9p.up.railway.app",
+          "currentValue": "2b4d990c42f6b79d.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.entelelink.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=955981cd8ce1eba3d69b0bc07815f649c43324f00869e6390f39d6c80d591cd1",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "2d375cd2-b914-4c18-b8b5-59718ff8bb0e",
+        "name": "enteleledger"
+      },
+      "domain": {
+        "id": "655d16e5-b4ee-4993-9fee-f86b569e0ad7",
+        "domain": "enteleledger.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "enteleledger.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "1j2rs9jm.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.enteleledger.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=b0c4896fa3826d607312ea29270a7282f747246247076970b23fcf5bd0f52f62",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "2d375cd2-b914-4c18-b8b5-59718ff8bb0e",
+        "name": "enteleledger"
+      },
+      "domain": {
+        "id": "aff306b1-5b17-4b4a-98f1-8efbfcdd6f12",
+        "domain": "www.enteleledger.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.enteleledger.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "azfb7x8v.up.railway.app",
+          "currentValue": "6f62c50f2e8cc514.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.enteleledger.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=3819a97b8ca8beba927413a29e619d13f842c802de07e4e0b74ed5e7693730fa",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "776296f7-9a3b-408d-9a51-7c37657ee33b",
+        "name": "cerebthra"
+      },
+      "domain": {
+        "id": "2623c31c-3436-4b50-939e-c06f6aae334f",
+        "domain": "cerebthra.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "cerebthra.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "sxk2k20c.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.cerebthra.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=0dddfc3e4b60b307a42d681e5bc17729d4a37287bafe44a4939312e9c7856842",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "776296f7-9a3b-408d-9a51-7c37657ee33b",
+        "name": "cerebthra"
+      },
+      "domain": {
+        "id": "337a2fab-c753-4b29-ac5a-9cf4f3a37d03",
+        "domain": "www.cerebthra.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.cerebthra.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "tytyrp5e.up.railway.app",
+          "currentValue": "e6bfebbab2501160.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.cerebthra.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=5886954d8ed32320b5be07c9f37adae2500edb4d6bd02b8b7fe2f4532554f257",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "01dc69cb-2316-44ce-876f-794e8cd3e2d4",
+        "name": "avasante"
+      },
+      "domain": {
+        "id": "12c347c0-601d-420f-91c1-7e6ed06acf27",
+        "domain": "avasante.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "avasante.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "hsfn4a3e.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.avasante.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=489cf06883734dbb343e58e0e8c9106dd18b4182f1ecf38e06c585816f890051",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "01dc69cb-2316-44ce-876f-794e8cd3e2d4",
+        "name": "avasante"
+      },
+      "domain": {
+        "id": "516f16e3-f9aa-47e9-9d89-5e9737d5f55e",
+        "domain": "www.avasante.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.avasante.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "60sfaoox.up.railway.app",
+          "currentValue": "869f73605eedd05e.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.avasante.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=1c1dd793cf327da0bace901739da57cbb39efb31c7cf64197dfd20eb9e5734b9",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "fef12886-ef9a-4e2b-a735-6145500d09f6",
+        "name": "warpkron"
+      },
+      "domain": {
+        "id": "2333e4cd-f701-4bcb-b307-cd217bb924a9",
+        "domain": "www.warpkron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.warpkron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "kgi46u1m.up.railway.app",
+          "currentValue": "d1e552fc2569a6bf.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.warpkron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=67abbc82bc6a64966cd98d196596add11b278b3d8605e8dbbaf6f1fab1735e86",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "fef12886-ef9a-4e2b-a735-6145500d09f6",
+        "name": "warpkron"
+      },
+      "domain": {
+        "id": "1bfa1934-e371-40f2-9731-12849cfacddd",
+        "domain": "warpkron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "warpkron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "kwerblxl.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.warpkron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=72c2393ae6a6611af3df6860a419f4a9148e37268849770b785ff5ca9b678d8f",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "9d9ad4f0-7412-4023-8194-8cd8ed043083",
+        "name": "alvinaworld"
+      },
+      "domain": {
+        "id": "9ec6d466-b7b3-4e41-bb4c-a9d61e616c7d",
+        "domain": "alvinaworld.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "alvinaworld.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "uytugxqj.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.alvinaworld.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=da45962aabf1eab879aeccad8e722ee73c599e4326263d2c64b90ad94fd2d4ec",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "9d9ad4f0-7412-4023-8194-8cd8ed043083",
+        "name": "alvinaworld"
+      },
+      "domain": {
+        "id": "039f1687-ccc2-463e-a259-7422a9c1c484",
+        "domain": "www.alvinaworld.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.alvinaworld.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "s0ghmvem.up.railway.app",
+          "currentValue": "a27145ac598862e0.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.alvinaworld.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=f49c09148504544ef48451c2b3afc4cafd02887b287c1d983d211516819e5d18",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "2ac8dba5-3039-4d70-af95-99402764b52f",
+        "name": "alvikron"
+      },
+      "domain": {
+        "id": "a9b79911-12dc-4a1e-8b22-77fd795e1a16",
+        "domain": "www.alvikron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.alvikron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "nt3w70bh.up.railway.app",
+          "currentValue": "df820fd293af85dd.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.alvikron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=c877d7ed19688ad8f9b20aae06fde8d587073e39ea584a237117015c0b2db45a",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "2ac8dba5-3039-4d70-af95-99402764b52f",
+        "name": "alvikron"
+      },
+      "domain": {
+        "id": "e194413a-4ed0-4ff9-b4c9-f2bb21a27853",
+        "domain": "alvikron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "alvikron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "7u7gbkkl.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.alvikron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=74bc4f611bf9a8299b34f4bb5c91dbcbf49e6786ca800ff99c43a716f70c8888",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "4b5db4a6-339b-4dda-afb4-90ee83ebcf61",
+        "name": "london-secret-of-women"
+      },
+      "domain": {
+        "id": "ef6c00c3-5955-4406-a1b8-0c94bc2bed38",
+        "domain": "www.london-thesecretofwomen.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.london-thesecretofwomen.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "iiwwrxwp.up.railway.app",
+          "currentValue": "06cd447d11ec05e1.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.london-thesecretofwomen.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=4858d7bf776f4548425eca5df8da5a853aa93a8f742d4b42f96d0f6dacf86b13",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "4b5db4a6-339b-4dda-afb4-90ee83ebcf61",
+        "name": "london-secret-of-women"
+      },
+      "domain": {
+        "id": "7c2dc75f-b466-48b6-8801-bf68d9f4968b",
+        "domain": "london-thesecretofwomen.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "london-thesecretofwomen.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "92h4yrin.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.london-thesecretofwomen.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=796cdfd578d66e570061c03e9cba961dbba4e5de7825ecacf198d7bfa94f1ad9",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "8c3c95b3-b801-4acc-be90-72545c5ac0d0",
+        "name": "ekron"
+      },
+      "domain": {
+        "id": "3a3fac54-8801-42be-abe6-0637bb677359",
+        "domain": "ekron.network",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "ekron.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "d9fi1oem.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.ekron.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=dbfd27071a20bdea930cc30bba5db58b5713d4f97fc3d53d2a6c8bdef01e7925",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "8c3c95b3-b801-4acc-be90-72545c5ac0d0",
+        "name": "ekron"
+      },
+      "domain": {
+        "id": "eea89523-9813-475d-bedf-3cc18ab34c41",
+        "domain": "www.ekron.network",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.ekron.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "wvwekouj.up.railway.app",
+          "currentValue": "da272b516950fa49.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.ekron.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=6479d265eef8c77afa1e9dd6f2d94588bdfc969c20e66c8f8838f3520e9479e9",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "073170d2-e5d0-411d-9f5a-c1f2e02719c9",
+        "name": "cognethra"
+      },
+      "domain": {
+        "id": "c6aa3bf6-ebf9-4a91-abcb-d990356658d7",
+        "domain": "cognethra.org",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "cognethra.org",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "ya6ssb41.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.cognethra.org",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=4c9c7aef7143203a7b33836f08a2754f54ee2fdbad5236ea188e8bfc15f71082",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "073170d2-e5d0-411d-9f5a-c1f2e02719c9",
+        "name": "cognethra"
+      },
+      "domain": {
+        "id": "8675db9e-7d67-42c7-b2cb-bdfb6ea8cd41",
+        "domain": "www.cognethra.org",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.cognethra.org",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "6u5wen8w.up.railway.app",
+          "currentValue": "e31661278effdbc3.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.cognethra.org",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=042d573ab4de9e87b682abe2790548a893cc4240e5bb1e91d7c0b7ce8d4f6f37",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "140e1790-0929-4556-ba3f-3dc1e281364a",
+        "name": "puppykron-token"
+      },
+      "domain": {
+        "id": "8d9b7fa1-2ab8-41c9-a150-a7e96e145a1f",
+        "domain": "puppykron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "puppykron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "h77jgxep.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.puppykron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=e5c884a5f118448542d4483315ea328915ca241e19a10a9dfd2fd12a050ac17c",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "140e1790-0929-4556-ba3f-3dc1e281364a",
+        "name": "puppykron-token"
+      },
+      "domain": {
+        "id": "e9d72cb7-343b-487e-99cf-cedab98cf577",
+        "domain": "www.puppykron.com",
+        "kind": "custom",
+        "targetPort": null
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.puppykron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "a1n0v862.up.railway.app",
+          "currentValue": "3d113284ca962849.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.puppykron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=66c4a8d64cfa916d8e488859d35d0fa9d4fe2c3fd89d155d4e51af07a64a0b61",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": "restokron-token",
+      "domain": {
+        "id": "a5e86955-53dd-4ca5-ae17-a81fb6d0955d",
+        "domain": "restokron.com",
+        "targetPort": 8080
+      },
+      "created": true,
+      "domainType": "custom",
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "restokron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "mam2xnd3.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.restokron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=d80d2862fec2c8b2844e7a058aea7feb6ba1ca4a55f71278ef495eb16402265f",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ],
+      "certificateStatus": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+      "existingDomains": []
+    },
+    {
+      "service": "restokron-token",
+      "domain": {
+        "id": "48b29a32-bae7-4c16-8964-0e0c5b13129c",
+        "domain": "www.restokron.com",
+        "targetPort": 8080
+      },
+      "created": true,
+      "domainType": "custom",
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.restokron.com",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "h88fdcd7.up.railway.app",
+          "currentValue": "c49c0f7044a96535.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.restokron.com",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=42f856cf56cda51678277ff523a52982da8fdec1422ad52b91be50ce0d7107b5",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ],
+      "certificateStatus": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+      "existingDomains": []
+    },
+    {
+      "service": "restokron-network",
+      "domain": {
+        "id": "4715001e-b9fa-406b-9669-d59643b35cbd",
+        "domain": "restokron.network",
+        "targetPort": 8080
+      },
+      "created": true,
+      "domainType": "custom",
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "restokron.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "lrhmxytq.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.restokron.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=365db69e80c17d68f006bf6b2d8f17745340fbaa610a63127c49b7973180991a",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ],
+      "certificateStatus": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+      "existingDomains": []
+    },
+    {
+      "service": "restokron-network",
+      "domain": {
+        "id": "3943fa8d-c1fb-409f-ba29-72b2b5a914ad",
+        "domain": "www.restokron.network",
+        "targetPort": 8080
+      },
+      "created": true,
+      "domainType": "custom",
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.restokron.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "ghrk5joy.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.restokron.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=e713d0a649ce2bce771fe5208036d4f407e35a8caaf428777d6fdf21884b1737",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ],
+      "certificateStatus": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+      "existingDomains": []
+    },
+    {
+      "service": "restokron-app",
+      "domain": {
+        "id": "3b0499f7-0e7d-4a81-aa20-5cbe1227c366",
+        "domain": "restokron.app",
+        "targetPort": 8080
+      },
+      "created": true,
+      "domainType": "custom",
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "restokron.app",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "vbmrftnj.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.restokron.app",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=bd89558c25e3ecdcf1f92339d718d95c3a8233cfd3e4feb7786d8e753cdb464f",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ],
+      "certificateStatus": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+      "existingDomains": []
+    },
+    {
+      "service": "restokron-app",
+      "domain": {
+        "id": "3d3e1739-13f2-4944-882c-a62641db412b",
+        "domain": "www.restokron.app",
+        "targetPort": 8080
+      },
+      "created": true,
+      "domainType": "custom",
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.restokron.app",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "8nuh5s5y.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.restokron.app",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=f5a5fcda1a6ebc997f72df40191a4dc8525f6c70fae80e0651518625b5b38ccf",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ],
+      "certificateStatus": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+      "existingDomains": []
+    }
+  ]
+}
