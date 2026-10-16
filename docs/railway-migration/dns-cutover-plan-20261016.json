@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-16T11:43:33.730Z",
+  "capturedAt": "2026-10-16T11:45:18.699Z",
   "notes": "Required web traffic CNAME and Railway ownership TXT records only. Preserve email, MX, DKIM, SPF, DMARC and unrelated records.",
   "domains": [
     {
@@ -2171,6 +2171,135 @@
       ],
       "certificateStatus": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
       "existingDomains": []
+    },
+    {
+      "service": {
+        "id": "1f12730d-1c68-4519-bf32-3b0d80865abc",
+        "name": "syntherra"
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "domain": {
+        "id": "98fbbbb5-d420-43fe-8b92-a3696652c8b2",
+        "domain": "syntherra.network",
+        "kind": "custom",
+        "targetPort": 8080
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "",
+          "fqdn": "syntherra.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "z9a4eq5l.up.railway.app",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify",
+          "fqdn": "_railway-verify.syntherra.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=5f5b19c981c7cc780dfc5b63a7d9cab6a86218fa3c43d50956f6da6e5c8e3394",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "1f12730d-1c68-4519-bf32-3b0d80865abc",
+        "name": "syntherra"
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "domain": {
+        "id": "451b2039-8d36-425e-8d63-ef291c4605d7",
+        "domain": "www.syntherra.network",
+        "kind": "custom",
+        "targetPort": 8080
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "www",
+          "fqdn": "www.syntherra.network",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "bsg9fvld.up.railway.app",
+          "currentValue": "8ef3a9afbeef565f.vercel-dns-016.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.www",
+          "fqdn": "_railway-verify.www.syntherra.network",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=8d4721810dcb70e8e7fc3ea666c0c4d1aa2b46eb7a6bc33fa7d18ae5e6b6cf48",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
+    },
+    {
+      "service": {
+        "id": "4866d823-8f30-403a-a30d-e951249a1a66",
+        "name": "kron-family-hub"
+      },
+      "environment": {
+        "id": "e3d9077d-ca2f-4016-a0ba-6dbffc1838c9",
+        "name": "production"
+      },
+      "domain": {
+        "id": "a42d590b-0950-4408-bfa6-adc2585eb0ed",
+        "domain": "kron.entelekron.org",
+        "kind": "custom",
+        "targetPort": 8080
+      },
+      "railwayManaged": false,
+      "verified": false,
+      "certificate": {
+        "status": "CERTIFICATE_STATUS_TYPE_VALIDATING_OWNERSHIP",
+        "errorMessage": null,
+        "retryable": null
+      },
+      "dnsRecords": [
+        {
+          "hostLabel": "kron",
+          "fqdn": "kron.entelekron.org",
+          "recordType": "DNS_RECORD_TYPE_CNAME",
+          "purpose": "DNS_RECORD_PURPOSE_TRAFFIC_ROUTE",
+          "requiredValue": "fou2wr78.up.railway.app",
+          "currentValue": "cname.vercel-dns.com",
+          "status": "DNS_RECORD_STATUS_REQUIRES_UPDATE"
+        },
+        {
+          "hostLabel": "_railway-verify.kron",
+          "fqdn": "_railway-verify.kron.entelekron.org",
+          "recordType": "DNS_RECORD_TYPE_TXT",
+          "purpose": "DNS_RECORD_PURPOSE_OWNERSHIP_VERIFICATION",
+          "requiredValue": "railway-verify=9a54bb95337a2fa2cb8ef9dd5cf74e939f13ff239b4de4094d58d542cb8dae95",
+          "currentValue": "",
+          "status": "DNS_RECORD_STATUS_UNSPECIFIED"
+        }
+      ]
     }
   ]
 }
