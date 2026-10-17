@@ -1,0 +1,6519 @@
+{
+  "capturedAt": "2026-10-17T00:07:25.119Z",
+  "scope": "73 Vercel projects; 76 main Railway services and separate ENK service",
+  "limitations": [
+    "Variable-name presence does not verify value equality or provider access.",
+    "Vercel sensitive values are not readable; no secrets are recorded here.",
+    "Account-wide integration configurations endpoint returned 403; no authenticated Vercel CLI is installed.",
+    "No Cloudflare authenticated zone inventory yet; Railway DNS checks cover attached hostnames, not all zone records.",
+    "No database data, billing, storage objects or provider resources were deleted or moved."
+  ],
+  "restored": [
+    {
+      "service": "energiemind-io",
+      "keys": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+      ],
+      "source": "same Vercel project's Supabase integration",
+      "deployment": "3add16c3-ab0f-46ff-ad29-6c3896211bd8",
+      "status": "SUCCESS"
+    },
+    {
+      "service": "buildpulse",
+      "keys": [
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+      ],
+      "source": "same Vercel project's configuration; existing URL and publishable key preserved",
+      "deployment": "89c32686-8eda-441b-9f49-3cccd80889f0",
+      "status": "SUCCESS"
+    }
+  ],
+  "providerFindings": [
+    {
+      "provider": "Supabase",
+      "projects": [
+        "energiemind-io",
+        "energiemind-network"
+      ],
+      "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+      "action": "Retain existing Supabase projects/auth/storage. Configure each Railway app with its own keys and audit callbacks/RLS/schedules before retiring Vercel billing."
+    },
+    {
+      "provider": "Neon",
+      "projects": [
+        "tvk-cyberlab"
+      ],
+      "action": "Database/auth variables present in Vercel but absent from Railway snapshot; sensitive values unreadable. Provider access and data migration/ownership audit required."
+    }
+  ],
+  "vercelConfigAudit": [
+    {
+      "service": "sovra-protocol",
+      "repo": "tvk-group/SOVRA-protocol-token",
+      "branch": "deployment/railway",
+      "status": "found",
+      "crons": [
+        {
+          "path": "/api/cron-payment-evidence-refresh",
+          "schedule": "*/3 * * * *"
+        },
+        {
+          "path": "/api/indexnow",
+          "schedule": "31 3 * * *"
+        }
+      ],
+      "rewrites": [
+        {
+          "source": "/",
+          "has": [
+            {
+              "type": "host",
+              "value": "app.sovraprotocol.com"
+            }
+          ],
+          "destination": "/app.html"
+        },
+        {
+          "source": "/",
+          "has": [
+            {
+              "type": "host",
+              "value": "sovraprotocol.app"
+            }
+          ],
+          "destination": "/app.html"
+        }
+      ],
+      "redirects": [
+        {
+          "source": "/legal/tokenomics.html",
+          "destination": "/tokenomics",
+          "permanent": true
+        },
+        {
+          "source": "/tokenomics",
+          "destination": "/tokenomics.html",
+          "permanent": false
+        },
+        {
+          "source": "/risk-disclosure.html",
+          "destination": "/legal/risk-disclosure.html",
+          "permanent": true
+        },
+        {
+          "source": "/assets/wallets.json",
+          "destination": "/security.html",
+          "permanent": false
+        },
+        {
+          "source": "/:path*",
+          "has": [
+            {
+              "type": "host",
+              "value": "sovraprotocol.io"
+            }
+          ],
+          "destination": "https://www.sovraprotocol.com/:path*",
+          "permanent": true
+        },
+        {
+          "source": "/:path*",
+          "has": [
+            {
+              "type": "host",
+              "value": "www.sovraprotocol.io"
+            }
+          ],
+          "destination": "https://www.sovraprotocol.com/:path*",
+          "permanent": true
+        },
+        {
+          "source": "/:path*",
+          "has": [
+            {
+              "type": "host",
+              "value": "sovraprotocol.org"
+            }
+          ],
+          "destination": "https://www.sovraprotocol.com/:path*",
+          "permanent": true
+        },
+        {
+          "source": "/:path*",
+          "has": [
+            {
+              "type": "host",
+              "value": "www.sovraprotocol.org"
+            }
+          ],
+          "destination": "https://www.sovraprotocol.com/:path*",
+          "permanent": true
+        },
+        {
+          "source": "/app",
+          "destination": "/app.html",
+          "permanent": false
+        },
+        {
+          "source": "/presale",
+          "destination": "/presale.html",
+          "permanent": false
+        },
+        {
+          "source": "/whitelist",
+          "destination": "/whitelist.html",
+          "permanent": false
+        },
+        {
+          "source": "/apply",
+          "destination": "/apply.html",
+          "permanent": false
+        },
+        {
+          "source": "/dashboard",
+          "destination": "/dashboard.html",
+          "permanent": false
+        },
+        {
+          "source": "/purchase",
+          "destination": "/purchase.html",
+          "permanent": false
+        },
+        {
+          "source": "/partner",
+          "destination": "/partner-info.html",
+          "permanent": false
+        },
+        {
+          "source": "/partner-dashboard",
+          "destination": "/partner.html",
+          "permanent": false
+        },
+        {
+          "source": "/wallets",
+          "destination": "/wallets.html",
+          "permanent": false
+        },
+        {
+          "source": "/process",
+          "destination": "/process.html",
+          "permanent": false
+        },
+        {
+          "source": "/whitepaper",
+          "destination": "/whitepaper.html",
+          "permanent": false
+        },
+        {
+          "source": "/privacy",
+          "destination": "/privacy.html",
+          "permanent": false
+        },
+        {
+          "source": "/terms",
+          "destination": "/terms.html",
+          "permanent": false
+        },
+        {
+          "source": "/platform",
+          "destination": "/platform.html",
+          "permanent": false
+        },
+        {
+          "source": "/security",
+          "destination": "/security.html",
+          "permanent": false
+        },
+        {
+          "source": "/docs",
+          "destination": "/docs.html",
+          "permanent": false
+        },
+        {
+          "source": "/buildpulse",
+          "destination": "/buildpulse.html",
+          "permanent": false
+        },
+        {
+          "source": "/admin",
+          "destination": "/admin-center.html",
+          "permanent": false
+        },
+        {
+          "source": "/admin-center",
+          "destination": "/admin-center.html",
+          "permanent": false
+        },
+        {
+          "source": "/announcements/sovra-token-launch",
+          "destination": "/announcements/sovra-token-launch.html",
+          "permanent": false
+        },
+        {
+          "source": "/security/token-scan",
+          "destination": "/security-token-scan.html",
+          "permanent": false
+        },
+        {
+          "source": "/kyc-verification",
+          "destination": "/kyc-verification.html",
+          "permanent": false
+        }
+      ],
+      "headers": [
+        {
+          "source": "/assets/wallets.json",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network https://cdn.jsdelivr.net https://static.sumsub.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network https://*.supabase.co wss://*.supabase.co https://api.sumsub.com https://*.sumsub.com; frame-src https://static.sumsub.com https://*.sumsub.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(self \"https://api.sumsub.com\" \"https://in.sumsub.com\"), microphone=(self \"https://api.sumsub.com\" \"https://in.sumsub.com\"), geolocation=(), usb=(), interest-cohort=()"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Content-Security-Policy-Report-Only",
+              "value": "default-src 'self'; script-src 'self' https://www.sovra.network https://cdn.jsdelivr.net https://static.sumsub.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network https://*.supabase.co wss://*.supabase.co https://api.sumsub.com https://*.sumsub.com; frame-src https://static.sumsub.com https://*.sumsub.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+            }
+          ]
+        },
+        {
+          "source": "/(apply|login|purchase|dashboard|dashboards|dashboard-center|operational-dashboard|auth-callback|admin|admin-center|partner).html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/api/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(config|schedule|portal|presale-readiness).js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, must-revalidate"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/buildpulse/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=60, stale-while-revalidate=300"
+            }
+          ]
+        }
+      ],
+      "functions": {
+        "api/**/*.js": {
+          "maxDuration": 30
+        }
+      }
+    },
+    {
+      "service": "cesal",
+      "repo": "tvk-group/cesal",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "entelekron-org",
+      "repo": "tvk-group/EnteleKRON",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/whitepaper/EnteleKRON_WhitePaper_v3.1.pdf",
+          "destination": "/whitepaper/EnteleKRON-Whitepaper.pdf",
+          "permanent": true
+        },
+        {
+          "source": "/:path*",
+          "has": [
+            {
+              "type": "host",
+              "value": "entelekron.org"
+            }
+          ],
+          "destination": "https://www.entelekron.org/:path*",
+          "permanent": true
+        },
+        {
+          "source": "/apply",
+          "destination": "https://entelekron.io",
+          "permanent": false
+        },
+        {
+          "source": "/sovra",
+          "destination": "https://www.sovra.network/",
+          "permanent": false
+        },
+        {
+          "source": "/sovra/",
+          "destination": "https://www.sovra.network/",
+          "permanent": false
+        }
+      ],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/offline.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/api/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/:locale(ar|bn|da|de|el|en|es|fa|fi|fr|he|hi|id|it|ja|ko|ms|nl|no|pl|pt|ro|ru|sv|sw|th|tr|uk|ur|vi|zh)/:page(contact|investor-info|legal|token-sale|wallet|auth|session)/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, stale-while-revalidate=86400"
+            }
+          ]
+        },
+        {
+          "source": "/assets/:file(pwa.js|social-config.js|app-locales.json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/(robots.txt|sitemap.xml)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin-allow-popups"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-site"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "accelerometer=(), bluetooth=(), browsing-topics=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=(), screen-wake-lock=(), clipboard-write=(self), fullscreen=(self), publickey-credentials-get=(self)"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self' https://www.sovra.network; frame-src 'self' https:; child-src 'self' https:; frame-ancestors 'self'; form-action 'self' mailto:; upgrade-insecure-requests"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "infrasphere-network",
+      "repo": "tvk-group/infrasphere-network",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "t-v-k-com",
+      "repo": "tvk-group/t-v-k-com",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, no-cache, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/assets/web-app-manifest.json",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, must-revalidate"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "enm-network",
+      "repo": "tvk-group/enm-network",
+      "branch": "deployment/railway",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/announcements/enm-token-launch",
+          "destination": "/en/announcements/enm-token-launch",
+          "permanent": true
+        },
+        {
+          "source": "/kyc-verification",
+          "destination": "/en/kyc-verification",
+          "permanent": true
+        },
+        {
+          "source": "/security/token-scan",
+          "destination": "/en/security-token-scan",
+          "permanent": true
+        },
+        {
+          "source": "/token",
+          "destination": "/en/token",
+          "permanent": true
+        },
+        {
+          "source": "/tokenomics",
+          "destination": "/en/tokenomics",
+          "permanent": true
+        },
+        {
+          "source": "/presale",
+          "destination": "/en/presale",
+          "permanent": true
+        },
+        {
+          "source": "/whitelist",
+          "destination": "/en/whitelist",
+          "permanent": true
+        },
+        {
+          "source": "/dashboard",
+          "destination": "/en/dashboard",
+          "permanent": true
+        },
+        {
+          "source": "/wallets",
+          "destination": "/en/wallets",
+          "permanent": true
+        },
+        {
+          "source": "/contract",
+          "destination": "/en/contract",
+          "permanent": true
+        },
+        {
+          "source": "/roadmap",
+          "destination": "/en/roadmap",
+          "permanent": true
+        },
+        {
+          "source": "/risk",
+          "destination": "/en/risk",
+          "permanent": true
+        },
+        {
+          "source": "/verify",
+          "destination": "/en/verify",
+          "permanent": true
+        },
+        {
+          "source": "/faq",
+          "destination": "/en/faq",
+          "permanent": true
+        },
+        {
+          "source": "/contact",
+          "destination": "/en/contact",
+          "permanent": true
+        }
+      ],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "entelerobot-app",
+      "repo": "tvk-group/entelerobot-app",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/offline",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/api/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "tvk-wallet-site",
+      "repo": "tvk-group/tvk-wallet-site",
+      "branch": "deployment/railway",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "sovra-network",
+      "repo": "tvk-group/sovra-network",
+      "branch": "deployment/railway",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/api/advisor",
+          "destination": "/api/advisor-runtime"
+        }
+      ],
+      "redirects": [
+        {
+          "source": "/buildpulse.html",
+          "destination": "/buildpulse",
+          "permanent": true
+        }
+      ],
+      "headers": [
+        {
+          "source": "/assets/sovra-advisor.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "public, max-age=60, stale-while-revalidate=300"
+            }
+          ]
+        },
+        {
+          "source": "/assets/sovra-home.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "public, max-age=60, stale-while-revalidate=300"
+            }
+          ]
+        },
+        {
+          "source": "/assets/sovra-motion.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "public, max-age=60, stale-while-revalidate=300"
+            }
+          ]
+        },
+        {
+          "source": "/buildpulse/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/assets/models/:path*",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "energiemind-main",
+      "repo": "tvk-group/energiemind-main",
+      "branch": "main",
+      "status": "found",
+      "crons": [
+        {
+          "path": "/api/indexnow",
+          "schedule": "43 3 * * *"
+        }
+      ],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, no-cache, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, must-revalidate"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "tvk-labs",
+      "repo": "tvk-group/tvk-labs-technologies",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=()"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-site"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://www.sovra.network; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https://www.sovra.network; connect-src 'self' https://www.sovra.network https://etcbqqmzzcxdmzfgrxze.supabase.co; frame-src 'none'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
+            }
+          ]
+        },
+        {
+          "source": "/iads-demo",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; img-src 'none'; connect-src 'none'; font-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'"
+            }
+          ]
+        },
+        {
+          "source": "/iads-demo/:path*",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; img-src 'none'; connect-src 'none'; font-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'"
+            }
+          ]
+        },
+        {
+          "source": "/iads-operator-acceptance",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; img-src 'none'; connect-src 'none'; font-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'"
+            }
+          ]
+        },
+        {
+          "source": "/iads-operator-acceptance/:path*",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; img-src 'none'; connect-src 'none'; font-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelepay",
+      "repo": "tvk-group/entelepay",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/:path*",
+          "has": [
+            {
+              "type": "host",
+              "value": "entelepay.com"
+            }
+          ],
+          "destination": "https://www.entelepay.com/:path*",
+          "permanent": true
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "on"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "energiemind-io",
+      "repo": "tvk-group/energiemind.io",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "has": [
+            {
+              "type": "host",
+              "value": "energiemind.io"
+            }
+          ],
+          "destination": "/en/",
+          "permanent": true
+        },
+        {
+          "source": "/",
+          "has": [
+            {
+              "type": "host",
+              "value": "www.energiemind.io"
+            }
+          ],
+          "destination": "/en/",
+          "permanent": true
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelebank",
+      "repo": "tvk-group/entelebank",
+      "branch": "main",
+      "status": "absent"
+    },
+    {
+      "service": "entelepoint",
+      "repo": "tvk-group/entelepoint",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "enteleagent",
+      "repo": "tvk-group/enteleagent",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/offline",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/api/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "energiemind-org",
+      "repo": "tvk-group/energiemind-org",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "tvk-prefabricated-systems",
+      "repo": "tvk-group/tvk-prefabricated-systems",
+      "branch": "main",
+      "status": "absent"
+    },
+    {
+      "service": "buildpulse",
+      "repo": "tvk-group/buildpulse",
+      "branch": "main",
+      "status": "found",
+      "crons": [
+        {
+          "path": "/api/cron/sovra-market-learning",
+          "schedule": "12,42 * * * *"
+        },
+        {
+          "path": "/api/cron/blog-editorial-plan",
+          "schedule": "15 6 * * *"
+        }
+      ],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "tvk-infrastructure-energy-systems",
+      "repo": "tvk-group/TVK-Infrastructure-Energy-Systems",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "/en/",
+          "permanent": false
+        },
+        {
+          "source": "/app",
+          "destination": "/en/app/",
+          "permanent": false
+        },
+        {
+          "source": "/app/",
+          "destination": "/en/app/",
+          "permanent": false
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "tvk-orbital",
+      "repo": "tvk-group/tvk-orbital",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "/en",
+          "permanent": true
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            }
+          ]
+        },
+        {
+          "source": "/api/tvk-orbital-awareness.json",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "tvk-id",
+      "repo": "tvk-group/tvk-id",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "asodi",
+      "repo": "tvk-group/asodi",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/.well-known/security.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/demo",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/demo/(.*)",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/demo/producer-acceptance",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            }
+          ]
+        },
+        {
+          "source": "/console",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            }
+          ]
+        },
+        {
+          "source": "/console/(.*)",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            }
+          ]
+        },
+        {
+          "source": "/api/console/(.*)",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "graphvault",
+      "repo": "tvk-group/graphvault",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "chronoseal",
+      "repo": "tvk-group/chronoseal",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "enteleagent-app",
+      "repo": "tvk-group/enteleagent-app",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/offline",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/api/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelecard",
+      "repo": "tvk-group/entelecard",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/:path*",
+          "has": [
+            {
+              "type": "host",
+              "value": "entelecard.com"
+            }
+          ],
+          "destination": "https://www.entelecard.com/:path*",
+          "permanent": true
+        }
+      ],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "entelekron-portal",
+      "repo": "tvk-group/entelekron-portal",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "entelevault",
+      "repo": "tvk-group/entelevault",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "enteleexchange-status",
+      "repo": "tvk-group/enteleexchange-status",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://www.sovra.network; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://www.sovra.network; form-action 'self'; upgrade-insecure-requests"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), browsing-topics=()"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            }
+          ]
+        },
+        {
+          "source": "/api/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "enteleexchange",
+      "repo": "tvk-group/enteleexchange",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "/en/",
+          "permanent": true
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src 'none'; child-src 'none'; script-src 'self' https://www.sovra.network; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self' https://www.sovra.network https://jhcdgtzsiqnjbcgclnys.supabase.co wss://jhcdgtzsiqnjbcgclnys.supabase.co; form-action 'self'; upgrade-insecure-requests"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "accelerometer=(), bluetooth=(), browsing-topics=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=(), screen-wake-lock=(), clipboard-write=(self), fullscreen=(self), publickey-credentials-get=(self)"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin-allow-popups"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/offline",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/en/account/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/en/login/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/en/register/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/en/password-recovery/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/en/password-update/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/en/email-verification/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/en/auth/callback/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelerobot",
+      "repo": "tvk-group/entelerobot",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/offline",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/api/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, max-age=0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "alvina-app",
+      "repo": "tvk-group/alvina-app",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/",
+          "destination": "/de/index.html"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "alvinaflow",
+      "repo": "tvk-group/alvinaflow",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelekron-financial-infrastructure",
+      "repo": "tvk-group/entelekron-financial-infrastructure",
+      "branch": "main",
+      "status": "absent"
+    },
+    {
+      "service": "energiemind-shop",
+      "repo": "tvk-group/energiemind-shop",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "/en",
+          "permanent": false
+        },
+        {
+          "source": "/shop",
+          "destination": "/en/shop",
+          "permanent": false
+        },
+        {
+          "source": "/mining-heaters",
+          "destination": "/en/mining-heaters",
+          "permanent": false
+        },
+        {
+          "source": "/bitcoin-miners",
+          "destination": "/en/bitcoin-miners",
+          "permanent": false
+        },
+        {
+          "source": "/energy-systems",
+          "destination": "/en/energy-systems",
+          "permanent": false
+        },
+        {
+          "source": "/solar-power",
+          "destination": "/en/solar-power",
+          "permanent": false
+        },
+        {
+          "source": "/monitoring-devices",
+          "destination": "/en/monitoring-devices",
+          "permanent": false
+        },
+        {
+          "source": "/accessories",
+          "destination": "/en/accessories",
+          "permanent": false
+        },
+        {
+          "source": "/cooling-systems",
+          "destination": "/en/cooling-systems",
+          "permanent": false
+        },
+        {
+          "source": "/support",
+          "destination": "/en/support",
+          "permanent": false
+        },
+        {
+          "source": "/contact",
+          "destination": "/en/contact",
+          "permanent": false
+        },
+        {
+          "source": "/quote",
+          "destination": "/en/quote",
+          "permanent": false
+        },
+        {
+          "source": "/app",
+          "destination": "/en/app",
+          "permanent": false
+        },
+        {
+          "source": "/app/:path*",
+          "destination": "/en/app/:path*",
+          "permanent": false
+        }
+      ],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "q-presencee",
+      "repo": "tvk-group/q-presencee",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "opsline",
+      "repo": "tvk-group/opsline",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelescan",
+      "repo": "tvk-group/entelescan",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=(), payment=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network; font-src 'self' data:; form-action 'self'; upgrade-insecure-requests"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "enteleclos",
+      "repo": "tvk-group/enteleclos",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "/en/",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/inquiry",
+          "destination": "/:lang/case-intake",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/inquiry.html",
+          "destination": "/:lang/case-intake",
+          "permanent": true
+        },
+        {
+          "source": "/thankyou-inquiry.html",
+          "destination": "/thankyou-case-intake.html",
+          "permanent": true
+        },
+        {
+          "source": "/zh/:path*",
+          "destination": "/zh-cn/:path*",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/buildpulse",
+          "destination": "/buildpulse",
+          "permanent": false
+        },
+        {
+          "source": "/:lang/buildpulse.html",
+          "destination": "/buildpulse",
+          "permanent": false
+        },
+        {
+          "source": "/:lang/legal",
+          "destination": "/legal",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/legal.html",
+          "destination": "/legal",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/impressum",
+          "destination": "/legal",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/impressum.html",
+          "destination": "/legal",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/privacy",
+          "destination": "/privacy",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/privacy.html",
+          "destination": "/privacy",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/terms",
+          "destination": "/terms",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/terms.html",
+          "destination": "/terms",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/disclaimer",
+          "destination": "/disclaimer",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/disclaimer.html",
+          "destination": "/disclaimer",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/cookies",
+          "destination": "/cookies",
+          "permanent": true
+        },
+        {
+          "source": "/:lang/cookies.html",
+          "destination": "/cookies",
+          "permanent": true
+        }
+      ],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/site.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/offline.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/assets/js/site.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/buildpulse/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/api/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/:lang/:page(case-intake|contact|inquiry|recovery-case|secure|review|evidence|incident|verify)/:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/thankyou-:path*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Vercel-CDN-Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow,noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src 'none'; child-src 'none'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; media-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self' https://www.sovra.network https://etcbqqmzzcxdmzfgrxze.supabase.co; form-action 'self'; upgrade-insecure-requests"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin-allow-popups"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-site"
+            },
+            {
+              "key": "Origin-Agent-Cluster",
+              "value": "?1"
+            },
+            {
+              "key": "X-DNS-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "accelerometer=(), bluetooth=(), browsing-topics=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=(), screen-wake-lock=(), clipboard-write=(self), fullscreen=(self), publickey-credentials-get=(self)"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelelink",
+      "repo": "tvk-group/entelelink",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src 'none'; script-src 'self' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network; form-action 'self'; manifest-src 'self'; media-src 'self'; worker-src 'self'; upgrade-insecure-requests"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+            },
+            {
+              "key": "Link",
+              "value": "<https://www.entelelink.com/.well-known/entelelink.json>; rel=\"service-desc\"; type=\"application/json\""
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/offline.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, must-revalidate"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400, stale-while-revalidate=604800"
+            }
+          ]
+        },
+        {
+          "source": "/sitemap.xml",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/xml; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, stale-while-revalidate=86400"
+            }
+          ]
+        },
+        {
+          "source": "/robots.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, stale-while-revalidate=86400"
+            }
+          ]
+        },
+        {
+          "source": "/.well-known/security.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, stale-while-revalidate=86400"
+            }
+          ]
+        },
+        {
+          "source": "/.well-known/entelelink.json",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, stale-while-revalidate=86400"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "tvk-cyberlab",
+      "repo": "tvk-group/tvk-cyberlab",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; connect-src 'self' https://www.sovra.network; font-src 'self'; form-action 'self' mailto:; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; upgrade-insecure-requests"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Resource-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "enteleledger",
+      "repo": "tvk-group/enteleledger",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/index.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/css/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/js/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400, must-revalidate"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "sentientsignals",
+      "repo": "tvk-group/sentientsignals",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "aerospace",
+      "repo": "tvk-group/aerospace",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, no-cache, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, must-revalidate"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/.well-known/security.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, must-revalidate"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "energiemind-network",
+      "repo": "tvk-group/energiemind.network",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/app",
+          "destination": "/app/index.html"
+        },
+        {
+          "source": "/app/",
+          "destination": "/app/index.html"
+        },
+        {
+          "source": "/admin",
+          "destination": "/admin/index.html"
+        },
+        {
+          "source": "/admin/",
+          "destination": "/admin/index.html"
+        },
+        {
+          "source": "/partner-admin",
+          "destination": "/partner-admin/index.html"
+        },
+        {
+          "source": "/partner-admin/",
+          "destination": "/partner-admin/index.html"
+        }
+      ],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, no-cache, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/assets/web-app-manifest.json",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/admin/(.*)",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            }
+          ]
+        },
+        {
+          "source": "/partner-admin/(.*)",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "webkron",
+      "repo": "tvk-group/webkron",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/browserconfig.xml",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/xml; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/security.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/.well-known/:path*",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/api/webkron-notify",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "private, no-store, max-age=0"
+            },
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            }
+          ]
+        },
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=(), payment=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' https://www.sovra.network; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://agdmafcdzhsyonyexopp.supabase.co https://www.sovra.network; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+            }
+          ]
+        }
+      ],
+      "functions": {
+        "api/webkron-notify.ts": {
+          "maxDuration": 30
+        },
+        "api/site-scan.ts": {
+          "maxDuration": 30
+        }
+      }
+    },
+    {
+      "service": "preflightaudit",
+      "repo": "tvk-group/Preflightaudit",
+      "branch": "fix/railway-security-dependencies",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "warpkron",
+      "repo": "tvk-group/warpkron",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/(sitemap.xml|robots.txt)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "minekron",
+      "repo": "tvk-group/MineKron",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/app/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/app/"
+            }
+          ]
+        },
+        {
+          "source": "/(sitemap.xml|robots.txt)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "purikron",
+      "repo": "tvk-group/puriKRON",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://mainnet.base.org https://*.base.org https://www.sovra.network; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/(sitemap.xml|robots.txt)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "alvinaworld",
+      "repo": "tvk-group/alvinaworld",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "alvikron",
+      "repo": "tvk-group/AlviKRON",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network https://mainnet.base.org; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/(sitemap.xml|robots.txt)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "tvk-network",
+      "repo": "tvk-group/tvk-network",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "/en/",
+          "permanent": true
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "ekron",
+      "repo": "tvk-group/eKRON",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/app/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/app/"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "/app/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "/(sitemap.xml|robots.txt)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "sovikron",
+      "repo": "tvk-group/SoviKRON",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network https://mainnet.base.org; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/app/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/app/"
+            }
+          ]
+        },
+        {
+          "source": "/(sitemap.xml|robots.txt)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "cerebthra",
+      "repo": "tvk-group/Cerebthra",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "avasante",
+      "repo": "tvk-group/avasante",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "nadiia-moves",
+      "repo": "tvk-group/nadiia.moves",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://www.instagram.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://www.sovra.network; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.facebook.com https://www.sovra.network; img-src 'self' data: blob: https:; media-src 'self' blob: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/site.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/app/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "london-secret-of-women",
+      "repo": "tvk-group/LoNDoN-the-secret-of-women",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/index.html"
+        }
+      ],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "cognethra",
+      "repo": "tvk-group/cognethra",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/privacy.html",
+          "destination": "/en/privacy.html",
+          "permanent": true
+        },
+        {
+          "source": "/terms.html",
+          "destination": "/en/terms.html",
+          "permanent": true
+        },
+        {
+          "source": "/disclaimer.html",
+          "destination": "/en/disclaimer.html",
+          "permanent": true
+        },
+        {
+          "source": "/app",
+          "destination": "/en/app/",
+          "permanent": true
+        },
+        {
+          "source": "/app/",
+          "destination": "/en/app/",
+          "permanent": false
+        }
+      ],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json"
+            }
+          ]
+        },
+        {
+          "source": "/sitemap-index.xml",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/xml; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/sitemap-:locale.xml",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/xml; charset=utf-8"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "ava-sentient-site",
+      "repo": "tvk-group/ava-sentient-site",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "puppykron-site",
+      "repo": "tvk-group/puppykron-site",
+      "branch": "main",
+      "status": "absent"
+    },
+    {
+      "service": "kron-family-hub",
+      "repo": "tvk-group/kron.entelekron.org",
+      "branch": "main",
+      "status": "absent"
+    },
+    {
+      "service": "entelequant",
+      "repo": "tvk-group/entelequant",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "restokron",
+      "repo": "tvk-group/restoKRON",
+      "branch": "main",
+      "status": "absent"
+    },
+    {
+      "service": "entelekron-osaic",
+      "repo": "tvk-group/entelekron-OSAIC",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "has": [
+            {
+              "type": "host",
+              "value": "app.entelekron.tvk.group"
+            }
+          ],
+          "destination": "/?source=app",
+          "permanent": false
+        },
+        {
+          "source": "/",
+          "has": [
+            {
+              "type": "host",
+              "value": "www.app.entelekron.tvk.group"
+            }
+          ],
+          "destination": "/?source=app",
+          "permanent": false
+        }
+      ],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "osoix",
+      "repo": "tvk-group/osoix",
+      "branch": "main",
+      "status": "found",
+      "crons": [
+        {
+          "path": "/api/cron/mission-control-alerts/",
+          "schedule": "7 * * * *"
+        },
+        {
+          "path": "/api/cron/trial-reminders/",
+          "schedule": "13 * * * *"
+        },
+        {
+          "path": "/api/cron/orbital-snapshot/",
+          "schedule": "17 0 * * *"
+        },
+        {
+          "path": "/api/cron/orbital-evidence-watchdog/",
+          "schedule": "37 * * * *"
+        },
+        {
+          "path": "/api/cron/orbital-source-refresh/",
+          "schedule": "43 * * * *"
+        }
+      ],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "puppykron-token",
+      "repo": "tvk-group/puppykron-token",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubDomains; preload"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.sovra.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.sovra.network; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            }
+          ]
+        },
+        {
+          "source": "/assets/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "tvk-group",
+      "repo": "tvk-group/tvk-group-website",
+      "branch": "deployment/railway",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "/en/",
+          "permanent": true
+        },
+        {
+          "source": "/buildpulse",
+          "destination": "/en/buildpulse",
+          "permanent": false
+        },
+        {
+          "source": "/buildpulse/",
+          "destination": "/en/buildpulse",
+          "permanent": false
+        }
+      ],
+      "headers": [
+        {
+          "source": "/sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-store, no-cache, must-revalidate"
+            },
+            {
+              "key": "Service-Worker-Allowed",
+              "value": "/"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/manifest.webmanifest",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, must-revalidate"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/manifest+json; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' mailto:; frame-ancestors 'none'"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "restokron-network",
+      "repo": "tvk-group/restoKRON-token",
+      "branch": "deployment/railway-multisite",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "restokron-token",
+      "repo": "tvk-group/restoKRON-token",
+      "branch": "deployment/railway-multisite",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "entelewallet-app",
+      "repo": "tvk-group/entelewallet-app",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    },
+    {
+      "service": "entelewallet-site",
+      "repo": "tvk-group/entelewallet-site",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "frame-ancestors 'self'; object-src 'none'; base-uri 'self'"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "restokron-app",
+      "repo": "tvk-group/restoKRON-token",
+      "branch": "deployment/railway-multisite",
+      "status": "found",
+      "crons": [],
+      "rewrites": [],
+      "redirects": [],
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        }
+      ],
+      "functions": {}
+    },
+    {
+      "service": "syntherra",
+      "repo": "tvk-group/syntherra",
+      "branch": "main",
+      "status": "found",
+      "crons": [],
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/$1"
+        }
+      ],
+      "redirects": [],
+      "headers": [],
+      "functions": {}
+    }
+  ],
+  "apps": [
+    {
+      "vercelProject": "energiemind-site",
+      "vercelProjectId": "prj_Zx1uzRXAmhrpipXV71VAGysNPkEP",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [
+        {
+          "key": "WALLET_PRESALE_RPC_URL",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ETHEREUM_RPC_URL",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "WALLET_PRESALE_CHAIN_ID",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "WALLET_PRESALE_TOKEN_ADDRESS",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "WALLET_PRESALE_CONFIRMATIONS",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "WALLET_PRESALE_ENABLED",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUMSUB_WEBHOOK_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUMSUB_LEVEL_NAME",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUMSUB_BASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUMSUB_APP_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUMSUB_SECRET_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelequant",
+      "vercelProjectId": "prj_sZSb4e5FOy8xwl1nOrTXpAE2HLe6",
+      "railwayService": "entelequant",
+      "railwayServiceId": "e60cec58-fa1d-413b-96ea-0303cf87f877",
+      "productionVariables": [
+        {
+          "key": "FCA_API_EMAIL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEREG_INTERNAL_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "FCA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "ENTELEQUANT_STRIPE_WEBHOOK_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "ENTELEQUANT_STRIPE_SECRET_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "BINANCE_API_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BINANCE_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "BYBIT_API_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BYBIT_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEQUANT_CONTROL_PLANE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ALCHEMY_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BASE_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEQUANT_SUPABASE_SECRET_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEQUANT_AUDIT_MLDSA_PRIVATE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "ENTELEQUANT_INDEXNOW_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEQUANT_CREDENTIAL_ENCRYPTION_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "ENTELEQUANT_SUPABASE_PUBLISHABLE_KEY",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "XT_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "XT_API_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEQUANT_WORKER_SHARED_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_MARKET_CONTEXT_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_ENGINEERING_ENDPOINT",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_MARKET_CONTEXT_ENDPOINT",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_LEARNING_INGEST_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "FRED_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TWELVE_DATA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "FINNHUB_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NVIDIA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUI_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "XRPL_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "AVALANCHE_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TRON_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POLYGON_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ARBITRUM_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOLANA_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BSC_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BITCOIN_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ETHEREUM_CHAIN_ID",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ETHEREUM_RPC_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "buildpulse",
+      "vercelProjectId": "prj_x8xvQG2xDEBKlhWlSTM8f6WnGUsO",
+      "railwayService": "buildpulse",
+      "railwayServiceId": "be2368bc-8670-4aa8-bac4-f0dc7ea3481f",
+      "productionVariables": [
+        {
+          "key": "BUILDPULSE_STRIPE_WEBHOOK_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TINYFISH_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_MARKET_CRON_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_MARKET_INGEST_ENDPOINT",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_LEARNING_CONSENT_VERSION",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_LEARNING_ENDPOINT",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_ENGINEERING_ENDPOINT",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_LEARNING_INGEST_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_LEARNING_VISITOR_SALT",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "FRED_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "TWELVE_DATA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "FINNHUB_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_URL",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "CRON_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NVIDIA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "resto-kron-site",
+      "vercelProjectId": "prj_WEzwMCF5CWj4FTy90IKea6f9Winm",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enteleledger",
+      "vercelProjectId": "prj_9sQHm2QO5KVENDrZxn2CyLUo3Q76",
+      "railwayService": "enteleledger",
+      "railwayServiceId": "2d375cd2-b914-4c18-b8b5-59718ff8bb0e",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enteleagent",
+      "vercelProjectId": "prj_o6X1ert8nX1U3S3x6ZTZLSyEibxD",
+      "railwayService": "enteleagent",
+      "railwayServiceId": "8541b309-479f-4330-ac62-a6fc3619f056",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enteleagent-app",
+      "vercelProjectId": "prj_9D3yyypmGUDMtYgEWAtkxJeWjNhY",
+      "railwayService": "enteleagent-app",
+      "railwayServiceId": "ed3ca2ed-22fe-48c3-817e-f1885d438915",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelerobot",
+      "vercelProjectId": "prj_C4klxxTUJN8HS23NB6H14kJG4EQJ",
+      "railwayService": "entelerobot",
+      "railwayServiceId": "1cffecaf-90fc-4efe-ac98-1bac15fbced0",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelerobot-app",
+      "vercelProjectId": "prj_X4JAhmuTiGW0GxgmxIY867APAGlC",
+      "railwayService": "entelerobot-app",
+      "railwayServiceId": "aec788c8-7731-4ee5-908d-8ce3debf9f34",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "minekron",
+      "vercelProjectId": "prj_goXTAJZAkNA7Ep8H8rPTc37WRlp2",
+      "railwayService": "minekron",
+      "railwayServiceId": "c7306c79-3f12-4f0d-b6fe-85961b55276d",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "sovikron",
+      "vercelProjectId": "prj_NEC5AEG0XZphDz0X7NHCeKMyoC4s",
+      "railwayService": "sovikron",
+      "railwayServiceId": "79d23811-1429-40d2-b29f-ce6db87371cf",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enk-entelekron-org",
+      "vercelProjectId": "prj_6G9faAf4QIFTBFmpKWDN9laUmViw",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "puri-kron",
+      "vercelProjectId": "prj_AqAMzf4LD5JAmSAW7EAA3974rcVI",
+      "railwayService": "purikron",
+      "railwayServiceId": "7a9d825e-c3aa-4989-a958-d0c0c47b51df",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "puppykron-site",
+      "vercelProjectId": "prj_xBUczADBTU5S7Yziwoiqnug29HkC",
+      "railwayService": "puppykron-site",
+      "railwayServiceId": "fe8bad40-62a4-4cb1-9491-8725918d0fb7",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "puppykron-token",
+      "vercelProjectId": "prj_C3vbL23FACfbWJJakR8wNZdpRy6K",
+      "railwayService": "puppykron-token",
+      "railwayServiceId": "140e1790-0929-4556-ba3f-3dc1e281364a",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "vite-react",
+      "vercelProjectId": "prj_AzcDEXhjcyhFBDvBQaTbJs20vyiB",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "cerebthra",
+      "vercelProjectId": "prj_juBN2XCYPV1ZkUrwtxgwTQcaKZ2j",
+      "railwayService": "cerebthra",
+      "railwayServiceId": "776296f7-9a3b-408d-9a51-7c37657ee33b",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "avasante",
+      "vercelProjectId": "prj_GIerYsT7XTjzjMR4uoYkhZ5Ag73I",
+      "railwayService": "avasante",
+      "railwayServiceId": "01dc69cb-2316-44ce-876f-794e8cd3e2d4",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "chronoseal",
+      "vercelProjectId": "prj_Cir09YgIlRog7Keh3b8Ibe2lMFXI",
+      "railwayService": "chronoseal",
+      "railwayServiceId": "869f84f6-8ecd-4467-a393-4e2237f40989",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "graphvault",
+      "vercelProjectId": "prj_5JJHQA95cSkNMdnroAbEtz7OsjOk",
+      "railwayService": "graphvault",
+      "railwayServiceId": "24cf40de-2dca-4298-a40e-f858a5deacd7",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "q-presencee",
+      "vercelProjectId": "prj_hQFmxXcpwIRNvFQZJFz7lnGDzr2h",
+      "railwayService": "q-presencee",
+      "railwayServiceId": "bddf05ca-9d5b-4f11-98ef-2ecc3fdd6095",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelelink",
+      "vercelProjectId": "prj_znCo7WJ5TVtxsmmfK1nqfH1vQem4",
+      "railwayService": "entelelink",
+      "railwayServiceId": "e559b847-d351-4e17-9e5a-8126dfe35c91",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelescan",
+      "vercelProjectId": "prj_InElkAZRAZNw5N3QyH1J45N6IgCR",
+      "railwayService": "entelescan",
+      "railwayServiceId": "8faaa952-2aa8-4aa4-832d-0ec2cf9f0d58",
+      "productionVariables": [
+        {
+          "key": "ETHERSCAN_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelevault",
+      "vercelProjectId": "prj_lVL6JHyySLVzkLhG3AmML0y6deZc",
+      "railwayService": "entelevault",
+      "railwayServiceId": "45a26e46-e4cd-4dab-b83f-b0a237b04c44",
+      "productionVariables": [
+        {
+          "key": "ENTELEVAULT_READ_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "sentientsignals",
+      "vercelProjectId": "prj_TuVQERUKOQbwAYRM3UANyMOihgvz",
+      "railwayService": "sentientsignals",
+      "railwayServiceId": "81c2bd90-60c8-4b1a-a5e7-1da20b118482",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-id",
+      "vercelProjectId": "prj_XWI8NHlzc55wM48zzaZQdEGzrS9q",
+      "railwayService": "tvk-id",
+      "railwayServiceId": "96d0fb7e-8c80-40e0-87ba-e6f75724ba31",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "ava-sentient-site",
+      "vercelProjectId": "prj_YDxmPxYeujDSt9xIs0QWpFEXcFgJ",
+      "railwayService": "ava-sentient-site",
+      "railwayServiceId": "55dd6c34-d807-4608-a797-b41ebbc6e237",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-cyberlab",
+      "vercelProjectId": "prj_fxTBFYfkPtsDVQ8Wf8PIYHlXt5Uj",
+      "railwayService": "tvk-cyberlab",
+      "railwayServiceId": "1a276309-cef4-4de3-9b65-30aad7d8803b",
+      "productionVariables": [
+        {
+          "key": "POSTGRES_URL_NON_POOLING",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "DATABASE_URL_UNPOOLED",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "PGHOST",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_URL_NO_SSL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "PGHOST_UNPOOLED",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "DATABASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "PGPASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_USER",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEON_AUTH_BASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "VITE_NEON_AUTH_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEON_PROJECT_ID",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "PGUSER",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_DATABASE",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "PGDATABASE",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_PRISMA_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_HOST",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "cognethra",
+      "vercelProjectId": "prj_Sp1ieBnfvpExHobMh7mFP7W6FeVo",
+      "railwayService": "cognethra",
+      "railwayServiceId": "073170d2-e5d0-411d-9f5a-c1f2e02719c9",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "syntherra",
+      "vercelProjectId": "prj_DFRAp0Cy3zVABExXPbNTAndMTFVD",
+      "railwayService": "syntherra",
+      "railwayServiceId": "1f12730d-1c68-4519-bf32-3b0d80865abc",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "warpkron",
+      "vercelProjectId": "prj_phAzzGVSwFk2h8jmLs5YAWdnlPMP",
+      "railwayService": "warpkron",
+      "railwayServiceId": "fef12886-ef9a-4e2b-a735-6145500d09f6",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "lo-n-do-n-the-secret-of-women",
+      "vercelProjectId": "prj_gRvndbd4Q2dRjL6Jl0gEhKWG8AzA",
+      "railwayService": "london-secret-of-women",
+      "railwayServiceId": "4b5db4a6-339b-4dda-afb4-90ee83ebcf61",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "diyetisyengozdeakin",
+      "vercelProjectId": "prj_DKAC9RZr3OzVKBky7fcazuBxLtuZ",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "opsline",
+      "vercelProjectId": "prj_3AnakJiRLF2FXf2pCCvIaMhP0CBq",
+      "railwayService": "opsline",
+      "railwayServiceId": "cfc79bdc-19f2-4539-8069-46920a0ea9ae",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-orbital-infrastructure",
+      "vercelProjectId": "prj_9KOM0bfGlTjLwxxlnH4FDof4BcD8",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelepoint",
+      "vercelProjectId": "prj_dHueCh6GEnTQD250f19xkWXTydlh",
+      "railwayService": "entelepoint",
+      "railwayServiceId": "98831ac6-78e0-40fa-8470-54c8cfdbf6b8",
+      "productionVariables": [
+        {
+          "key": "BREVO_SENDER_NAME",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BREVO_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BREVO_NOTIFY_EMAIL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SUPABASE_SERVICE_ROLE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SITE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelepay",
+      "vercelProjectId": "prj_71G2s0GxAA5a2x5EV0NN3W7s8ErV",
+      "railwayService": "entelepay",
+      "railwayServiceId": "a5552b0d-4138-43da-9875-e4e71b9836b4",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-orbital",
+      "vercelProjectId": "prj_ZVCIpYEWkLvqYDEP4VGH6Joh5A2L",
+      "railwayService": "tvk-orbital",
+      "railwayServiceId": "c12c640b-44cd-4bcf-86c3-2c44115895a7",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelecard",
+      "vercelProjectId": "prj_ZNR6HGrSdgbgn79W0HZZHd482vv1",
+      "railwayService": "entelecard",
+      "railwayServiceId": "5f693e0e-e7b6-4f02-ae24-2e97ed257cf6",
+      "productionVariables": [
+        {
+          "key": "FCA_API_EMAIL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEREG_INTERNAL_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "FCA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enteleexchange",
+      "vercelProjectId": "prj_34FPbar6y63CISVsUg1HXnv81dF7",
+      "railwayService": "enteleexchange",
+      "railwayServiceId": "5bf9957e-9d1b-448f-8a57-47d9785a584e",
+      "productionVariables": [
+        {
+          "key": "FCA_API_EMAIL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEREG_INTERNAL_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "FCA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BINANCE_API_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BINANCE_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_MARKET_CONTEXT_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_MARKET_CONTEXT_ENDPOINT",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SOVRA_LEARNING_INGEST_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENABLE_SANDBOX_TEST_ORDERS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enteleexchange-api",
+      "vercelProjectId": "prj_iqFjehWMLDuRG4U6ictOwt5LRd6S",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [
+        {
+          "key": "SOVRA_MARKET_CONTEXT_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_MARKET_CONTEXT_ENDPOINT",
+          "type": "plain",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SOVRA_LEARNING_INGEST_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enteleexchange-docs",
+      "vercelProjectId": "prj_1lVvaiiJ8j1YJu6fd5a4PzU47Lhk",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "enteleexchange-status",
+      "vercelProjectId": "prj_u6JNLalGIRgeIRL06XiXhFSr013e",
+      "railwayService": "enteleexchange-status",
+      "railwayServiceId": "c1d871d6-5755-4256-9551-8b21bb7f0806",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "webkron",
+      "vercelProjectId": "prj_aX3cIF1unIH10aOd6dMhCnOlHHQZ",
+      "railwayService": "webkron",
+      "railwayServiceId": "2ee2135a-c703-44f1-8e71-9c60c073b4d2",
+      "productionVariables": [
+        {
+          "key": "WEBKRON_PROTON_SMTP_USER",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "WEBKRON_PROTON_SMTP_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "nadiia-moves",
+      "vercelProjectId": "prj_82mWZdHGHOrA6bR8pOvgGvMd8xDt",
+      "railwayService": "nadiia-moves",
+      "railwayServiceId": "d1c5fc38-9c28-4e12-a6f2-c81dbcc7f0f5",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "osoix",
+      "vercelProjectId": "prj_eZx5KHE6d8xPZnJI1TSGHQ711FWb",
+      "railwayService": "osoix",
+      "railwayServiceId": "d32edf10-701b-47a1-9cc6-c86fd393afd4",
+      "productionVariables": [
+        {
+          "key": "FRED_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TWELVE_DATA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "FINNHUB_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NVIDIA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SITE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "OSOIX_CUSTOMER_AUTH_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_OPERATOR_SESSION_SECONDS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_OPERATOR_IDLE_SECONDS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_REVIEWER_SESSION_SECONDS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_REVIEWER_IDLE_SECONDS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "CRON_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_SESSION_SECONDS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_AUTH_MAX_ATTEMPTS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_AUTH_WINDOW_SECONDS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_AUTH_BLOCK_SECONDS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "COPERNICUS_CLIENT_ID",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "COPERNICUS_CLIENT_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ECMWF_DATASTORE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ECMWF_DATASTORE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SPACE_TRACK_IDENTITY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SPACE_TRACK_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SUPABASE_SERVICE_ROLE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_CESIUM_ION_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_AUTH_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_AUTH_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "OSOIX_AUTH_USER",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NASA_FIRMS_MAP_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "cesal",
+      "vercelProjectId": "prj_RAJ4bqahsKcCksfjygbtLbuPCzfD",
+      "railwayService": "cesal",
+      "railwayServiceId": "a5de26b7-66a4-4fbd-8ea2-bdc9dc427837",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelebank",
+      "vercelProjectId": "prj_LlgqNvaMatfS2DGADvW766SVONSq",
+      "railwayService": "entelebank",
+      "railwayServiceId": "f0f35343-3c86-4702-adc8-418ec7c96d3a",
+      "productionVariables": [
+        {
+          "key": "FCA_API_EMAIL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEREG_INTERNAL_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "FCA_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-wallet-platform",
+      "vercelProjectId": "prj_5OjdApBkIEDcmbSbOxEht7vWzODm",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [
+        {
+          "key": "VERCEL_PREVIEW_FEEDBACK_ENABLED",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ENTELEWALLET_SOURCE_TOKEN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "asodi",
+      "vercelProjectId": "prj_QKGZIHyY5mAlv23pXLEgtzpUK11u",
+      "railwayService": "asodi",
+      "railwayServiceId": "8cddb310-7db7-42f3-8e82-40c9b30f7694",
+      "productionVariables": [
+        {
+          "key": "ASODI_CONSOLE_SECURITY_STORE_ENABLED",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_SECURITY_STORE_URL",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_SECURITY_STORE_SECRET_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_AUTH_ENABLED",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_DURABLE_SECURITY_ENABLED",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_DURABLE_SECURITY_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_ORIGIN",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_SESSION_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "ASODI_CONSOLE_DURABLE_SECURITY_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_USERNAME",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_FROM",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_ALERT_RECIPIENTS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "aerospace",
+      "vercelProjectId": "prj_xfN2tTFaIuG1pTkW7zxI8u9INPXX",
+      "railwayService": "aerospace",
+      "railwayServiceId": "1e6a3401-4363-434c-b8cb-b8c7749abfad",
+      "productionVariables": [
+        {
+          "key": "TVK_IADS_ALERT_RECIPIENTS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_USERNAME",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_FROM",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "e-kron",
+      "vercelProjectId": "prj_ys1SBG4mkcAY1nv7jc2CZu9ieRjn",
+      "railwayService": "ekron",
+      "railwayServiceId": "8c3c95b3-b801-4acc-be90-72545c5ac0d0",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "alvikron",
+      "vercelProjectId": "prj_mW4ydUnmgXQWzQvUjDjZOK3TP0Ym",
+      "railwayService": "alvikron",
+      "railwayServiceId": "2ac8dba5-3039-4d70-af95-99402764b52f",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "energiemind-dapp",
+      "vercelProjectId": "prj_Mjf6z22W9o25KsKRCDTG5eSEwIBx",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [
+        {
+          "key": "NEXT_PUBLIC_RPC_URL",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_ENM_TOKEN",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_STAKING_CONTRACT",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_VESTING_CONTRACT",
+          "type": "encrypted",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelekron",
+      "vercelProjectId": "prj_NOED2YhEsUtPpFzThIlHce5hGiOs",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelekron-validator",
+      "vercelProjectId": "prj_WGbrYg5g0OTW37ROekd1BDxKVnIf",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-group-website",
+      "vercelProjectId": "prj_Kquhw1qBlaH4b34YWtS4jpTk4XAq",
+      "railwayService": "tvk-group",
+      "railwayServiceId": "2151ff21-51c8-4137-a0f5-70daddfc39a9",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entelekron-portal",
+      "vercelProjectId": "prj_aiKbqcmaGOakygvLU2Qqh7vaJza9",
+      "railwayService": "entelekron-portal",
+      "railwayServiceId": "74f928c5-2b4d-47cc-aaba-5395492b7071",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "alvina-app",
+      "vercelProjectId": "prj_6mLG3Np5hOySaYbd2gRUGkJ2nKZw",
+      "railwayService": "alvina-app",
+      "railwayServiceId": "cfe17b3b-f428-4f65-b225-bb855080e8c2",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvklabs-technologies",
+      "vercelProjectId": "prj_RhrUpZJVNkhZKZVzvLKC0O8hyiQC",
+      "railwayService": "tvk-labs",
+      "railwayServiceId": "ce281e33-1686-420f-93cb-8f768c055ae3",
+      "productionVariables": [
+        {
+          "key": "TVK_IADS_SMTP_USERNAME",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_SMTP_FROM",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "TVK_IADS_ALERT_RECIPIENTS",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvklabs-technologies-4m64",
+      "vercelProjectId": "prj_bwknF3qWgQAufMQThcgA8gbXumMv",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvklabs-technologies-4b8s",
+      "vercelProjectId": "prj_PSe5zhiJwh6kf9KD4158pzsCv2bD",
+      "railwayService": "tvk-labs",
+      "railwayServiceId": "ce281e33-1686-420f-93cb-8f768c055ae3",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "alvinaflow",
+      "vercelProjectId": "prj_D3yzKTyt7jPZkc779NgMLnrltiXb",
+      "railwayService": "alvinaflow",
+      "railwayServiceId": "63d85304-1cb4-4305-899f-2082479cb645",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "alvinaworld",
+      "vercelProjectId": "prj_xFlp3d2iuHpVO2Wg9D6NiARRJZtr",
+      "railwayService": "alvinaworld",
+      "railwayServiceId": "9d9ad4f0-7412-4023-8194-8cd8ed043083",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-network",
+      "vercelProjectId": "prj_rngxfSg4escxFKTenDGnPOCtoBMK",
+      "railwayService": "tvk-network",
+      "railwayServiceId": "ddcd0f11-8ad8-42d5-a789-1678cc18ec29",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "infrasphere-network",
+      "vercelProjectId": "prj_Zqe33fcqLpsuB29MMABQ8DZMVYOY",
+      "railwayService": "infrasphere-network",
+      "railwayServiceId": "10cf1465-1480-44af-9848-03ace90d1b27",
+      "productionVariables": [
+        {
+          "key": "SUPABASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_SERVICE_ROLE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "BREVO_API_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "CONTACT_TO_EMAIL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "CONTACT_FROM_EMAIL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "tvk-infrastructure-energy-systems",
+      "vercelProjectId": "prj_2PYdNKiQT42598Ag1ofUP4JHIEak",
+      "railwayService": "tvk-infrastructure-energy-systems",
+      "railwayServiceId": "44de01af-adfd-48a3-9fac-d217e09f92b4",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "energiemind-main",
+      "vercelProjectId": "prj_ig7gIr7oLuYyFIm4TcF6R4a737mK",
+      "railwayService": "energiemind-main",
+      "railwayServiceId": "54d13419-a517-4ac3-a78e-67c85d7c9b34",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "energiemind-shop",
+      "vercelProjectId": "prj_q9Jjc0GtmsV6xVMhgIDVfdVLMmJg",
+      "railwayService": "energiemind-shop",
+      "railwayServiceId": "d92eaf89-e174-458b-9626-762a39ff3a85",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "energiemind-org",
+      "vercelProjectId": "prj_tdU8dMQZ63KAqy0pvmwSYYvvJUik",
+      "railwayService": "energiemind-org",
+      "railwayServiceId": "be48e7d8-7624-4f25-bf81-48e0608a3f9b",
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "energiemind-io",
+      "vercelProjectId": "prj_oa3mK5v648Y9CEMkdhVFTx6owreE",
+      "railwayService": "energiemind-io",
+      "railwayServiceId": "4a749bb5-a5bd-4a9f-841b-9d639ffeb273",
+      "productionVariables": [
+        {
+          "key": "SUPABASE_JWT_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_PUBLISHABLE_KEY",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_SECRET_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": true
+        },
+        {
+          "key": "POSTGRES_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_PRISMA_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_URL_NON_POOLING",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_USER",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_HOST",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_DATABASE",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_ANON_KEY",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_URL",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SUPABASE_SERVICE_ROLE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_APP_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "energiemind-network",
+      "vercelProjectId": "prj_FGivS9Cp4siYyI4GEPaAPYy7HLKG",
+      "railwayService": "energiemind-network",
+      "railwayServiceId": "08289ca2-be14-435f-980a-693f2ee2ea17",
+      "productionVariables": [
+        {
+          "key": "SUPABASE_JWT_SECRET",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_PUBLISHABLE_KEY",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SUPABASE_SECRET_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_PRISMA_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_URL_NON_POOLING",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_USER",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_HOST",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "POSTGRES_DATABASE",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_URL",
+          "type": "encrypted",
+          "integrationConfigurationId": "icfg_s8wxtrBxY0EUyqJTG2b8IMlZ",
+          "railwayNamePresent": true
+        },
+        {
+          "key": "ADMIN_PASSWORD",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_URL",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": true
+        },
+        {
+          "key": "SUPABASE_SERVICE_ROLE_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        },
+        {
+          "key": "SUPABASE_ANON_KEY",
+          "type": "sensitive",
+          "integrationConfigurationId": null,
+          "railwayNamePresent": false
+        }
+      ],
+      "hiddenProductionEnvCount": 0
+    },
+    {
+      "vercelProject": "entele-kron-token-v2",
+      "vercelProjectId": "prj_lFxPrYv0SycduDTY7luNvSNUGdSS",
+      "railwayService": null,
+      "railwayServiceId": null,
+      "productionVariables": [],
+      "hiddenProductionEnvCount": 0
+    }
+  ],
+  "unmappedDomains": [
+    {
+      "project": "diyetisyengozdeakin",
+      "domain": "gozdeakin.com"
+    },
+    {
+      "project": "diyetisyengozdeakin",
+      "domain": "www.gozdeakin.com"
+    },
+    {
+      "project": "diyetisyengozdeakin",
+      "domain": "diyetisyengozdeakin.com"
+    },
+    {
+      "project": "diyetisyengozdeakin",
+      "domain": "www.diyetisyengozdeakin.com"
+    },
+    {
+      "project": "tvk-wallet-platform",
+      "domain": "platform.tvkwallet.com"
+    },
+    {
+      "project": "tvk-wallet-platform",
+      "domain": "demo.tvkwallet.com"
+    },
+    {
+      "project": "entelekron",
+      "domain": "entelekron.tvk.group"
+    }
+  ]
+}
