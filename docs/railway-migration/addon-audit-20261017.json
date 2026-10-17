@@ -6,7 +6,10 @@
     "Vercel sensitive values are not readable; no secrets are recorded here.",
     "Account-wide integration configurations endpoint returned 403; no authenticated Vercel CLI is installed.",
     "No Cloudflare authenticated zone inventory yet; Railway DNS checks cover attached hostnames, not all zone records.",
-    "No database data, billing, storage objects or provider resources were deleted or moved."
+    "No database data, billing, storage objects or provider resources were deleted or moved.",
+    "The Vercel list endpoint returned encrypted payloads despite decrypt=true. Migrated values were corrected using get_project_env and format-validated before the final builds.",
+    "Cloudflare secure sign-in was interrupted; authenticated account state could not be verified.",
+    "Variable-name snapshots can become stale when other sessions change service configuration. Missing-name counts are inventory findings, not proof every listed dependency is currently absent."
   ],
   "restored": [
     {
@@ -16,8 +19,13 @@
         "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
       ],
       "source": "same Vercel project's Supabase integration",
-      "deployment": "3add16c3-ab0f-46ff-ad29-6c3896211bd8",
-      "status": "SUCCESS"
+      "deployment": "7301d99c-91b5-4561-b8df-031e9b69a3ce",
+      "status": "SUCCESS",
+      "verification": {
+        "homeHTTP": 200,
+        "loginPageHTTP": 200,
+        "scope": "Public page rendering only; authenticated login/privileged database operations not verified."
+      }
     },
     {
       "service": "buildpulse",
@@ -25,8 +33,12 @@
         "NEXT_PUBLIC_SUPABASE_ANON_KEY"
       ],
       "source": "same Vercel project's configuration; existing URL and publishable key preserved",
-      "deployment": "89c32686-8eda-441b-9f49-3cccd80889f0",
-      "status": "SUCCESS"
+      "deployment": "6edd65cf-c0ab-417c-b0ae-ac04bce1070f",
+      "status": "SUCCESS",
+      "verification": {
+        "apexHTTP": 200,
+        "wwwHTTP": 200
+      }
     }
   ],
   "providerFindings": [
@@ -6515,5 +6527,6 @@
       "project": "entelekron",
       "domain": "entelekron.tvk.group"
     }
-  ]
+  ],
+  "updatedAt": "2026-10-17T01:54:03.043Z"
 }
