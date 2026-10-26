@@ -23,3 +23,19 @@ a[class*="bg-slate-900"],button[class*="bg-slate-900"]{color:#fff!important}
 @keyframes bp-hero-enter{from{opacity:0;transform:translate3d(0,18px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
 @media(prefers-reduced-motion:no-preference){.bp-hero-entrance{animation:bp-hero-enter .55s cubic-bezier(.2,.75,.2,1) both}.bp-hero-entrance h1{animation:bp-hero-enter .7s .08s cubic-bezier(.2,.75,.2,1) both}}
 @media(prefers-reduced-motion:reduce){.bp-hero-entrance,.bp-hero-entrance h1{animation:none!important;transform:none!important}}
+
+
+/* SKI1 runtime experience assurance v1 — native keyboard focus, forced contrast and safe motion. */
+:where(a, button, input, select, textarea, summary, [role="button"], [tabindex="0"]):focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+@media (prefers-contrast: more) {
+  :where(a, button, [role="button"]):focus-visible { outline: 3px solid currentColor !important; outline-offset: 4px; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :where(.feature-card, .service-card, .ecosystem-card, .news-card, .product-card) {
+    transition: transform .26s cubic-bezier(.2,.8,.2,1), box-shadow .26s ease, border-color .26s ease;
+  }
+  :where(.feature-card, .service-card, .ecosystem-card, .news-card, .product-card):hover { transform: translateY(-3px); }
+}
