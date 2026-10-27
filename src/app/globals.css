@@ -39,3 +39,14 @@ a[class*="bg-slate-900"],button[class*="bg-slate-900"]{color:#fff!important}
   }
   :where(.feature-card, .service-card, .ecosystem-card, .news-card, .product-card):hover { transform: translateY(-3px); }
 }
+
+/* Respect Windows high-contrast mode; do not rely on visual hover alone. */
+@media (forced-colors: active) {
+  :where(a, button, input, select, summary, [role="button"]):focus-visible {
+    outline: 3px solid Highlight !important;
+    outline-offset: 4px;
+  }
+  :where(.feature-card, .service-card, .ecosystem-card, .news-card, .product-card) {
+    forced-color-adjust: auto;
+  }
+}
