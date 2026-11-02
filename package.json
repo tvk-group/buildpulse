@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/check-next-patch.mjs && next build",
+    "build": "node scripts/check-next-patch.mjs && npm run check:source-hygiene && npm run check:payment-verifiers && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
