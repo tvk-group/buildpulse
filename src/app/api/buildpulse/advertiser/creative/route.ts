@@ -11,6 +11,9 @@ function dimensions(bytes:Buffer,mime:string):{width:number;height:number}|null{
  return null;
 }
 export async function POST(request:Request){
+ const contentLength=Number(request.headers.get("content-length")||0);
+ if(!Number.isSafeInteger(contentLength)||contentLength<1)return NextResponse.json({error:"Upload length is required"},{status:411});
+ if(contentLength>5*1024*1024+64*1024)return NextResponse.json({error:"Upload exceeds the allowed size"},{status:413});
  const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:"Authentication required"},{status:401});
  const form=await request.formData().catch(()=>null);if(!form)return NextResponse.json({error:"Invalid upload"},{status:400});
  const orderId=String(form.get("orderId")??"");const file=form.get("file");
@@ -25,7 +28,7 @@ export async function POST(request:Request){
  const scannerToken=process.env.TVK_FILESHIELD_API_TOKEN;
  if(!scannerRoot||!scannerToken||scannerToken.length<32)return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503});
  let scanUrl:URL;
- try{scanUrl=new URL(scannerRoot);if(scanUrl.protocol!=="https:")throw new Error("protocol")}catch{return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503})}
+ try{scanUrl=new URL(scannerRoot);if(scanUrl.protocol!=="https:"||scanUrl.hostname!=="tvk-fileshield-scanner-production.up.railway.app"||scanUrl.port||scanUrl.username||scanUrl.password||scanUrl.pathname!=="/"||scanUrl.search||scanUrl.hash)throw new Error("invalid scanner URL")}catch{return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503})}
  let scanResponse:Response;
  try{
   scanResponse=await fetch(new URL("/internal/v1/scan",scanUrl),{
@@ -35,9 +38,12 @@ export async function POST(request:Request){
   });
  }catch{return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503})}
  if(!scanResponse.ok)return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503});
- let scanResult:{schema?:string;sha256?:string;size_bytes?:number;verdict?:string};
- try{scanResult=await scanResponse.json()}catch{return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503})}
- if(scanResult.schema!=="tvk.fileshield.api.v1"||scanResult.sha256!==sha256||scanResult.size_bytes!==bytes.length)
+ const responseType=(scanResponse.headers.get("content-type")||"").split(";")[0].trim().toLowerCase();
+ const responseLength=Number(scanResponse.headers.get("content-length")||0);
+ if(responseType!=="application/json"||!Number.isSafeInteger(responseLength)||responseLength<1||responseLength>4096)return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503});
+ let scanResult:{schema?:string;sha256?:string;size_bytes?:number;verdict?:string;engine?:string};
+ try{const responseText=await scanResponse.text();if(responseText.length>4096)throw new Error("oversized result");scanResult=JSON.parse(responseText)}catch{return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503})}
+ if(scanResult.schema!=="tvk.fileshield.api.v1"||typeof scanResult.engine!=="string"||!/^tvk-fileshield-v\\d+\\.\\d+$/.test(scanResult.engine)||scanResult.sha256!==sha256||scanResult.size_bytes!==bytes.length)
   return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503});
  if(scanResult.verdict!=="ALLOW")return NextResponse.json({error:"Creative did not pass security scanning"},{status:422});
  const size=dimensions(bytes,file.type);if(!size||size.width<1||size.height<1||size.width>4096||size.height>4096)return NextResponse.json({error:"Creative image dimensions could not be validated"},{status:400});
