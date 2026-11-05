@@ -3,7 +3,7 @@ name: tvk-railway-only-operations
 description: Railway-exclusive environment, deploy, healthcheck, and rollback management
 ---
 # Railway-only Deployment
-- TVK now deploys EXCLUSIVELY to Railway. Never trigger or configure Vercel builds.
+- TVK now deploys EXCLUSIVELY to Railway. Do not trigger or configure deployments outside Railway.
 - Inventory each repo -> Railway project -> environment -> service -> branch -> public domain and healthcheck.
 - Validate Docker/Nixpacks/build/start settings, root directory, environment secrets, watch paths, minimum privileges, staged migrations and rollback.
 - **Watch Paths** can skip docs-only changes; absent paths can cause a deployment. `[skip ci]` is NOT reliable Railway suppression.

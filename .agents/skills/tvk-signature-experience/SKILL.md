@@ -9,7 +9,7 @@ version: 1.0.0
 Use for user-facing product design, new pages, UI improvements, design-system reviews and visual QA across TVK projects. Do not automatically redesign pages just because the skill was installed. Honor repo-local AGENTS.md, existing project brand files and official assets. Do not copy another brand's artwork, icon system or proprietary designs.
 
 ## Quality philosophy
-The wow factor comes from extraordinary clarity, editorial composition, precise typography, depth, emotionally relevant imagery and satisfying functional feedback—not gratuitous 3D, neon, tiny text, or animations. Every page must communicate the user's primary job in the first viewport. Design should feel considered rather than an interchangeable AI/SaaS template. Review against Anthropic's frontend-design approach and the Vercel Labs web-interface-guidelines, but use original implementation and the TVK identity.
+The wow factor comes from extraordinary clarity, editorial composition, precise typography, depth, emotionally relevant imagery and satisfying functional feedback—not gratuitous 3D, neon, tiny text, or animations. Every page must communicate the user's primary job in the first viewport. Design should feel considered rather than an interchangeable AI/SaaS template. Review against Anthropic's frontend-design approach and established web-interface guidelines, but use original implementation and the TVK identity.
 
 ## Required design process
 1. Inspect actual product, audience, primary user action, existing theme/token/style files and brand assets before suggesting changes.
@@ -47,6 +47,6 @@ Collect desktop+mobile before/after, accessibility checks, link crawl, bundle & 
 
 ## Upstream references (guidance, not imported executables)
 - https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
-- https://github.com/vercel-labs/agent-skills (web-design-guidelines, react-best-practices, composition-patterns; guidance only; Railway-only deployments)
+- Use accessibility, responsive-design, and performance guidance without copying third-party templates.
 - https://www.w3.org/TR/WCAG22/
 - https://web.dev/articles/vitals
