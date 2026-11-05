@@ -18,7 +18,29 @@ export async function POST(request:Request){
  if(!MIME.has(file.type)||file.size<1||file.size>5*1024*1024)return NextResponse.json({error:"Creative must be PNG, JPEG or WebP and no larger than 5 MB"},{status:400});
  const {data:order}=await supabase.from("buildpulse_ad_orders").select("id,status").eq("id",orderId).eq("user_id",user.id).in("status",["draft","awaiting_payment","payment_detected","review"]).maybeSingle();
  if(!order)return NextResponse.json({error:"Campaign cannot accept creatives"},{status:403});
- const bytes=Buffer.from(await file.arrayBuffer());const size=dimensions(bytes,file.type);if(!size||size.width<1||size.height<1||size.width>4096||size.height>4096)return NextResponse.json({error:"Creative image dimensions could not be validated"},{status:400});const sha256=createHash("sha256").update(bytes).digest("hex");
+ const bytes=Buffer.from(await file.arrayBuffer());
+ const sha256=createHash("sha256").update(bytes).digest("hex");
+ const scanBody=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength) as ArrayBuffer;
+ const scannerRoot=process.env.TVK_FILESHIELD_SCANNER_URL;
+ const scannerToken=process.env.TVK_FILESHIELD_API_TOKEN;
+ if(!scannerRoot||!scannerToken||scannerToken.length<32)return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503});
+ let scanUrl:URL;
+ try{scanUrl=new URL(scannerRoot);if(scanUrl.protocol!=="https:")throw new Error("protocol")}catch{return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503})}
+ let scanResponse:Response;
+ try{
+  scanResponse=await fetch(new URL("/internal/v1/scan",scanUrl),{
+   method:"POST",signal:AbortSignal.timeout(70000),
+   headers:{Authorization:`Bearer ${scannerToken}`,"Content-Type":"application/octet-stream","X-File-Name":file.type==="image/png"?"creative.png":file.type==="image/webp"?"creative.webp":"creative.jpg"},
+   body:scanBody
+  });
+ }catch{return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503})}
+ if(!scanResponse.ok)return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503});
+ let scanResult:{schema?:string;sha256?:string;size_bytes?:number;verdict?:string};
+ try{scanResult=await scanResponse.json()}catch{return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503})}
+ if(scanResult.schema!=="tvk.fileshield.api.v1"||scanResult.sha256!==sha256||scanResult.size_bytes!==bytes.length)
+  return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503});
+ if(scanResult.verdict!=="ALLOW")return NextResponse.json({error:"Creative did not pass security scanning"},{status:422});
+ const size=dimensions(bytes,file.type);if(!size||size.width<1||size.height<1||size.width>4096||size.height>4096)return NextResponse.json({error:"Creative image dimensions could not be validated"},{status:400});
  const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";const path=`${user.id}/${orderId}/${randomUUID()}-${sha256.slice(0,16)}.${ext}`;
  const {error:uploadError}=await supabase.storage.from(BUCKET).upload(path,bytes,{contentType:file.type,upsert:false,cacheControl:"31536000"});
  if(uploadError)return NextResponse.json({error:"Creative storage failed"},{status:500});

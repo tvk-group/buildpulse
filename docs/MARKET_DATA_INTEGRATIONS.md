@@ -23,7 +23,7 @@ Never expose provider API keys in client bundles. BuildPulse adapters should nor
 
 provider adapter -> normalized market/economic event -> provenance + freshness -> cache/database -> BuildPulse API -> market tape/charts/newsroom/SOVRA AI context
 
-Use WebSockets only in a long-lived ingestion service where provider terms permit redistribution. Vercel request handlers should consume normalized/cache data rather than hold permanent WebSocket connections.
+Use WebSockets only in a long-lived ingestion service where provider terms permit redistribution. Railway web handlers should consume normalized/cache data rather than hold permanent WebSocket connections; move long-lived ingestion to a dedicated worker or the planned AWS ingestion services.
 
 ## Required controls
 

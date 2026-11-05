@@ -6,14 +6,18 @@ Canonical website: `https://www.buildpulse.news`
 
 Production repository: `tvk-group/buildpulse`
 
-Deployment: Vercel project `buildpulse`.
+Deployment: Railway service `buildpulse` on the `TVK Ecosystem` project. The production Railway service has `buildpulse.news` and `www.buildpulse.news` domains attached.
 
 BuildPulse is maintained as a standalone application. Its publication pipeline includes primary-source ingestion, editorial verification, edition generation, founder review, immutable archival output, controlled delivery, advertising operations, and scheduler observability.
 
 ## Domain deployment
 
-The production custom domain is `buildpulse.news`. The Vercel project must own the custom-domain association before external DNS is pointed at Vercel. For an externally managed apex, use the DNS values shown by the Vercel project after attachment and verify HTTPS before cutover.
+The production custom domain is `buildpulse.news`; `www.buildpulse.news` also routes through Railway. Verify the active Railway deployment SHA and HTTPS domain status before release acceptance.
 
+
+## Scheduled jobs
+
+The legacy cron configuration has been removed. Railway currently has no verified scheduled runner for the market-learning endpoint (`12,42 * * * *`) or editorial-plan endpoint (`15 6 * * *`). These jobs must remain marked inactive until an AWS EventBridge or Railway schedule is configured and verified. Never re-enable the retired deployment path.
 
 ## Advertising payments
 
