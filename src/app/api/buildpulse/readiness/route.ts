@@ -62,6 +62,6 @@ export async function GET(){
     checks:status?.checks??{},
     counts:status?.counts??{},
     scheduler:status?.scheduler??{},
-    architecture:{...(status?.architecture??{}),payments:{checkout:"stripe-payment-links-plus-supabase-edge",cryptoVerification:"supabase-edge-v21-capability-driven",capabilities:"live-payment-edge",legacyVercelSecretsRequired:false}}
+    architecture:{...(status?.architecture??{}),payments:{checkout:"stripe-payment-links-plus-supabase-edge",cryptoVerification:"supabase-edge-v21-capability-driven",capabilities:"live-payment-edge",legacyHostingSecretsRequired:false}}
   },{headers:{"cache-control":"no-store"}});
 }

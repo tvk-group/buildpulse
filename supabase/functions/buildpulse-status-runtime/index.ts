@@ -76,7 +76,7 @@ Deno.serve(async(req:Request)=>{
       editionDispatch:{latest:approvedDispatch,dueApproved:counts.dueApprovedEditions,reconciliationRequired:counts.dispatchReconciliationRequired,failClosed:mailDomainStatus!=="verified"},
       scheduler:{ingestion,ingestionMode,approvedEditionDispatch:approvedDispatch,technologyEditorial,webPublication:"database-cron-every-5m",adActivation:"database-cron-every-5m"},
       architecture:{
-        ingestion:latest["ingest-supabase-fallback"]?"supabase-pg-cron-edge-hourly-fallback":"vercel-hourly",
+        ingestion:latest["ingest-supabase-fallback"]?"supabase-pg-cron-edge-hourly-fallback":"external-scheduler-hourly",
         editorialReview:"supabase-edge",
         editionGenerationApproval:"supabase-edge",
         webPublication:"postgres-cron",
