@@ -20,6 +20,7 @@ export async function POST(request:Request){
  if(!order)return NextResponse.json({error:"Campaign cannot accept creatives"},{status:403});
  const bytes=Buffer.from(await file.arrayBuffer());
  const sha256=createHash("sha256").update(bytes).digest("hex");
+ const scanBody=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength) as ArrayBuffer;
  const scannerRoot=process.env.TVK_FILESHIELD_SCANNER_URL;
  const scannerToken=process.env.TVK_FILESHIELD_API_TOKEN;
  if(!scannerRoot||!scannerToken||scannerToken.length<32)return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503});
@@ -30,7 +31,7 @@ export async function POST(request:Request){
   scanResponse=await fetch(new URL("/internal/v1/scan",scanUrl),{
    method:"POST",signal:AbortSignal.timeout(70000),
    headers:{Authorization:`Bearer ${scannerToken}`,"Content-Type":"application/octet-stream","X-File-Name":file.type==="image/png"?"creative.png":file.type==="image/webp"?"creative.webp":"creative.jpg"},
-   body:bytes
+   body:scanBody
   });
  }catch{return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503})}
  if(!scanResponse.ok)return NextResponse.json({error:"Creative security scanning is unavailable"},{status:503});
