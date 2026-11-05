@@ -17,7 +17,7 @@ The production custom domain is `buildpulse.news`; `www.buildpulse.news` also ro
 
 ## Scheduled jobs
 
-The former Vercel cron configuration has been removed. Railway currently has no verified scheduled runner for the market-learning endpoint (`12,42 * * * *`) or editorial-plan endpoint (`15 6 * * *`). These jobs must remain marked inactive until an AWS EventBridge or Railway schedule is configured and verified. Never re-enable a Vercel deployment.
+The legacy cron configuration has been removed. Railway currently has no verified scheduled runner for the market-learning endpoint (`12,42 * * * *`) or editorial-plan endpoint (`15 6 * * *`). These jobs must remain marked inactive until an AWS EventBridge or Railway schedule is configured and verified. Never re-enable a Vercel deployment.
 
 ## Advertising payments
 
