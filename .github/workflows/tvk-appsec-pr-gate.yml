@@ -1,0 +1,88 @@
+name: TVK AppSec PR admission
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tvk-appsec-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  credential-and-ci-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Detect changed sensitive files and high-confidence secret exposures
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import pathlib
+          import re
+          import subprocess
+          import sys
+
+          base = os.environ.get('BASE_SHA', '').strip()
+          if not base:
+              print('Manual run: no PR base; this admission gate inspects PR changes only.')
+              sys.exit(0)
+          changed = subprocess.check_output(
+              ['git', 'diff', '--name-only', '--diff-filter=ACMR', '-z', base, 'HEAD']
+          ).split(b'\0')
+          file_name_patterns = (
+              re.compile(r'(^|/)(?:id_rsa|id_ed25519|private\.key)$', re.I),
+              re.compile(r'\.(?:p12|pfx)$', re.I),
+          )
+          material_patterns = {
+              'private key PEM': re.compile(rb'-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----'),
+              'GitHub access token': re.compile(rb'\b(?:gh[pousr]_[A-Za-z0-9_]{36,}|github_pat_[A-Za-z0-9_]{60,})\b'),
+          }
+          problems = []
+          notices = []
+          for raw in changed:
+              if not raw:
+                  continue
+              name = os.fsdecode(raw)
+              path = pathlib.Path(name)
+              if path.is_symlink() or not path.is_file():
+                  continue
+              basename = path.name.lower()
+              if basename == '.env' or (
+                  basename.startswith('.env.')
+                  and not basename.endswith(('.example', '.sample', '.template'))
+              ):
+                  problems.append((name, 'tracked runtime environment file'))
+              if any(p.search(name) for p in file_name_patterns):
+                  problems.append((name, 'tracked key/credential file'))
+              try:
+                  data = path.read_bytes()
+              except OSError:
+                  continue
+              if b'\0' in data[:4096]:
+                  continue
+              for kind, pattern in material_patterns.items():
+                  if pattern.search(data):
+                      problems.append((name, kind))
+              if name.startswith('.github/workflows/'):
+                  source = data.decode('utf-8', 'replace')
+                  if re.search(r'(?m)^\s*permissions:\s*write-all\s*$', source):
+                      problems.append((name, 'overprivileged workflow token'))
+                  if re.search(r'(?m)^\s*pull_request_target\s*:', source):
+                      notices.append((name, 'pull_request_target needs separate untrusted-code review'))
+                  if re.search(r'(?m)^\s*-?\s*uses:\s*[^\s#]+@(?:v\d+|main|master)\b', source):
+                      notices.append((name, 'un-pinned action reference requires migration to immutable SHA'))
+          for name, note in notices:
+              print('REVIEW:', name, '-', note)
+          if problems:
+              for name, reason in sorted(set(problems)):
+                  print('BLOCK:', name, '-', reason, file=sys.stderr)
+              sys.exit(1)
+          print('PASS: no high-confidence credentials or newly overprivileged workflow found.')
+          print('NOTE: repository admission does not verify runtime auth, RLS, CSRF, CSP, backup or deployment configuration.')
+          PY
