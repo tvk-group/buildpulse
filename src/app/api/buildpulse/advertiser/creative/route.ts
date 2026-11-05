@@ -43,7 +43,7 @@ export async function POST(request:Request){
  if(responseType!=="application/json"||!Number.isSafeInteger(responseLength)||responseLength<1||responseLength>4096)return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503});
  let scanResult:{schema?:string;sha256?:string;size_bytes?:number;verdict?:string;engine?:string};
  try{const responseText=await scanResponse.text();if(responseText.length>4096)throw new Error("oversized result");scanResult=JSON.parse(responseText)}catch{return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503})}
- if(scanResult.schema!=="tvk.fileshield.api.v1"||typeof scanResult.engine!=="string"||!/^tvk-fileshield-v\\d+\\.\\d+$/.test(scanResult.engine)||scanResult.sha256!==sha256||scanResult.size_bytes!==bytes.length)
+ if(scanResult.schema!=="tvk.fileshield.api.v1"||typeof scanResult.engine!=="string"||!/^tvk-fileshield-v\\d+\\.\\d+(?:\\.\\d+)?$/.test(scanResult.engine)||scanResult.sha256!==sha256||scanResult.size_bytes!==bytes.length)
   return NextResponse.json({error:"Creative security scanning returned an invalid result"},{status:503});
  if(scanResult.verdict!=="ALLOW")return NextResponse.json({error:"Creative did not pass security scanning"},{status:422});
  const size=dimensions(bytes,file.type);if(!size||size.width<1||size.height<1||size.width>4096||size.height>4096)return NextResponse.json({error:"Creative image dimensions could not be validated"},{status:400});
