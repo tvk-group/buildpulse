@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "product": "SOVRA CyberDome",
+  "repository": "tvk-group/buildpulse",
+  "canonicalRegistry": {
+    "repository": "tvk-group/tvk-docs",
+    "commit": "80e1e5f25543e30ffd1397afbba7be625d70e317",
+    "path": "standards/cyberdome/v1/policy-registry.json"
+  },
+  "riskProfiles": [
+    "general_web_or_service"
+  ],
+  "securityDomains": [
+    "CD-GOV",
+    "CD-IR",
+    "CD-AUDIT",
+    "CD-APP",
+    "CD-EDGE"
+  ],
+  "reviewStatus": "PROVISIONAL_REQUIRES_OWNER_REVIEW",
+  "implementationStatus": "NOT_ASSESSED",
+  "pipeline": {
+    "eventPublisherEnabled": false,
+    "agentExecutionEnabled": false,
+    "networkResponseEnabled": false,
+    "financialActionEnabled": false,
+    "externalHackBackAllowed": false
+  },
+  "notes": "Registry classification is provisional. This file is metadata, not runtime protection or certification."
+}
