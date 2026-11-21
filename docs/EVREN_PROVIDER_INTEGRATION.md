@@ -26,7 +26,7 @@ For the internal gateway, the provider uses `EVREN_API_KEY`, `EVREN_API_BASE_URL
 ## Privacy and operational controls
 
 - Do not route finance reconciliation or other `local_only` tasks to EVREN.
-- `private_preferred` tasks must remain local-first; cloud routing requires an explicit policy decision and data classification.
+- `private_preferred` tasks remain local-only by default unless a task-specific `BUILDPULSE_AI_PROVIDER_ORDER_<TASK>` explicitly enables a cloud provider after data classification and policy review.
 - Do not send credentials, wallet secrets, private keys, customer records or restricted material to EVREN.
 - The chat endpoint uses server-side secrets, bounded input/history, a per-minute request limit and a 60-second upstream timeout.
 - EVREN chat requests retry one HTTP 503 before moving to the next configured provider.
