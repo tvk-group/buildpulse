@@ -9,9 +9,13 @@ type ChatMessage={role:"user"|"assistant";content:string};
 type LearningPayload={enabled?:boolean;visitorId?:string;locale?:string;voiceLocale?:string;accent?:string};
 type Bucket={count:number;reset:number};
 
-const ENDPOINT=(process.env.NVIDIA_AI_BASE_URL||"https://integrate.api.nvidia.com/v1").replace(/\/$/,"");
-const DEFAULT_MODEL=process.env.NVIDIA_AI_MODEL||"openai/gpt-oss-20b";
-const ALLOWED_MODELS=(process.env.NVIDIA_AI_MODELS||DEFAULT_MODEL).split(",").map(x=>x.trim()).filter(Boolean);
+const EVREN_ENDPOINT=(process.env.EVREN_API_BASE_URL||"https://evren-llmapi.ssyz.org.tr/v1").replace(/\/$/,"");
+const EVREN_DEFAULT_MODEL=process.env.EVREN_API_MODEL||"qwen3.8-flash-next";
+const EVREN_ALLOWED_MODELS=(process.env.EVREN_API_MODELS||EVREN_DEFAULT_MODEL).split(",").map(x=>x.trim()).filter(Boolean);
+const NVIDIA_ENDPOINT=(process.env.NVIDIA_AI_BASE_URL||"https://integrate.api.nvidia.com/v1").replace(/\/$/,"");
+const NVIDIA_DEFAULT_MODEL=process.env.NVIDIA_AI_MODEL||"openai/gpt-oss-20b";
+const NVIDIA_ALLOWED_MODELS=(process.env.NVIDIA_AI_MODELS||NVIDIA_DEFAULT_MODEL).split(",").map(x=>x.trim()).filter(Boolean);
+const PROVIDER_ORDER=(process.env.BUILDPULSE_CHAT_PROVIDER_ORDER||"evren,nvidia").split(",").map(x=>x.trim().toLowerCase()).filter(x=>x==="evren"||x==="nvidia");
 const buckets=new Map<string,Bucket>();
 const WINDOW_MS=60_000;
 const MAX_REQUESTS=Math.max(1,Number(process.env.BUILDPULSE_AI_RPM||"12"));
@@ -63,33 +67,54 @@ function cleanMessages(value:unknown):ChatMessage[]{
 }
 
 export async function GET(){
- return Response.json({available:Boolean(process.env.NVIDIA_API_KEY),provider:"NVIDIA",models:ALLOWED_MODELS,defaultModel:DEFAULT_MODEL,limits:{requestsPerMinute:MAX_REQUESTS,maxHistoryMessages:16,maxInputCharacters:12000}});
+ const providers=PROVIDER_ORDER.filter(p=>p==="evren"?Boolean(process.env.EVREN_API_KEY):Boolean(process.env.NVIDIA_API_KEY));
+ return Response.json({available:providers.length>0,providers,models:[...(process.env.EVREN_API_KEY?EVREN_ALLOWED_MODELS:[]),...(process.env.NVIDIA_API_KEY?NVIDIA_ALLOWED_MODELS:[])],defaultModel:providers[0]==="evren"?EVREN_DEFAULT_MODEL:NVIDIA_DEFAULT_MODEL,limits:{requestsPerMinute:MAX_REQUESTS,maxHistoryMessages:16,maxInputCharacters:12000}});
 }
 
 export async function POST(req:NextRequest){
- const apiKey=process.env.NVIDIA_API_KEY;
- if(!apiKey)return Response.json({error:"BuildPulse AI is not activated yet. NVIDIA_API_KEY is missing."},{status:503});
+ const available=PROVIDER_ORDER.filter(p=>p==="evren"?Boolean(process.env.EVREN_API_KEY):Boolean(process.env.NVIDIA_API_KEY));
+ if(!available.length)return Response.json({error:"BuildPulse AI is not activated. Configure an approved server-side inference provider."},{status:503});
  if(limited(clientKey(req)))return Response.json({error:"Free AI limit reached for this minute. Please wait briefly and try again."},{status:429,headers:{"Retry-After":"60"}});
  let body:{messages?:unknown;model?:unknown;maxTokens?:unknown;learning?:LearningPayload};
  try{body=await req.json()}catch{return Response.json({error:"Invalid request."},{status:400})}
  const messages=cleanMessages(body.messages);
  if(!messages.length)return Response.json({error:"Enter a message first."},{status:400});
- const requested=typeof body.model==="string"?body.model:DEFAULT_MODEL;
- const model=ALLOWED_MODELS.includes(requested)?requested:DEFAULT_MODEL;
  const latestUser=[...messages].reverse().find(m=>m.role==="user")?.content??"";
  await recordSovraLearning(req,body.learning,"user_message",latestUser);
  const knowledge=[ecosystemContext(latestUser),repositoryContext(latestUser)].filter(Boolean).join("\n\n");
  const systemPrompt=knowledge?`${PRODUCT_SYSTEM_PROMPT}\n\n${knowledge}\n\nFor TVK ecosystem questions, use this canonical context. Correct obvious speech-to-text/name variants such as Entelechrome or Entelechron to ENTELΞKRON when context indicates it. Repository inventory is evidence of repository existence only, not launch, audit, partnership, security or production status. If a requested fact is not established, say so.`:PRODUCT_SYSTEM_PROMPT;
  const maxTokens=Math.max(64,Math.min(2048,typeof body.maxTokens==="number"&&Number.isFinite(body.maxTokens)?Math.floor(body.maxTokens):2048));
- const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45_000);
- try{
-  const upstream=await fetch(`${ENDPOINT}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:"system",content:systemPrompt},...messages],max_tokens:maxTokens,stream:false}),cache:"no-store",signal:controller.signal});
-  const data=await upstream.json().catch(()=>null);
-  if(!upstream.ok)return Response.json({error:data?.detail||data?.message||data?.error?.message||"AI provider request failed."},{status:upstream.status});
-  const answer=data?.choices?.[0]?.message?.content;
-  if(typeof answer!=="string"||!answer.trim())return Response.json({error:"AI provider returned no answer."},{status:502});
-  await recordSovraLearning(req,body.learning,"assistant_reply",answer);
-  return Response.json({content:answer,model:data?.model||model,provider:"NVIDIA",poweredBy:"SOVRA AI"});
- }catch(error){if(error instanceof Error&&error.name==="AbortError")return Response.json({error:"AI provider timed out. Please try again."},{status:504});return Response.json({error:"AI provider is temporarily unavailable."},{status:502})}
- finally{clearTimeout(timeout)}
+ const requested=typeof body.model==="string"?body.model:"";
+ const errors:string[]=[];
+ for(const provider of available){
+  const endpoint=provider==="evren"?EVREN_ENDPOINT:NVIDIA_ENDPOINT;
+  const apiKey=provider==="evren"?process.env.EVREN_API_KEY!:process.env.NVIDIA_API_KEY!;
+  const allowed=provider==="evren"?EVREN_ALLOWED_MODELS:NVIDIA_ALLOWED_MODELS;
+  const fallbackModel=provider==="evren"?EVREN_DEFAULT_MODEL:NVIDIA_DEFAULT_MODEL;
+  const model=requested&&allowed.includes(requested)?requested:fallbackModel;
+  const maxAttempts=provider==="evren"?2:1;
+  for(let attempt=1;attempt<=maxAttempts;attempt++){
+   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),60_000);
+   try{
+    const upstream=await fetch(`${endpoint}/chat/completions`,{method:"POST",headers:{"content-type":"application/json","authorization":`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:"system",content:systemPrompt},...messages],max_tokens:maxTokens,stream:false}),cache:"no-store",signal:controller.signal});
+    const data=await upstream.json().catch(()=>null);
+    if(!upstream.ok){
+     const detail=data?.detail||data?.message||data?.error?.message||`Inference provider returned HTTP ${upstream.status}`;
+     if(provider==="evren"&&upstream.status===503&&attempt<maxAttempts){await new Promise(resolve=>setTimeout(resolve,700));continue}
+     throw new Error(String(detail).slice(0,300));
+    }
+    const answer=data?.choices?.[0]?.message?.content;
+    if(typeof answer!=="string"||!answer.trim())throw new Error("Inference provider returned no answer.");
+    await recordSovraLearning(req,body.learning,"assistant_reply",answer);
+    return Response.json({content:answer,model:data?.model||model,provider:provider.toUpperCase(),poweredBy:"SOVRA AI"});
+   }catch(error){
+    const message=error instanceof Error?error.message:"Inference request failed";
+    errors.push(`${provider} attempt ${attempt}: ${message}`);
+    if(provider==="evren"&&attempt<maxAttempts&&message.toLowerCase().includes("503")){await new Promise(resolve=>setTimeout(resolve,700));continue}
+    break;
+   }finally{clearTimeout(timeout)}
+  }
+ }
+ console.error("buildpulse_chat_providers_exhausted",{providers:available,errors});
+ return Response.json({error:"AI providers are temporarily unavailable. Please try again shortly."},{status:502});
 }
