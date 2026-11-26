@@ -1,0 +1,735 @@
+{
+  "capturedAt": "2026-10-16T11:45:19.131Z",
+  "deploymentSummary": {
+    "ecosystemServices": 76,
+    "ecosystemSuccessfulDeployments": 76,
+    "entelekronTokenProject": "SUCCESS"
+  },
+  "selectedUrlChecks": [
+    {
+      "service": "enm-network",
+      "serviceId": "c992caea-4739-45ce-aaa1-e290f995492f",
+      "url": "https://enm.network",
+      "status": 200,
+      "finalUrl": "https://enm.network",
+      "title": "EnergieMIND (ENM) | Energy Intelligence Information",
+      "elapsed": 4.76
+    },
+    {
+      "service": "tvk-infrastructure-energy-systems",
+      "serviceId": "44de01af-adfd-48a3-9fac-d217e09f92b4",
+      "url": "https://tvk-infrastructure-energy-systems-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://tvk-infrastructure-energy-systems-production.up.railway.app",
+      "title": "TVK Infrastructure &amp; Energy Systems LTD",
+      "elapsed": 6.29
+    },
+    {
+      "service": "buildpulse",
+      "serviceId": "be2368bc-8670-4aa8-bac4-f0dc7ea3481f",
+      "url": "https://buildpulse.news",
+      "status": 200,
+      "finalUrl": "https://buildpulse.news",
+      "title": "BuildPulse | Global Technology &amp; Digital Intelligence",
+      "elapsed": 8.98
+    },
+    {
+      "service": "sovra-network",
+      "serviceId": "aeec5f63-ef89-44a9-aef3-898b3cf680e9",
+      "url": "https://sovraai.si",
+      "status": 200,
+      "finalUrl": "https://sovraai.si",
+      "title": "SOVRA AI | Sovereign Operational Virtual Reasoning Architecture",
+      "elapsed": 3.95
+    },
+    {
+      "service": "energiemind-main",
+      "serviceId": "54d13419-a517-4ac3-a78e-67c85d7c9b34",
+      "url": "https://energiemind.com",
+      "status": 402,
+      "finalUrl": "https://energiemind.com"
+    },
+    {
+      "service": "sovra-protocol",
+      "serviceId": "0e2226f3-40d0-4f67-a8dc-64c758cfacaa",
+      "url": "https://sovraprotocol.io",
+      "status": 200,
+      "finalUrl": "https://www.sovraprotocol.com/",
+      "title": "SOVRA Protocol — Sovereign Token Layer for AI-Powered Blockchain",
+      "elapsed": 8.94
+    },
+    {
+      "service": "entelekron-org",
+      "serviceId": "64fec39e-5909-4098-91c0-c0916a5b05dc",
+      "url": "https://www.entelekron.org",
+      "status": 404,
+      "finalUrl": "https://www.entelekron.org"
+    },
+    {
+      "service": "tvk-labs",
+      "serviceId": "ce281e33-1686-420f-93cb-8f768c055ae3",
+      "url": "https://www.tvklabs.com",
+      "status": 402,
+      "finalUrl": "https://www.tvklabs.com"
+    },
+    {
+      "service": "t-v-k-com",
+      "serviceId": "ae0fb1f4-fdc9-45bf-8045-cf57af326dda",
+      "url": "https://www.t-v-k.com",
+      "status": 200,
+      "finalUrl": "https://www.t-v-k.com",
+      "title": "TVK Group Türkiye | Corporate Information",
+      "elapsed": 5.38
+    },
+    {
+      "service": "infrasphere-network",
+      "serviceId": "10cf1465-1480-44af-9848-03ace90d1b27",
+      "url": "https://infrasphere-network-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://infrasphere-network-production.up.railway.app/en",
+      "title": "InfraSphere | Infrastructure Intelligence",
+      "elapsed": 10.25
+    },
+    {
+      "service": "energiemind-io",
+      "serviceId": "4a749bb5-a5bd-4a9f-841b-9d639ffeb273",
+      "url": "https://energiemind-io-production.up.railway.app",
+      "status": 500,
+      "finalUrl": "https://energiemind-io-production.up.railway.app"
+    },
+    {
+      "service": "enteleagent",
+      "serviceId": "8541b309-479f-4330-ac62-a6fc3619f056",
+      "url": "https://enteleagent-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://enteleagent-production.up.railway.app",
+      "title": "EnteleAGENT — Sovereign Economic Authority for Machines",
+      "elapsed": 5.22
+    },
+    {
+      "service": "tvk-prefabricated-systems",
+      "serviceId": "fa50ecd6-e29d-40af-a400-cc1149deb0d1",
+      "url": "https://tvk-prefabricated-systems-production.up.railway.app",
+      "status": 500,
+      "finalUrl": "https://tvk-prefabricated-systems-production.up.railway.app"
+    },
+    {
+      "service": "cesal",
+      "serviceId": "a5de26b7-66a4-4fbd-8ea2-bdc9dc427837",
+      "url": "https://cesal-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://cesal-production.up.railway.app",
+      "title": "ÇESAL | Çeşme Alaçatı Hayvanları Koruma Derneği",
+      "elapsed": 3.99
+    },
+    {
+      "service": "entelerobot-app",
+      "serviceId": "aec788c8-7731-4ee5-908d-8ce3debf9f34",
+      "url": "https://entelerobot-app-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelerobot-app-production.up.railway.app",
+      "title": "EnteleROBOT Wallet",
+      "elapsed": 4.9
+    },
+    {
+      "service": "entelepoint",
+      "serviceId": "98831ac6-78e0-40fa-8470-54c8cfdbf6b8",
+      "url": "https://entelepoint-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelepoint-production.up.railway.app/en",
+      "title": "EntelePoint | Unified Access to the Entele Ecosystem",
+      "elapsed": 7.48
+    },
+    {
+      "service": "tvk-wallet-site",
+      "serviceId": "b923b7fb-5e01-4238-8a15-cf9d2c389427",
+      "url": "https://tvkwallet.com",
+      "status": 404,
+      "finalUrl": "https://tvkwallet.com"
+    },
+    {
+      "service": "energiemind-org",
+      "serviceId": "be48e7d8-7624-4f25-bf81-48e0608a3f9b",
+      "url": "https://energiemind-org-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://energiemind-org-production.up.railway.app/en",
+      "title": "Energiemind — Sustainability, Research &amp; Public Mission",
+      "elapsed": 8.44
+    },
+    {
+      "service": "entelebank",
+      "serviceId": "f0f35343-3c86-4702-adc8-418ec7c96d3a",
+      "url": "https://entelebank-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelebank-production.up.railway.app",
+      "title": "EnteleBANK | Planned UK Banking Project",
+      "elapsed": 4.79
+    },
+    {
+      "service": "entelepay",
+      "serviceId": "a5552b0d-4138-43da-9875-e4e71b9836b4",
+      "url": "https://entelepay-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelepay-production.up.railway.app",
+      "title": "EntelePay | Merchant Crypto &amp; Stablecoin Infrastructure | EntelePAY",
+      "elapsed": 4.27
+    },
+    {
+      "service": "tvk-orbital",
+      "serviceId": "c12c640b-44cd-4bcf-86c3-2c44115895a7",
+      "url": "https://tvk-orbital-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://tvk-orbital-production.up.railway.app",
+      "title": "TVK Orbital | Orbital Recovery Systems",
+      "elapsed": 4.33
+    },
+    {
+      "service": "enteleagent-app",
+      "serviceId": "ed3ca2ed-22fe-48c3-817e-f1885d438915",
+      "url": "https://enteleagent-app-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://enteleagent-app-production.up.railway.app",
+      "title": "EnteleAGENT Wallet",
+      "elapsed": 4.32
+    },
+    {
+      "service": "entelekron-financial-infrastructure",
+      "serviceId": "d32c9d2a-9b6a-40ea-97d5-854547021755",
+      "url": "https://finance.entelekron.org",
+      "status": 200,
+      "finalUrl": "https://finance.entelekron.org",
+      "title": "EnteleKRON Financial Infrastructure",
+      "elapsed": 3.09
+    },
+    {
+      "service": "enteleexchange",
+      "serviceId": "5bf9957e-9d1b-448f-8a57-47d9785a584e",
+      "url": "https://enteleexchange.com",
+      "status": 402,
+      "finalUrl": "https://enteleexchange.com"
+    },
+    {
+      "service": "enteleexchange-status",
+      "serviceId": "c1d871d6-5755-4256-9551-8b21bb7f0806",
+      "url": "https://status.enteleexchange.com",
+      "status": 402,
+      "finalUrl": "https://status.enteleexchange.com"
+    },
+    {
+      "service": "energiemind-shop",
+      "serviceId": "d92eaf89-e174-458b-9626-762a39ff3a85",
+      "url": "https://energiemind-shop-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://energiemind-shop-production.up.railway.app",
+      "title": null,
+      "elapsed": 5.54
+    },
+    {
+      "service": "entelevault",
+      "serviceId": "45a26e46-e4cd-4dab-b83f-b0a237b04c44",
+      "url": "https://entelevault-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelevault-production.up.railway.app",
+      "title": "EnteleVAULT | Identity & Data Vault Concept",
+      "elapsed": 4.57
+    },
+    {
+      "service": "entelecard",
+      "serviceId": "5f693e0e-e7b6-4f02-ae24-2e97ed257cf6",
+      "url": "https://entelecard-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelecard-production.up.railway.app/en",
+      "title": "EnteleCARD | Stablecoin-Powered Everyday Spending | EnteleCARD",
+      "elapsed": 7.56
+    },
+    {
+      "service": "entelescan",
+      "serviceId": "8faaa952-2aa8-4aa4-832d-0ec2cf9f0d58",
+      "url": "https://entelescan-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelescan-production.up.railway.app",
+      "title": "EnteleSCAN v7 | Ecosystem Intelligence & Mission Control",
+      "elapsed": 4.04
+    },
+    {
+      "service": "entelekron-portal",
+      "serviceId": "74f928c5-2b4d-47cc-aaba-5395492b7071",
+      "url": "https://entelekron-portal-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelekron-portal-production.up.railway.app",
+      "title": "EnteleKRON Portal | Ecosystem Interface",
+      "elapsed": 4.69
+    },
+    {
+      "service": "asodi",
+      "serviceId": "8cddb310-7db7-42f3-8e82-40c9b30f7694",
+      "url": "https://asodi.systems",
+      "status": 200,
+      "finalUrl": "https://asodi.systems",
+      "title": "ASODI — Air, Space & Orbital Domain Intelligence",
+      "elapsed": 3.59
+    },
+    {
+      "service": "opsline",
+      "serviceId": "cfc79bdc-19f2-4539-8069-46920a0ea9ae",
+      "url": "https://opsline.org",
+      "status": 200,
+      "finalUrl": "https://opsline.org",
+      "title": "Opsline | AI Agents & Automation for Web3 Operations",
+      "elapsed": 3.85
+    },
+    {
+      "service": "entelerobot",
+      "serviceId": "1cffecaf-90fc-4efe-ac98-1bac15fbced0",
+      "url": "https://entelerobot-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelerobot-production.up.railway.app",
+      "title": "EnteleROBOT — Sovereign Authority for Physical Machines",
+      "elapsed": 6.13
+    },
+    {
+      "service": "enteleclos",
+      "serviceId": "ffa8bee6-de0e-423d-9d4c-9f3fec839039",
+      "url": "https://enteleclos.com",
+      "status": 200,
+      "finalUrl": "https://enteleclos.com/en/",
+      "title": "EnteleCLOS | Digital Asset Security Assurance"
+    },
+    {
+      "service": "chronoseal",
+      "serviceId": "869f84f6-8ecd-4467-a393-4e2237f40989",
+      "url": "https://chronoseal-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://chronoseal-production.up.railway.app",
+      "title": "ChronoSeal | Cryptographic Timestamping Concept",
+      "elapsed": 3.01
+    },
+    {
+      "service": "alvina-app",
+      "serviceId": "cfe17b3b-f428-4f65-b225-bb855080e8c2",
+      "url": "https://alvina-app-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://alvina-app-production.up.railway.app/de/",
+      "title": "ALVINA – Ihr persönlicher Intelligenzbegleiter"
+    },
+    {
+      "service": "graphvault",
+      "serviceId": "24cf40de-2dca-4298-a40e-f858a5deacd7",
+      "url": "https://graphvault-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://graphvault-production.up.railway.app",
+      "title": "GraphVAULT | Semantic Knowledge Graph Concept",
+      "elapsed": 3.39
+    },
+    {
+      "service": "q-presencee",
+      "serviceId": "bddf05ca-9d5b-4f11-98ef-2ecc3fdd6095",
+      "url": "https://q-presencee-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://q-presencee-production.up.railway.app",
+      "title": "Q-Presence | Presence &amp; Identity Verification Concept",
+      "elapsed": 3.3
+    },
+    {
+      "service": "alvinaflow",
+      "serviceId": "63d85304-1cb4-4305-899f-2082479cb645",
+      "url": "https://alvinaflow-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://alvinaflow-production.up.railway.app",
+      "title": "Alvina Flow | Breath, Movement & Connection",
+      "elapsed": 3.64
+    },
+    {
+      "service": "tvk-id",
+      "serviceId": "96d0fb7e-8c80-40e0-87ba-e6f75724ba31",
+      "url": "https://tvk-id-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://tvk-id-production.up.railway.app",
+      "title": "TVK ID | Digital Identity & Verification Gateway",
+      "elapsed": 3.58
+    },
+    {
+      "service": "purikron",
+      "serviceId": "7a9d825e-c3aa-4989-a958-d0c0c47b51df",
+      "url": "https://purikron.com",
+      "status": 402,
+      "finalUrl": "https://purikron.com"
+    },
+    {
+      "service": "sentientsignals",
+      "serviceId": "81c2bd90-60c8-4b1a-a5e7-1da20b118482",
+      "url": "https://sentientsignals-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://sentientsignals-production.up.railway.app",
+      "title": "Sentient Signals | Behavioral Market Research",
+      "elapsed": 3.41
+    },
+    {
+      "service": "sovikron",
+      "serviceId": "79d23811-1429-40d2-b29f-ce6db87371cf",
+      "url": "https://sovikron.com",
+      "status": 402,
+      "finalUrl": "https://sovikron.com"
+    },
+    {
+      "service": "ekron",
+      "serviceId": "8c3c95b3-b801-4acc-be90-72545c5ac0d0",
+      "url": "https://ekron.network",
+      "status": 402,
+      "finalUrl": "https://ekron.network"
+    },
+    {
+      "service": "tvk-network",
+      "serviceId": "ddcd0f11-8ad8-42d5-a789-1678cc18ec29",
+      "url": "https://tvk-network-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://tvk-network-production.up.railway.app/en/",
+      "title": "TVK Group | Trust Infrastructure & Technology"
+    },
+    {
+      "service": "warpkron",
+      "serviceId": "fef12886-ef9a-4e2b-a735-6145500d09f6",
+      "url": "https://www.warpkron.com",
+      "status": 402,
+      "finalUrl": "https://www.warpkron.com"
+    },
+    {
+      "service": "entelelink",
+      "serviceId": "e559b847-d351-4e17-9e5a-8126dfe35c91",
+      "url": "https://entelelink.com",
+      "status": 402,
+      "finalUrl": "https://entelelink.com"
+    },
+    {
+      "service": "syntherra",
+      "serviceId": "1f12730d-1c68-4519-bf32-3b0d80865abc",
+      "url": "https://syntherra.network",
+      "status": 502,
+      "finalUrl": "https://syntherra.network"
+    },
+    {
+      "service": "enteleledger",
+      "serviceId": "2d375cd2-b914-4c18-b8b5-59718ff8bb0e",
+      "url": "https://enteleledger.com",
+      "status": 402,
+      "finalUrl": "https://enteleledger.com"
+    },
+    {
+      "service": "webkron",
+      "serviceId": "2ee2135a-c703-44f1-8e71-9c60c073b4d2",
+      "url": "https://webkron.org",
+      "status": 200,
+      "finalUrl": "https://webkron.org",
+      "title": "webKRON | Multilingual Website Studio",
+      "elapsed": 4.05
+    },
+    {
+      "service": "alvinaworld",
+      "serviceId": "9d9ad4f0-7412-4023-8194-8cd8ed043083",
+      "url": "https://alvinaworld.com",
+      "status": 402,
+      "finalUrl": "https://alvinaworld.com"
+    },
+    {
+      "service": "aerospace",
+      "serviceId": "1e6a3401-4363-434c-b8cb-b8c7749abfad",
+      "url": "https://tvkaerospace.com",
+      "status": 402,
+      "finalUrl": "https://tvkaerospace.com"
+    },
+    {
+      "service": "energiemind-network",
+      "serviceId": "08289ca2-be14-435f-980a-693f2ee2ea17",
+      "url": "https://energiemind.network",
+      "status": 402,
+      "finalUrl": "https://energiemind.network"
+    },
+    {
+      "service": "minekron",
+      "serviceId": "c7306c79-3f12-4f0d-b6fe-85961b55276d",
+      "url": "https://minekron.com",
+      "status": 402,
+      "finalUrl": "https://minekron.com"
+    },
+    {
+      "service": "alvikron",
+      "serviceId": "2ac8dba5-3039-4d70-af95-99402764b52f",
+      "url": "https://www.alvikron.com",
+      "status": 402,
+      "finalUrl": "https://www.alvikron.com"
+    },
+    {
+      "service": "tvk-cyberlab",
+      "serviceId": "1a276309-cef4-4de3-9b65-30aad7d8803b",
+      "url": "https://www.tvkcyberlab.com",
+      "status": 404,
+      "finalUrl": "https://www.tvkcyberlab.com"
+    },
+    {
+      "service": "preflightaudit",
+      "serviceId": "47b6eeb3-7316-4160-a6cf-2ec8262dbcaa",
+      "url": "https://www.preflightaudit.com",
+      "status": 200,
+      "finalUrl": "https://www.preflightaudit.com/en",
+      "title": "Launch Readiness &amp; Security Verification | Preflight Audit",
+      "elapsed": 19.06
+    },
+    {
+      "service": "nadiia-moves",
+      "serviceId": "d1c5fc38-9c28-4e12-a6f2-c81dbcc7f0f5",
+      "url": "https://nadiia-moves-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://nadiia-moves-production.up.railway.app",
+      "title": "Nadiia Moves | Movement, Wellness & Modern Living",
+      "elapsed": 13.94
+    },
+    {
+      "service": "kron-family-hub",
+      "serviceId": "4866d823-8f30-403a-a30d-e951249a1a66",
+      "url": "https://kron.entelekron.org",
+      "status": 502,
+      "finalUrl": "https://kron.entelekron.org"
+    },
+    {
+      "service": "london-secret-of-women",
+      "serviceId": "4b5db4a6-339b-4dda-afb4-90ee83ebcf61",
+      "url": "https://www.london-thesecretofwomen.com",
+      "status": 402,
+      "finalUrl": "https://www.london-thesecretofwomen.com"
+    },
+    {
+      "service": "avasante",
+      "serviceId": "01dc69cb-2316-44ce-876f-794e8cd3e2d4",
+      "url": "https://avasante.com",
+      "status": 402,
+      "finalUrl": "https://avasante.com"
+    },
+    {
+      "service": "cognethra",
+      "serviceId": "073170d2-e5d0-411d-9f5a-c1f2e02719c9",
+      "url": "https://cognethra.org",
+      "status": 402,
+      "finalUrl": "https://cognethra.org"
+    },
+    {
+      "service": "cerebthra",
+      "serviceId": "776296f7-9a3b-408d-9a51-7c37657ee33b",
+      "url": "https://cerebthra.com",
+      "status": 402,
+      "finalUrl": "https://cerebthra.com"
+    },
+    {
+      "service": "ava-sentient-site",
+      "serviceId": "55dd6c34-d807-4608-a797-b41ebbc6e237",
+      "url": "https://ava-sentient-site-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://ava-sentient-site-production.up.railway.app",
+      "title": "Ava Sentient | Digital Presence Concept",
+      "elapsed": 8.47
+    },
+    {
+      "service": "restokron",
+      "serviceId": "20da98e8-b766-458e-9e33-d84f1a8b7a8f",
+      "url": "https://restokron-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://restokron-production.up.railway.app",
+      "title": "restoKRON | Restaurant Payment Interface Prototype",
+      "elapsed": 4.75
+    },
+    {
+      "service": "osoix",
+      "serviceId": "d32edf10-701b-47a1-9cc6-c86fd393afd4",
+      "url": "https://osoix.com",
+      "status": 200,
+      "finalUrl": "https://osoix.com",
+      "title": "OSOIX | Live World Intelligence for Orbital Infrastructure",
+      "elapsed": 7.79
+    },
+    {
+      "service": "entelekron-osaic",
+      "serviceId": "5b1463cc-56cf-49c2-a409-ac22df834e7f",
+      "url": "https://entelekron-osaic-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://entelekron-osaic-production.up.railway.app",
+      "title": "ENTELEKRON | Ecosystem Operating-System Concept",
+      "elapsed": 3.2
+    },
+    {
+      "service": "puppykron-token",
+      "serviceId": "140e1790-0929-4556-ba3f-3dc1e281364a",
+      "url": "https://puppykron.com",
+      "status": 402,
+      "finalUrl": "https://puppykron.com"
+    },
+    {
+      "service": "entelewallet-app",
+      "serviceId": "4f359be2-4612-4ec2-9813-74d9c2181f71",
+      "url": "https://entelewallet.app",
+      "status": 200,
+      "finalUrl": "https://entelewallet.app",
+      "title": "EnteleWALLET | Secure Non-Custodial Multi-Chain Wallet",
+      "elapsed": 3.46
+    },
+    {
+      "service": "restokron-token",
+      "serviceId": "c38a65f0-9160-4d8f-80c5-cdba33ec7710",
+      "url": "https://restokron-token-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://restokron-token-production.up.railway.app",
+      "title": "restoKRON (rKRON) — Official Token on Base | restokron.com",
+      "elapsed": 3.98
+    },
+    {
+      "service": "entelewallet-site",
+      "serviceId": "85d25ac1-474d-4eca-960b-26b18cf49f25",
+      "url": "https://entelewallet.com",
+      "status": 200,
+      "finalUrl": "https://entelewallet.com",
+      "title": "EnteleWALLET 1.1 | External-wallet Send — active, simulated and wallet-signed",
+      "elapsed": 4.46
+    },
+    {
+      "service": "puppykron-site",
+      "serviceId": "fe8bad40-62a4-4cb1-9491-8725918d0fb7",
+      "url": "https://puppykron-site-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://puppykron-site-production.up.railway.app",
+      "title": "PuppyKRON | Community Project",
+      "elapsed": 4.3
+    },
+    {
+      "service": "tvk-group",
+      "serviceId": "2151ff21-51c8-4137-a0f5-70daddfc39a9",
+      "url": "https://tvk.group",
+      "status": 200,
+      "finalUrl": "https://tvk.group/en/",
+      "title": "TVK Group — Technology, Infrastructure & Innovation Ecosystem",
+      "elapsed": 7.47
+    },
+    {
+      "service": "entelequant",
+      "serviceId": "e60cec58-fa1d-413b-96ea-0303cf87f877",
+      "url": "https://entelequant.com",
+      "status": 200,
+      "finalUrl": "https://entelequant.com",
+      "title": "EnteleQUANT | Exchange portfolio automation",
+      "elapsed": 4.14
+    },
+    {
+      "service": "restokron-app",
+      "serviceId": "ca5d1f5b-b028-4f3e-8712-3561b75c92e9",
+      "url": "https://restokron-app-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://restokron-app-production.up.railway.app",
+      "title": "restoKRON App — Merchant Payment Portal",
+      "elapsed": 4.59
+    },
+    {
+      "service": "restokron-network",
+      "serviceId": "c296277b-2103-41a7-bc49-73eda67c2fcf",
+      "url": "https://restokron-network-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://restokron-network-production.up.railway.app",
+      "title": "restoKRON Network — Hospitality Payment Infrastructure on Base",
+      "elapsed": 3.24
+    }
+  ],
+  "additionalPublicPageChecks": [
+    {
+      "url": "https://preflightaudit.com",
+      "status": 200,
+      "finalUrl": "https://preflightaudit.com/en",
+      "title": "Launch Readiness &amp; Security Verification | Preflight Audit"
+    },
+    {
+      "url": "https://www.preflightaudit.com/en/audit-library",
+      "status": 200,
+      "finalUrl": "https://www.preflightaudit.com/en/audit-library",
+      "title": "Audit Library — Public Assessment Summaries | Preflight Audit"
+    },
+    {
+      "url": "https://preflightaudit.com/en/verify",
+      "status": 200,
+      "finalUrl": "https://preflightaudit.com/en/verify",
+      "title": "Verification Records | Preflight Audit"
+    },
+    {
+      "url": "https://enteleclos.com",
+      "status": 200,
+      "finalUrl": "https://enteleclos.com/en/",
+      "title": "EnteleCLOS | Digital Asset Security Assurance"
+    },
+    {
+      "url": "https://alvina-app-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://alvina-app-production.up.railway.app/de/",
+      "title": "ALVINA – Ihr persönlicher Intelligenzbegleiter"
+    },
+    {
+      "url": "https://tvk-network-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://tvk-network-production.up.railway.app/en/",
+      "title": "TVK Group | Trust Infrastructure & Technology"
+    },
+    {
+      "url": "https://syntherra.network",
+      "status": 502,
+      "finalUrl": "https://syntherra.network"
+    },
+    {
+      "url": "https://kron.entelekron.org",
+      "status": 502,
+      "finalUrl": "https://kron.entelekron.org"
+    },
+    {
+      "url": "https://restokron-token-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://restokron-token-production.up.railway.app",
+      "title": "restoKRON (rKRON) — Official Token on Base | restokron.com"
+    },
+    {
+      "url": "https://restokron-token-production.up.railway.app/verify/",
+      "status": 200,
+      "finalUrl": "https://restokron-token-production.up.railway.app/verify/",
+      "title": "restoKRON — Official Verification &amp; On-Chain Registry"
+    },
+    {
+      "url": "https://restokron-network-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://restokron-network-production.up.railway.app",
+      "title": "restoKRON Network — Hospitality Payment Infrastructure on Base"
+    },
+    {
+      "url": "https://restokron-app-production.up.railway.app",
+      "status": 200,
+      "finalUrl": "https://restokron-app-production.up.railway.app",
+      "title": "restoKRON App — Merchant Payment Portal"
+    },
+    {
+      "url": "https://restokron-app-production.up.railway.app/auth/login/",
+      "status": 200,
+      "finalUrl": "https://restokron-app-production.up.railway.app/auth/login/",
+      "title": "Sign In — restoKRON App"
+    },
+    {
+      "url": "https://restokron-app-production.up.railway.app/dashboard/",
+      "status": 200,
+      "finalUrl": "https://restokron-app-production.up.railway.app/dashboard/",
+      "title": "Merchant Dashboard — restoKRON App"
+    }
+  ],
+  "remaining": {
+    "dns": "55 hostnames have prepared cutover/ownership records",
+    "configuration": [
+      "energiemind.io service has no variables; missing project-specific Supabase URL/public key.",
+      "tvk-prefabricated-systems service has no variables; missing project-specific Supabase URL/public key.",
+      "tvk-wallet-platform requires private source materialization using ENTELEWALLET_SOURCE_TOKEN; not deployed as an incomplete bootstrap."
+    ]
+  },
+  "securityVerificationBoundary": "Automatic approval review blocked sensitive-file-path probes. Those checks were dropped; this record contains only public-page and health verification.",
+  "notes": [
+    "HTTP 200 does not prove authenticated user flows, payment settlement or every feature branch is complete.",
+    "Core PreflightAudit suite: 340 passed. Other release suites: 65,37,14,31 passed. TypeScript, zero-warning ESLint and 2,734-page Next.js build succeeded.",
+    "Four unrelated outbound IPv6 changes remain staged and unapplied."
+  ]
+}
